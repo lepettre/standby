@@ -178,3 +178,18 @@ Wichtige Größen: Kopfzeile der Kacheln 13 px fett 700; große Ziffern `min(34c
 ## 8. Widgets und ihr Aussehen
 
 Siehe docs/WIDGETS.md.
+
+## Zweitfarbe: wo sie vorkommt (ab 3.1.3)
+
+Leitlinie: Akzent für die Hauptsache und für Aktionen, Zweitfarbe für die ruhige zweite Ebene. Kein starres System, sondern wie bei aktuellen Widget-Sets: eine Familie getönter Flächen und eine zweite Datenreihe.
+
+| Wo | Verwendung |
+| --- | --- |
+| Kalender, Termine, Datum und Termine | ganze Kachel in Zweitfarbe getönt (`--tint`), Schrift `--tint-ink` |
+| Monatsblatt | heutiger Tag als Kreis in `--tint-ink` auf `--tint` |
+| Uhr als Ringe | innerer Ring (Stunden) |
+| Digitaluhr gestapelt | Minuten |
+| Mehrere Tage | Regenwahrscheinlichkeit in Prozent und Legende |
+| Temperatur und Regen | Regensäulen und Legende |
+
+Nicht in Zweitfarbe: Uhrzeiten und Temperaturen als Hauptwert, Knöpfe, Fortschrittsbalken (Akzent); Spotify (eigene Markenfarben); Die Gestirne (Papierfarbe).

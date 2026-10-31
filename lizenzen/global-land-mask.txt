@@ -1,0 +1,4 @@
+global-land-mask (Python-Paket, Version 1.0.0) von Todd Karin
+Lizenz laut Paketangabe (PyPI-Klassifikator): MIT License.
+Das Quellpaket enthält keinen eigenen Lizenztext; Copyright-Zeile daher nicht wiedergegeben (offen, an der Quelle github.com/toddkarin/global-land-mask zu prüfen).
+Verwendet nur zur einmaligen Erzeugung der 90 × 40-Landmaske der Punkt-Weltkarte.

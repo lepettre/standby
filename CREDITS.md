@@ -1,6 +1,6 @@
 # Quellen, Lizenzen und Würdigung
 
-Stand: Version 3.1.0, 31. Oktober 2026. Diese Datei nennt alles, was in das StandBy-Dashboard eingeflossen ist oder von ihm genutzt wird: Daten, Schnittstellen, Schriften, Icons, Bilder, Texte, Werkzeuge und Vorbilder. Jeder neue Baustein bekommt hier einen Eintrag, bevor er ausgeliefert wird (siehe Regel in CLAUDE.md).
+Stand: Version 3.1.3, 31. Oktober 2026. Diese Datei nennt alles, was in das StandBy-Dashboard eingeflossen ist oder von ihm genutzt wird: Daten, Schnittstellen, Schriften, Icons, Bilder, Texte, Werkzeuge und Vorbilder. Jeder neue Baustein bekommt hier einen Eintrag, bevor er ausgeliefert wird (siehe Regel in CLAUDE.md).
 
 Legende Status: **geprüft** = Lizenz/Bedingung an der Quelle nachgelesen · **übernommen** = aus Sekundärquelle, an der Primärquelle noch zu bestätigen · **offen** = Urheber oder Bedingung unbekannt, vor Weitergabe klären.
 
@@ -36,9 +36,9 @@ Umsetzung im Dialog mit Claude (Anthropic).
 
 | Schrift | Urheber | Lizenz | Einbindung | Status |
 | --- | --- | --- | --- | --- |
-| Archivo Black | Omnibus-Type | SIL Open Font License 1.1 | Base64 eingebettet (aus einer eigenen Rezepte-App übernommen) | übernommen (OFL-Hinweis beilegen) |
-| Space Mono | Colophon Foundry, für Google Fonts | SIL Open Font License 1.1 | Base64 eingebettet (aus einer eigenen Rezepte-App) | übernommen (OFL-Hinweis beilegen) |
-| VT323 | Peter Hull (The VT323 Project Authors), Dateien über Fontsource `@fontsource/vt323` 5.3.0 | SIL Open Font License 1.1 | Copyright-Hinweis und Lizenz bei Weitergabe beilegen | Ab 3.0.1 als WOFF2 (latin, latin-ext) eingebettet; Hinweis im CSS-Kommentar, Lizenztext in `lizenzen/OFL-VT323.txt`; sichtbare Nennung folgt mit der Seite „Über und Quellen“ (3.1.0) | geprüft am Lizenztext des Pakets |
+| Archivo Black | Omnibus-Type | SIL Open Font License 1.1 | Base64 eingebettet (aus einer eigenen Rezepte-App übernommen); Lizenztext `lizenzen/OFL-ArchivoBlack.txt` (aus Fontsource 5.3.0), Nennung unter „Über und Quellen“ | übernommen |
+| Space Mono | Colophon Foundry, für Google Fonts | SIL Open Font License 1.1 | Base64 eingebettet (aus einer eigenen Rezepte-App); Lizenztext `lizenzen/OFL-SpaceMono.txt` (aus Fontsource 5.3.0), Nennung unter „Über und Quellen“ | übernommen |
+| VT323 | Peter Hull (The VT323 Project Authors), Dateien über Fontsource `@fontsource/vt323` 5.3.0 | SIL Open Font License 1.1 | Copyright-Hinweis und Lizenz bei Weitergabe beilegen | Ab 3.0.1 als WOFF2 (latin, latin-ext) eingebettet; Hinweis im CSS-Kommentar, Lizenztext in `lizenzen/OFL-VT323.txt`; sichtbare Nennung unter „Über und Quellen“ (ab 3.1.3) | geprüft am Lizenztext des Pakets |
 | SF Pro / SF Pro Rounded / New York | Apple | Systemschriften, nur über `ui-rounded`, `-apple-system`, `ui-serif` aufgerufen, nicht eingebettet | Systemaufruf | geprüft |
 
 ## 4. Icons und Grafik
@@ -107,10 +107,10 @@ Umsetzung im Dialog mit Claude (Anthropic).
 
 ## 7. Offene Pflichten (in der Roadmap als 3.1.0 eingeplant)
 
-1. Open-Meteo-Hinweis mit Link an jeder Wetteranzeige, CAMS bei Luftqualität und Pollen.
-2. Spotify-Darstellung an die Design-Richtlinien anpassen: Logo, unverändertes Cover, keine Überlagerung, Links zurück zu Spotify.
+1. Open-Meteo-Hinweis mit Link an jeder Wetteranzeige, CAMS bei Luftqualität und Pollen. Stand 3.1.3: im Wetter-Detailfenster und unter „Über und Quellen“; in den Kacheln selbst noch nicht.
+2. Spotify-Darstellung an die Design-Richtlinien anpassen: erledigt in 3.1.0, Richtlinien noch an der Quelle prüfen.
 3. Demo-Fotos ersetzen oder Fotografen nachtragen.
-4. Lizenztexte für OFL-Schriften, Lucide und global-land-mask als Datei beilegen und in der App unter „Über“ zeigen.
+4. Lizenztexte für OFL-Schriften, Lucide und global-land-mask: erledigt in 3.1.3 (`lizenzen/`, verlinkt unter „Über und Quellen“); für global-land-mask liegt kein Lizenztext im Paket, nur die Angabe MIT.
 5. Wikipedia-Einträge im Widget und Detailfenster verlinken.
 6. Unsplash utm_source auf den registrierten App-Namen setzen.
 7. Alle „übernommen“-Einträge an der Primärquelle bestätigen.

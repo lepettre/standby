@@ -2,6 +2,14 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 3.1.3 – 31.10.2026
+
+- Seite „Über und Quellen“ (Einstellungen): Version, alle Daten, Schriften, Grafiken und Inhalte mit Lizenz und Link; Lizenztexte in `lizenzen/`.
+- Wetter-Detailfenster nennt Open-Meteo (CC BY 4.0) und bei Luftqualität und Pollen CAMS.
+- Farbkombinationen einheitlich „Fläche · Schrift“ benannt, „Gelb + Ultramarin“ entfernt, neu „Marine · Gelb“ mit dunkler Fläche. Gespeicherte Auswahl wird übernommen.
+- Hex-Eingabe (z. B. #FFE600) unter jedem der drei eigenen Farbfelder, mit dem Farbwähler abgeglichen.
+- Einsatz der Zweitfarbe in docs/DESIGN.md festgehalten.
+
 ## 3.1.2 – 31.10.2026
 
 - Hochformat ist das gedrehte Querformat: Kacheln drehen mit (quer 2 × 1 wird hoch 1 × 2), die Anordnung bleibt gleich. Galerie-Vorschau folgt.

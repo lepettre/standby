@@ -21,7 +21,8 @@ Bisher: 1.0.0, 2.0.0, 3.0.0 (siehe CHANGELOG.md). Die Nummer steht in `index.htm
 | 3.2.0 | Daten sichern und übertragen | Neben |
 | 4.0.0 | Widgets bearbeiten wie bei iOS | Haupt |
 | 4.1.0 | Neue Darstellungen und schönere Detailfenster | Neben |
-| 4.2.0 | Kochmodus verfeinern, ältere Ideen | Neben |
+| 4.2.0 | Feedback zu 4.1: Handy-Raster, Bearbeiten, Datum, Kochmodus, Einstellungen | Neben |
+| 4.3.0 | Kochmodus verfeinern, ältere Ideen | Neben |
 | 5.0.0 | Home Assistant | Haupt |
 | R-Plan | Übernahme von Rezept-Übersicht und Kochmodus in eine eigene Rezepte-App | eigenes Projekt, nur nach Freigabe |
 
@@ -79,7 +80,23 @@ Offen geblieben: Punkt 11 (Google-Client) wird mit der fest eingebauten Client-I
 3. **Detailfenster überarbeiten** (F, erledigt in 4.1.0): Eleganter, stimmig zum Stil, ohne sichtbare Scrollbalken oder mit gestalteten.
 4. **Spotify-Bibliothek** (F, erledigt in 3.1.1 und 4.1.0, soweit Spotify die Daten freigibt): Lieblingssongs, Alben und Playlists durchsuchen und abspielen.
 
-## 4.2.0 – Kochmodus, ältere Ideen
+## 4.2.0 – Feedback zu 4.1 (Handy, Bearbeiten, Rezepte, Einstellungen)
+
+Herkunft: Feedback vom 31.10. abends (F2). Reihenfolge = Umsetzungsreihenfolge.
+
+1. **Raster am Handy** (F2): Hoch- und querformat müssen zwei 2 × 2-Module nebeneinander bzw. untereinander fassen (fest 4 × 2 quer, 2 × 4 hoch, Zellgröße passt sich an). Die Bearbeiten-Leiste darf das nicht verhindern: weiter oben oder über dem Raster einblenden.
+2. **Rezepte-Ansicht ohne Bearbeiten-Leiste** (F2): Dort gibt es keine Widgets anzupassen; Leiste und Langdruck-Bearbeiten dort nicht zeigen.
+3. **Stapel-Punkte** (F2): Die Punkte als Wisch-Hinweis auf Widget-Stapeln nach einigen Sekunden ausblenden, bei Berührung wieder einblenden.
+4. **Datums-Widget** (F2): Reines Datum, wählbar: nur Tag · Tag und Monat · Wochentag · Wochentag und Tagesdatum.
+5. **Kochmodus** (F2): Zutaten-Leiste unten entfällt, Zutaten nur in der Liste. In den Schritten die Menge nennen, falls bekannt.
+6. **Unsplash bei den Rezepten** (F2): Fotosuche direkt am Rezept, auch ohne API-Schlüssel (Suche auf unsplash.com öffnen, Foto übernehmen).
+7. **Einstellungen weiter entrümpeln** (F2): „Ansichten“ und „Darstellung“ ganz heraus, ebenso Standort und CORS-Proxy (Proxy dorthin, wo er gebraucht wird). Stil-Bibliothek ganz nach unten.
+8. **Ortssuche mit Vorschlägen** (F2): Beim Ort eines Widgets während der Eingabe passende Orte vorschlagen, damit klar ist, welche Orte bekannt sind.
+9. **Groß anzeigen mit Mehrwert** (F2): Wo sinnvoll mehr zeigen, z. B. Kalender groß mit Terminliste; bei Fotos und Rezept-Teaser „Groß anzeigen“ weglassen.
+10. **Fehler Kalender-Widget** (F2): Viele Termine an einem Tag überlagern sich in „Drei Tage“; Google-Anmeldefehler erscheint als technische Meldung („popup_failed_to_open“) statt als verständlicher Hinweis mit Knopf zum Erneuern.
+11. **Kalender-Detailfenster** (F2): Inhalt hält rechts den Rand nicht ein.
+
+## 4.3.0 – Kochmodus, ältere Ideen
 
 1. **Zutaten je Schritt** (F): Die automatische Zuordnung trifft nicht immer (Zutaten mit Hinweisen, Teilmengen). Optionen: Zuordnung verbessern, als Einstellung abschaltbar machen oder ausblenden. Entscheidung offen.
 2. **Weitere Ideen** (A): Google Tasks als Aufgaben-Widget, Mondphase als Pixel-Widget, Wecker-Ansicht vor dem ersten Termin, Ansichten automatisch nach Tageszeit, Rezeptvorschläge aus dem Vorrat, Gestirne-Wechsel am Ende des Nacht-Timers.

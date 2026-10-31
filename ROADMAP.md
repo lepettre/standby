@@ -55,12 +55,12 @@ Offen geblieben: Punkt 11 (Google-Client) wird mit der fest eingebauten Client-I
 5. **Sechsstellige Farbcodes** (F, erledigt in 3.1.3): Neben jedem der drei Farbfelder ein Eingabefeld für Hex-Codes wie `#FFE600`.
 6. **Zweitfarbe nachvollziehbar** (F, festgehalten in 3.1.3): Festlegen, welche Widgets die Zweitfarbe nutzen, nach zeitgenössischem Stil statt strenger Logik; in DESIGN.md dokumentieren.
 
-## 3.2.0 – Daten sichern und übertragen
+## 3.2.0 – Daten sichern und übertragen (ausgeliefert)
 
-1. **Dashboards speichern, teilen, exportieren, importieren** (F): Alle Ansichten, Widget-Einstellungen, Farben und Schriften als Datei; Import stellt alles wieder her. Hinweis: Safari kann Website-Daten nach längerer Nichtnutzung löschen, Home-Bildschirm-Apps sind davon ausgenommen; die Datei ist die sichere Kopie.
-2. **ICS-Datei hochladen** (F): Kalender auch als Datei statt nur als Abo-Adresse.
-3. **Einzelne Fotos löschen** (F): Ohne alles zurückzusetzen.
-4. **Rezepte nachladen und löschen** (F): Weitere Rezepte aus einer Export-Datei importieren, einzelne löschen. Direkter Abgleich mit einer Rezepte-App auf derselben Domain prüfen (gemeinsamer Browser-Speicher).
+1. **Dashboards speichern, teilen, exportieren, importieren** (F, erledigt in 3.2.0): Alle Ansichten, Widget-Einstellungen, Farben und Schriften als Datei; Import stellt alles wieder her. Hinweis: Safari kann Website-Daten nach längerer Nichtnutzung löschen, Home-Bildschirm-Apps sind davon ausgenommen; die Datei ist die sichere Kopie.
+2. **ICS-Datei hochladen** (F, erledigt in 3.2.0): Kalender auch als Datei statt nur als Abo-Adresse.
+3. **Einzelne Fotos löschen** (F, erledigt in 3.2.0): Ohne alles zurückzusetzen.
+4. **Rezepte nachladen und löschen** (F, erledigt in 3.2.0): Weitere Rezepte aus einer Export-Datei importieren, einzelne löschen. Direkter Abgleich mit einer Rezepte-App auf derselben Domain prüfen (gemeinsamer Browser-Speicher).
 5. **Zugangsdaten fest einbauen** (F, erledigt in 3.0.4): Spotify- und Google-Client-ID im Code hinterlegen, damit nichts mehr von Hand eingegeben werden muss. Beides ist für dich als Entwickler kostenlos; die Client-ID ist bei diesem Anmeldeverfahren kein Geheimnis. Benötigt: deine Spotify-Client-ID, deine Google-OAuth-Client-ID (Typ Webanwendung) und die endgültige Adresse des Dashboards. Einschränkungen: Spotify-Apps im Entwicklungsmodus funktionieren nur für Konten, die du im Spotify-Dashboard freischaltest; Google-Apps im Status „Testen“ nur für eingetragene Testnutzer, mit Warnhinweis „nicht überprüft“. Für dich allein reicht das.
 
 ## 4.0.0 – Widgets bearbeiten wie bei iOS

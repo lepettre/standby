@@ -2,6 +2,14 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 3.2.0 – 31.10.2026
+
+- Datensicherung: Ansichten, Widget- und übrige Einstellungen, Farben, Schrift, importierte Rezepte und ICS-Datei als Datei sichern (auf dem iPhone über das Teilen-Menü) und wiederherstellen. Anmeldungen und Fotos sind nicht enthalten.
+- Kalender auch als hochgeladene ICS-Datei, zusätzlich zu Google und ICS-Abo.
+- Eigene Fotos einzeln löschen (Vorschaubilder in den Einstellungen).
+- Rezepte aus der Export-Datei der Rezepte-App importieren (gleiche Rezepte werden ersetzt), einzeln löschen, ausgeblendete zurückholen. Eingebaute Rezepte bleiben im Code erhalten.
+- Auswahlfelder in den Einstellungen ragen nicht mehr über den Rand.
+
 ## 3.1.3 – 31.10.2026
 
 - Seite „Über und Quellen“ (Einstellungen): Version, alle Daten, Schriften, Grafiken und Inhalte mit Lizenz und Link; Lizenztexte in `lizenzen/`.

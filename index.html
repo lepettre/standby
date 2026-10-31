@@ -148,7 +148,7 @@ input,select{font:inherit;color:#fff;-webkit-user-select:text;user-select:text}
 .ag{-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
 .cal-err{font-size:12px;font-weight:600;opacity:.8;margin-top:6px}
 .w-week{background:#000;border:1px solid var(--line)}
-.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;flex:1;min-height:0;margin-top:8px}
+.wk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;flex:1;min-height:0;margin-top:8px}
 .wk-d{min-width:0;display:flex;flex-direction:column;gap:3px;overflow:hidden}
 .wk-h{display:flex;flex-direction:column;align-items:center;margin-bottom:3px}
 .wk-h span{font-size:11px;font-weight:700;color:var(--muted)}
@@ -567,10 +567,7 @@ body.night .chips button.on{background:var(--nr)!important;color:#000!important}
  .w-head .lg,.w-forecast .w-head span+span,.w-wiki .w-head span+span{display:none}
  .w-cal-agenda .ag li,.w-agenda .ag li{min-width:0}
  .w-cal-agenda .ag .trunc,.w-agenda .ag .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
- .wk{gap:3px}.wk-e{font-size:0;padding:0;height:6px;border-left:0;background:var(--c,var(--accent))}
- .wk-more{display:none}
  .sl-row b{font-size:min(22px,12cqw)}
- .wk-h b{font-size:min(6.5cqh,8.5cqw,24px)}
 }
 /* Uhren bleiben kreisrund, auch wenn Safari das Flex-Element staucht */
 .analog{flex:none;max-width:100%;max-height:100%}
@@ -622,6 +619,51 @@ body.night .chips button.on{background:var(--nr)!important;color:#000!important}
 @container (max-width:240px) and (max-height:240px){.sp2{gap:8px;padding:14px}.sp2-cov{width:52cqw}.sp2-top{top:14px;right:14px}.sp2 .sp-dv,.sp2 .sp-ctl,.sp2 .sp-bar,.sp2-l{display:none}.sp2-t{font-size:15px;-webkit-line-clamp:1}.sp2-a{font-size:12px}}
 /* schmal und hoch: Cover über die Breite */
 @container (max-width:240px) and (min-height:300px){.sp2-cov{width:100%}.sp2-top{position:static;order:-1;justify-content:space-between;max-width:100%}.sp2 .sp-ctl{margin-top:6px}}
+
+/* 3.1.1: Kurven um jetzt, Vergangenheit blass */
+.ch-nl{position:absolute;top:0;bottom:0;width:0;border-left:1px dashed color-mix(in srgb,currentColor 35%,transparent)}
+.ch-xn{color:var(--accent);font-weight:700}
+
+/* 3.1.1: Vorhersage nennt die gezeigte Anzahl Tage; Drei Tage lesbar */
+.fc-n7,.fc-n3{font-style:normal}.fc-n3{display:none}
+@container (max-height:260px){.fc-n7{display:none}.fc-n3{display:inline}}
+.wk-h b{font-size:max(16px,min(8cqh,9cqw))}
+.wk-h span{font-size:12px}
+.wk-e{font-size:max(11px,min(4cqh,5cqw));padding:4px 6px}
+
+/* 3.1.1: Spotify-Fenster ruhiger, Reiter statt vier Spalten, kein sichtbarer Scrollbalken */
+.pop-in{scrollbar-width:none}.pop-in::-webkit-scrollbar{display:none}
+.spp-cov{display:block;border-radius:8px;overflow:hidden;aspect-ratio:1;width:min(180px,32vw,calc(100dvh - 190px));min-width:96px;background:#282828}
+.spp-cov img{width:100%;height:100%;object-fit:cover;display:block}
+.spp-now .spp-cov img{width:100%;height:100%;min-width:0;border-radius:0}
+.spp-now .spp-cov.spp-ph{border-radius:8px}
+@media (max-width:560px){.spp-cov{width:min(220px,60vw)}}
+.spp-on{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:4px;text-align:left;max-width:100%}
+.spp-on .sp-logo{width:20px;height:20px}
+.spp-on b{color:#fff}
+.spp-on span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+a.spp-t,a.spp-a{display:block;color:inherit;text-decoration:none}
+.spp-a{color:var(--muted)}
+.spp-tabs{margin:18px 0 6px;flex-wrap:nowrap}
+.spp-list{display:flex;flex-direction:column}
+.spp-list .spp-row{display:flex;align-items:center;gap:12px;padding:8px 0;justify-content:flex-start;width:100%;text-align:left}
+.spp-list .spp-row img,.spp-noimg{width:40px;height:40px;border-radius:4px;object-fit:cover;flex:none;background:#2a2a2a;display:block}
+.spp-ic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#2a2a2a;flex:none;font-style:normal}
+.spp-list .spp-row span{display:flex;flex-direction:column;min-width:0;flex:1}
+.spp-list .spp-row b{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spp-list .spp-row small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spp-list .spp-row.on b{color:#1ed760}
+
+/* Drei Tage schmal: Tage untereinander, Termine als Zeilen */
+@container (max-width:240px){
+ .wk{grid-template-columns:1fr;grid-auto-rows:min-content;gap:8px}
+ .wk-d{display:grid;grid-template-columns:2.4em minmax(0,1fr);column-gap:8px;row-gap:3px;align-items:start}
+ .wk-h{grid-row:1/span 4;margin:0}
+ .wk-h b{font-size:14px;width:1.9em;height:1.9em}
+ .wk-e{grid-column:2;font-size:12px}
+ .wk-more{grid-column:2;text-align:left}
+}
+@container (max-width:240px) and (max-height:240px){.wk-d .wk-e:nth-of-type(n+4){display:none}.wk-d:nth-child(3){display:none}}
 </style>
 </head>
 <body>
@@ -666,7 +708,7 @@ const LS={get(k,d){try{const v=localStorage.getItem('sb_'+k);return v==null?d:JS
 
 /* ---------- Konfiguration ---------- */
 const THEMES={yellow:['Gelb','#ffe600'],orange:['Orange','#ff9500'],red:['Rot','#ff3b30'],pink:['Pink','#ff2d55'],magenta:['Magenta','#ff4fd8'],purple:['Lila','#bf5af2'],indigo:['Indigo','#5e5ce6'],blue:['Blau','#0a84ff'],cyan:['Cyan','#32ade6'],mint:['Mint','#63e6e2'],green:['Grün','#30d158'],lime:['Limette','#c7f23a'],peach:['Pfirsich','#ffb38a'],sand:['Sand','#e8d5a9'],silver:['Silber','#c7c7cc'],white:['Weiß','#f5f5f7']};
-const WIDGETS={forecast:'Wetter mehrere Tage','temp-chart':'Temperaturverlauf','rain-chart':'Regenrisiko','wx-combo':'Temperatur und Regen',sun:'Sonnenauf- und -untergang',uv:'UV-Index',pollen:'Pollenflug',wiki:'Wikipedia: Was geschah heute',pegel:'Pegel',radio:'Radio','station':'Bahnhofsuhr','clock-flap-classic':'Klapptafel klassisch','clock-words':'Uhr in Worten','clock-flap':'Klapptafel-Uhr','day-poster':'Wochentag-Plakat','countdown':'Countdown zum Termin','weather-text':'Wetter als Satz','ticker':'Schlagzeilen-Laufband','gestirne':'Die Gestirne','clock-big':'Digitaluhr groß','clock-split':'Digitaluhr zweifarbig','clock-stack':'Digitaluhr gestapelt','clock-outline':'Digitaluhr Kontur','clock-float':'Digitaluhr schwebend','clock-analog':'Analoguhr klassisch','analog-solid':'Analoguhr vollflächig','analog-numbers':'Analoguhr mit Ziffern','analog-arc':'Uhr als Ringe','cal-agenda':'Datum und Termine','week':'Woche','solar':'Sonnenverlauf (Weltkarte)','world':'Weltzeit-Liste','calendar':'Kalender','agenda':'Termine','weather':'Wetter','spotify':'Spotify','photos':'Fotos','news':'Nachrichten','recipe':'Rezept'};
+const WIDGETS={forecast:'Wetter mehrere Tage','temp-chart':'Temperaturverlauf','rain-chart':'Regenrisiko','wx-combo':'Temperatur und Regen',sun:'Sonnenauf- und -untergang',uv:'UV-Index',pollen:'Pollenflug',wiki:'Wikipedia: Was geschah heute',pegel:'Pegel',radio:'Radio','station':'Bahnhofsuhr','clock-flap-classic':'Klapptafel klassisch','clock-words':'Uhr in Worten','clock-flap':'Klapptafel-Uhr','day-poster':'Wochentag-Plakat','countdown':'Countdown zum Termin','weather-text':'Wetter als Satz','ticker':'Schlagzeilen-Laufband','gestirne':'Die Gestirne','clock-big':'Digitaluhr groß','clock-split':'Digitaluhr zweifarbig','clock-stack':'Digitaluhr gestapelt','clock-outline':'Digitaluhr Kontur','clock-float':'Digitaluhr schwebend','clock-analog':'Analoguhr klassisch','analog-solid':'Analoguhr vollflächig','analog-numbers':'Analoguhr mit Ziffern','analog-arc':'Uhr als Ringe','cal-agenda':'Datum und Termine','week':'Drei Tage','solar':'Sonnenverlauf (Weltkarte)','world':'Weltzeit-Liste','calendar':'Kalender','agenda':'Termine','weather':'Wetter','spotify':'Spotify','photos':'Fotos','news':'Nachrichten','recipe':'Rezept'};
 const LAYOUTS={single:[1,'Vollbild'],split:[2,'Duo: zwei nebeneinander'],grid:[4,'Raster 2 × 2'],hero:[3,'Breit oben, zwei unten'],side:[3,'Groß links, zwei rechts'],trio:[3,'Drei Spalten'],recipes:[0,'Rezept-Bibliothek']};
 const DEFAULT_DASH=[
  {id:'duo',name:'Duo',mods:[{s:'2x2',ks:['clock-big','clock-analog','station','clock-words']},{s:'2x2',ks:['calendar','weather','agenda','news']}]},
@@ -678,7 +720,7 @@ const COMBOS=[['Vivid','#ffe600','#000000','#b9c1c3'],['Gelb + Ultramarin','#ffe
 const CLOCKS=['station','clock-flap-classic','clock-words','clock-flap','clock-big','clock-float','clock-analog','clock-stack','clock-outline','clock-split','analog-solid','analog-numbers','analog-arc'];
 const WXW=['weather','weather-text','solar','forecast','temp-chart','rain-chart','wx-combo','sun','uv','pollen'];
 const CALW=['calendar','agenda','cal-agenda','week','countdown'];
-const CALTYPES={countdown:'Countdown',agenda:'Termine','cal-agenda':'Datum und Termine',week:'Woche',calendar:'Monatskalender'};
+const CALTYPES={countdown:'Countdown',agenda:'Termine','cal-agenda':'Datum und Termine',week:'Drei Tage',calendar:'Monatskalender'};
 const FONTS={round:['Gerundet','ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,sans-serif'],archivo:['Archivo Black','"Archivo Black","Arial Black",sans-serif'],serif:['Serif','ui-serif,"New York",Georgia,serif'],mono:['Space Mono','"Space Mono",ui-monospace,Menlo,monospace']};
 const DEFAULTS={theme:'yellow',h24:true,night:false,dash:'duo',wakeMode:'cook',city:'',zones:'Asia/Tokyo, America/New_York, Europe/Helsinki',ics:'',proxy:'',rss:'https://www.tagesschau.de/index~rss2.xml',spClient:'',unKey:'',gClient:'',font:'round',nightMode:'manual',nightFrom:'22:00',nightTo:'07:00',nOv:null,wcal:{},gestUrl:'',gSel:null,col:null,colName:''};
 let S={...DEFAULTS,...LS.get('settings',{})};
@@ -733,9 +775,9 @@ function demoData(){const t=new Date(),nh=t.getHours(),at=(d,h,m)=>new Date(t.ge
  D.evDemo=[ev(0,nh+1,30,45,'Teambesprechung'),ev(0,nh+3,0,60,'Telefonat'),ev(0,19,30,120,'Abendessen'),ev(1,0,0,0,'Markttag',true),ev(1,9,0,30,'Zahnarzt'),ev(2,14,0,90,'Videocall'),ev(4,10,0,60,'Sport'),ev(5,18,0,180,'Konzert')];
  const ago=m=>new Date(Date.now()-m*6e4).toString();
  D.news=[{title:'Demo: Hier steht die erste Schlagzeile aus deinem Feed',link:'#',date:ago(12)},{title:'Demo: Eine zweite, deutlich längere Schlagzeile zeigt, wie der Text umbricht und sich anpasst',link:'#',date:ago(47)},{title:'Demo: Dritte Meldung',link:'#',date:ago(95)}];D.newsTitle='Demo-Schlagzeilen';D.newsErr='';
- const H=[...Array(48)].map((_,i)=>new Date(+t+i*36e5)),iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),hs=H.map(d=>iso(d)+'T'+pad(d.getHours())+':00'),Dd=[...Array(7)].map((_,i)=>new Date(t.getFullYear(),t.getMonth(),t.getDate()+i));
+ const H=[...Array(60)].map((_,i)=>new Date(+t+(i-12)*36e5)),iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()),hs=H.map(d=>iso(d)+'T'+pad(d.getHours())+':00'),Dd=[...Array(7)].map((_,i)=>new Date(t.getFullYear(),t.getMonth(),t.getDate()+i));
  const f={utc_offset_seconds:-t.getTimezoneOffset()*60,current:{temperature_2m:9,apparent_temperature:6,relative_humidity_2m:78,weather_code:3,wind_speed_10m:18,wind_gusts_10m:41,wind_direction_10m:240,pressure_msl:1009,is_day:nh>=7&&nh<17?1:0,uv_index:1},
-  hourly:{time:hs,temperature_2m:H.map(d=>Math.round((8+3*Math.sin((d.getHours()-9)/24*2*Math.PI))*10)/10),precipitation_probability:H.map((_,i)=>i>=3&&i<7?75:i>=20&&i<24?40:8),precipitation:H.map(()=>0),weather_code:H.map((_,i)=>i>=3&&i<7?61:3),snowfall:H.map(()=>0)},
+  hourly:{time:hs,temperature_2m:H.map(d=>Math.round((8+3*Math.sin((d.getHours()-9)/24*2*Math.PI))*10)/10),precipitation_probability:H.map((_,i)=>(i-=12)>=3&&i<7?75:i>=20&&i<24?40:i<0&&i>-5?30:8),precipitation:H.map(()=>0),weather_code:H.map((_,i)=>(i-=12)>=3&&i<7?61:3),snowfall:H.map(()=>0)},
   daily:{time:Dd.map(iso),weather_code:[3,61,2,1,80,3,0],temperature_2m_max:[11,10,12,13,9,8,10],temperature_2m_min:[6,5,7,6,4,3,5],precipitation_probability_max:[75,80,20,10,65,30,5],precipitation_sum:[3,6,0,0,4,1,0],snowfall_sum:[0,0,0,0,0,0,0],uv_index_max:[1,1,2,2,1,1,2],sunrise:Dd.map(d=>iso(d)+'T07:20'),sunset:Dd.map(d=>iso(d)+'T16:40')}};
  D.weather=wxFrom(f,{current:{european_aqi:21},hourly:{time:hs,alder_pollen:hs.map(()=>6),birch_pollen:hs.map(()=>14),grass_pollen:hs.map(()=>3),mugwort_pollen:hs.map(()=>0),ragweed_pollen:hs.map(()=>0)}},{name:'Demo-Ort'});D.weatherErr='';D.loc={lat:52.52,lon:13.405,name:'Demo-Ort'};
  if(!D.sp||D.sp.idle)D.sp={title:'Demo-Titel',artist:'Demo-Interpret',playing:true,prog:62e3,dur:215e3,at:Date.now(),device:'Küche',vol:40,shuffle:false,repeat:'off',liked:false};D.evDemo[0].loc='Konferenzraum 3';D.evDemo[2].loc='Restaurant';D.evDemo[5].desc='Demo: Notizen zum Termin erscheinen hier.';spSig=''}
@@ -793,14 +835,14 @@ const W={
  station(c){const a=angs();let k='';for(let i=0;i<60;i++){const h=i%5===0;k+=`<rect x="${h?48.3:49.4}" y="6" width="${h?3.4:1.2}" height="${h?10:3.4}" fill="var(--ink2)" transform="rotate(${i*6} 50 50)"/>`}
   c.innerHTML=`<svg class="analog" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><circle cx="50" cy="50" r="48" fill="var(--dial)" stroke="var(--ink2)" stroke-width="1.5"/>${k}<rect x="47" y="22" width="6" height="36" fill="var(--ink2)" transform="rotate(${a.h} 50 50)"/><rect x="47.8" y="10" width="4.4" height="48" fill="var(--ink2)" transform="rotate(${a.m} 50 50)"/><rect x="49.4" y="12" width="1.2" height="50" fill="var(--sec)" transform="rotate(${a.s} 50 50)"/><circle cx="50" cy="50" r="1.6" fill="var(--sec)"/></svg>`},
  'cal-agenda'(c){const t=new Date(),st=calStatus();c.innerHTML=`<div class="ca"><div class="ca-l"><div class="cal-wd">${t.toLocaleDateString('de-DE',{weekday:'long'})}</div><div class="ca-d">${t.getDate()}</div><div class="cal-wd">${t.toLocaleDateString('de-DE',{month:'long'})}</div></div><div class="ca-r">${st&&st.startsWith('<div class="skel')?st:evList(4,'cal-agenda')+st}</div></div>`},
- week(c){const t=sod(new Date());let h='';for(let i=0;i<7;i++){const d=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i),e=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i+1),ev=evFor('week').filter(v=>v.start<e&&v.end>d).sort((a,b)=>a.start-b.start);
-  h+=`<div class="wk-d${i?'':' now'}"><div class="wk-h"><span>${WD[d.getDay()]}</span><b>${d.getDate()}</b></div>${ev.slice(0,3).map(v=>`<div class="wk-e"${v.color?` style="--c:${v.color}"`:''}>${esc(v.title||'Termin')}</div>`).join('')}${ev.length>3?`<div class="wk-more">+${ev.length-3}</div>`:''}</div>`}
-  const st=calStatus();c.innerHTML=`<div class="w-head"><span>Nächste 7 Tage</span></div>${st&&st.startsWith('<div class="skel')?st:`<div class="wk">${h}</div>${st}`}`},
- forecast(c){const w=D.weather;if(!wxGuard(c,w,'Vorhersage'))return;c.innerHTML=`<div class="w-head"><span>${w.daily.time.length} Tage</span><span>${esc(w.name)}</span></div><div class="fc">${fcRows(w)}</div><div class="fc-lg"><span><b>%</b> Regenrisiko</span><span><i></i> Tiefst bis Höchst</span></div>`},
- 'temp-chart'(c){const w=D.weather;if(!wxGuard(c,w,'Temperatur'))return;const ix=hIdx(w,24),T=ix.map(i=>w.hourly.t[i]);c.innerHTML=`<div class="w-head"><span>Temperatur<i class="lg">, 24 Std.</i></span><span>${Math.round(Math.min(...T))}° bis ${Math.round(Math.max(...T))}°</span></div><div class="ch-big">${w.temp}°</div><div class="ch">${chartSVG(w,24,'temp')}</div>${axis(w,ix)}`},
- 'rain-chart'(c){const w=D.weather;if(!wxGuard(c,w,'Regenrisiko'))return;const ix=hIdx(w,24),P=ix.map(i=>w.hourly.p[i]??0),mx=Math.max(0,...P),d=ix.length?new Date(wms(w,w.hourly.time[ix[P.indexOf(mx)]])):null;
-  c.innerHTML=`<div class="w-head"><span>Regenrisiko, 24 Std.</span></div><div class="ch-big">${mx} %<small>${mx>0&&d?'gegen '+(S.h24?d.getHours()+' Uhr':d.toLocaleTimeString('en-US',{hour:'numeric',hour12:true})):'trocken'}</small></div><div class="ch">${chartSVG(w,24,'rain')}</div>${axis(w,ix)}`},
- 'wx-combo'(c){const w=D.weather;if(!wxGuard(c,w,'Temperatur und Regen'))return;const ix=hIdx(w,24),P=ix.map(i=>w.hourly.p[i]??0);c.innerHTML=`<div class="w-head"><span>Temperatur und Regen</span></div><div class="ch-big">${w.temp}°<small><i class="ch-key"></i>Regen bis ${Math.max(0,...P)} %</small></div><div class="ch">${chartSVG(w,24,'combo')}</div>${axis(w,ix)}`},
+ week(c){const t=sod(new Date());let h='';for(let i=0;i<3;i++){const d=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i),e=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i+1),ev=evFor('week').filter(v=>v.start<e&&v.end>d).sort((a,b)=>a.start-b.start);
+  h+=`<div class="wk-d${i?'':' now'}"><div class="wk-h"><span>${WD[d.getDay()]}</span><b>${d.getDate()}</b></div>${ev.slice(0,4).map(v=>`<div class="wk-e"${v.color?` style="--c:${v.color}"`:''}>${esc(v.title||'Termin')}</div>`).join('')}${ev.length>4?`<div class="wk-more">+${ev.length-4}</div>`:''}</div>`}
+  const st=calStatus();c.innerHTML=`<div class="w-head"><span>Nächste 3 Tage</span></div>${st&&st.startsWith('<div class="skel')?st:`<div class="wk">${h}</div>${st}`}`},
+ forecast(c){const w=D.weather;if(!wxGuard(c,w,'Vorhersage'))return;const nD=w.daily.time.length;c.innerHTML=`<div class="w-head"><span><i class="fc-n7">${nD} Tage</i><i class="fc-n3">${Math.min(3,nD)} Tage</i></span><span>${esc(w.name)}</span></div><div class="fc">${fcRows(w)}</div><div class="fc-lg"><span><b>%</b> Regenrisiko</span><span><i></i> Tiefst bis Höchst</span></div>`},
+ 'temp-chart'(c){const w=D.weather;if(!wxGuard(c,w,'Temperatur'))return;const ix=hWin(w),T=ix.map(i=>w.hourly.t[i]);c.innerHTML=`<div class="w-head"><span>Temperatur<i class="lg"> ± 12 Std.</i></span><span>${Math.round(Math.min(...T))}° bis ${Math.round(Math.max(...T))}°</span></div><div class="ch-big">${w.temp}°</div><div class="ch">${chartSVG(w,ix,'temp')}</div>${axis(w,ix)}`},
+ 'rain-chart'(c){const w=D.weather;if(!wxGuard(c,w,'Regenrisiko'))return;const ix=hIdx(w,13),P=ix.map(i=>w.hourly.p[i]??0),mx=Math.max(0,...P),d=ix.length?new Date(wms(w,w.hourly.time[ix[P.indexOf(mx)]])):null;
+  c.innerHTML=`<div class="w-head"><span>Regenrisiko<i class="lg"> ± 12 Std.</i></span></div><div class="ch-big">${mx} %<small>${mx>0&&d?'gegen '+(S.h24?d.getHours()+' Uhr':d.toLocaleTimeString('en-US',{hour:'numeric',hour12:true})):'trocken'}</small></div><div class="ch">${chartSVG(w,hWin(w),'rain')}</div>${axis(w,hWin(w))}`},
+ 'wx-combo'(c){const w=D.weather;if(!wxGuard(c,w,'Temperatur und Regen'))return;const ix=hIdx(w,24),P=ix.map(i=>w.hourly.p[i]??0);c.innerHTML=`<div class="w-head"><span>Temperatur und Regen</span></div><div class="ch-big">${w.temp}°<small><i class="ch-key"></i>Regen bis ${Math.max(0,...P)} %</small></div><div class="ch">${chartSVG(w,hWin(w),'combo')}</div>${axis(w,hWin(w))}`},
  sun(c){const w=D.weather;if(!wxGuard(c,w,'Sonne'))return;const sr=wms(w,w.sunrise[0]),ss=wms(w,w.sunset[0]),now=Date.now(),up=now>sr&&now<ss,f=Math.max(0,Math.min(1,(now-sr)/(ss-sr))),a=Math.PI*(1-f),x=50+40*Math.cos(a),y=50-40*Math.sin(a),len=ss-sr;
   c.innerHTML=`<div class="w-head"><span>Sonne</span><span>${Math.floor(len/36e5)} Std. ${Math.round(len%36e5/6e4)} Min.</span></div><svg class="sunarc" viewBox="0 0 100 56" preserveAspectRatio="xMidYMid meet"><path d="M10 50 A40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="1.2" stroke-dasharray="1.5 2.5"/>${up?`<path d="M10 50 A40 40 0 0 1 ${x.toFixed(2)} ${y.toFixed(2)}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>`:''}<line x1="2" y1="50" x2="98" y2="50" stroke="currentColor" stroke-opacity=".4" stroke-width=".8"/>${up?`<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="4.5" fill="var(--accent)"/>`:''}</svg><div class="sun-row"><div><small>Aufgang</small><b>${(w.sunrise[now>ss?1:0]||'').slice(11,16)}</b></div><div style="text-align:right"><small>Untergang</small><b>${(w.sunset[now>ss?1:0]||'').slice(11,16)}</b></div></div>`},
  uv(c){const w=D.weather;if(!wxGuard(c,w,'UV-Index'))return;const v=w.uv??0,mx=w.daily.uv[0]??v;c.innerHTML=`<div class="w-head"><span>UV-Index</span><span>heute bis ${Math.round(mx)}</span></div><div class="fitbox mid" data-mw=".5" data-mh=".6"><div class="uv-n fitt">${Math.round(v)}</div></div><div class="uv-c">${uvCat(v)}</div><div class="uv-bar"><i style="left:${Math.min(100,v/11*100).toFixed(1)}%"></i></div>`},
@@ -943,14 +985,16 @@ function wxFrom(f,a,L){const cu=f.current||{},h=f.hourly||{},d=f.daily||{},ah=a&
   pollen:ah?{time:ah.time||[],Erle:ah.alder_pollen,Birke:ah.birch_pollen,'Gräser':ah.grass_pollen,'Beifuß':ah.mugwort_pollen,Ambrosia:ah.ragweed_pollen}:null}}
 const wms=(w,x)=>Date.parse(x+'Z')-w.off*1000;
 function hIdx(w,n){const T=w.hourly.time,out=[];for(let i=0;i<T.length&&out.length<n;i++)if(wms(w,T[i])>Date.now()-36e5)out.push(i);return out}
-function chartSVG(w,n,mode){const H=w.hourly,ix=hIdx(w,n);if(!ix.length)return'';const T=ix.map(i=>H.t[i]),P=ix.map(i=>H.p[i]??0),mn0=Math.min(...T),mx0=Math.max(...T),rg=Math.max(10,mx0-mn0),mn=(mn0+mx0)/2-rg/2,N=ix.length,X=i=>(i+.5)*100/N,Y=v=>86-(v-mn)/rg*68;let s='',ov='';
- if(mode!=='temp')s+=P.map((p,i)=>`<rect x="${(i*100/N+100/N*.16).toFixed(2)}" y="${(100-p).toFixed(1)}" width="${(100/N*.68).toFixed(2)}" height="${p}" fill="${mode==='rain'?'var(--accent)':'var(--pop)'}" fill-opacity="${mode==='rain'?.95:.5}"/>`).join('');
- if(mode!=='rain'){const pts=T.map((v,i)=>`${X(i).toFixed(2)},${Y(v).toFixed(2)}`).join(' ');
+/* Fenster um jetzt: 12 Stunden zurück, 12 voraus; ix.now = Position der aktuellen Stunde */
+function hWin(w){const T=w.hourly.time,now=Date.now();let i0=-1;for(let i=0;i<T.length;i++)if(wms(w,T[i])<=now)i0=i;if(i0<0)i0=0;const a=Math.max(0,i0-12),b=Math.min(T.length,i0+13),ix=[];for(let i=a;i<b;i++)ix.push(i);ix.now=i0-a;return ix}
+function chartSVG(w,n,mode){const H=w.hourly,ix=Array.isArray(n)?n:hIdx(w,n),k=ix.now||0;if(!ix.length)return'';const T=ix.map(i=>H.t[i]),P=ix.map(i=>H.p[i]??0),mn0=Math.min(...T),mx0=Math.max(...T),rg=Math.max(10,mx0-mn0),mn=(mn0+mx0)/2-rg/2,N=ix.length,X=i=>(i+.5)*100/N,Y=v=>86-(v-mn)/rg*68;let s='',ov='';
+ if(mode!=='temp')s+=P.map((p,i)=>`<rect x="${(i*100/N+100/N*.16).toFixed(2)}" y="${(100-p).toFixed(1)}" width="${(100/N*.68).toFixed(2)}" height="${p}" fill="${mode==='rain'?'var(--accent)':'var(--pop)'}" fill-opacity="${(mode==='rain'?.95:.5)*(i<k?.45:1)}"/>`).join('');
+ if(mode!=='rain'){const P2=(a,b)=>T.slice(a,b).map((v,j)=>`${X(a+j).toFixed(2)},${Y(v).toFixed(2)}`).join(' '),pts=P2(k,T.length);if(k>0)s+=`<polyline points="${P2(0,k+1)}" fill="none" stroke="var(--accent)" stroke-opacity=".4" stroke-width="2" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`;
   /* ruhigere Skala (mindestens 10 Grad), Punkt für jetzt, Höchst- und Tiefstwert an der Kurve */
   const iH=T.indexOf(mx0),iL=T.indexOf(mn0),cl=x=>Math.min(92,Math.max(8,x)).toFixed(1);
-  ov=`<i class="ch-now" style="left:${X(0).toFixed(1)}%;top:${Y(T[0]).toFixed(1)}%"></i>`+(mx0-mn0>=1?`<span class="ch-lab hi" style="left:${cl(X(iH))}%;top:${Y(mx0).toFixed(1)}%">${Math.round(mx0)}°</span><span class="ch-lab lo" style="left:${cl(X(iL))}%;top:${Y(mn0).toFixed(1)}%">${Math.round(mn0)}°</span>`:'');s+=`<polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`}
- return`<svg class="chart" viewBox="0 0 100 100" preserveAspectRatio="none">${s}</svg>${ov}`}
-function axis(w,ix){if(!ix.length)return'';const L=ix.length-1,q=[0,Math.round(L/3),Math.round(L*2/3),L],lab=j=>{const d=new Date(wms(w,w.hourly.time[ix[j]]));return S.h24?d.getHours()+' Uhr':d.toLocaleTimeString('en-US',{hour:'numeric',hour12:true})};
+  ov=`<i class="ch-nl" style="left:${X(k).toFixed(1)}%"></i><i class="ch-now" style="left:${X(k).toFixed(1)}%;top:${Y(T[k]).toFixed(1)}%"></i>`+(mx0-mn0>=1?`<span class="ch-lab hi" style="left:${cl(X(iH))}%;top:${Y(mx0).toFixed(1)}%">${Math.round(mx0)}°</span><span class="ch-lab lo" style="left:${cl(X(iL))}%;top:${Y(mn0).toFixed(1)}%">${Math.round(mn0)}°</span>`:'');s+=`<polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="3" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`}
+ return`<svg class="chart" viewBox="0 0 100 100" preserveAspectRatio="none">${s}</svg>${mode==='rain'?`<i class="ch-nl" style="left:${X(k).toFixed(1)}%"></i>`:''}${ov}`}
+function axis(w,ix){if(!ix.length)return'';if(ix.now!=null){const lab=j=>{const d=new Date(wms(w,w.hourly.time[ix[j]]));return S.h24?d.getHours()+' Uhr':d.toLocaleTimeString('en-US',{hour:'numeric',hour12:true})};const b=ix.now,a=ix.length-1-ix.now;return`<div class="ch-x"><span>${b?`vor ${b} Std.`:''}</span><span class="ch-xn">jetzt</span><span>${a?`in ${a} Std.`:''}</span></div>`}const L=ix.length-1,q=[0,Math.round(L/3),Math.round(L*2/3),L],lab=j=>{const d=new Date(wms(w,w.hourly.time[ix[j]]));return S.h24?d.getHours()+' Uhr':d.toLocaleTimeString('en-US',{hour:'numeric',hour12:true})};
  return`<div class="ch-x">${q.map((j,k)=>`<span>${k?lab(j):'jetzt'}</span>`).join('')}</div>`}
 function wxGuard(c,w,title){if(w)return true;c.innerHTML=`<div class="w-head"><span>${title}</span></div>`+ghost([80,55,65],esc(D.weatherErr||'Wetter wird geladen …'));return false}
 function fcRows(w,n){const d=w.daily,m=Math.min(n||d.time.length,d.time.length),lo=Math.min(...d.min.slice(0,m)),hi=Math.max(...d.max.slice(0,m)),rg=Math.max(1,hi-lo);
@@ -989,7 +1033,15 @@ if(window.WebKitPlaybackTargetAvailabilityEvent)AUD.addEventListener('webkitplay
 
 /* ---------- Spotify: Geräte, Bibliothek, Wiedergabe ---------- */
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-function spSdk(){if(isIOS||!SP.t||window._sdk)return;window._sdk=1;window.onSpotifyWebPlaybackSDKReady=()=>{try{const p=new Spotify.Player({name:'StandBy-Dashboard',getOAuthToken:cb=>spToken().then(cb),volume:.7});p.addListener('ready',({device_id})=>{D.sdkId=device_id});p.connect();D.sdk=p}catch{}};const s=document.createElement('script');s.src='https://sdk.scdn.co/spotify-player.js';document.head.append(s)}
+function spSdk(){if(isIOS||!SP.t||window._sdk)return;window._sdk=1;window.onSpotifyWebPlaybackSDKReady=()=>{try{const p=new Spotify.Player({name:'StandBy-Dashboard',getOAuthToken:cb=>spToken().then(cb),volume:.7});
+ p.addListener('ready',({device_id})=>{D.sdkId=device_id});p.addListener('not_ready',()=>{D.sdkId=null});
+ /* verständliche Hinweise statt stiller Abbrüche */
+ p.addListener('autoplay_failed',()=>toast('Der Browser hat die Wiedergabe blockiert. Einmal auf Abspielen tippen.'));p.addListener('playback_error',()=>toast('Wiedergabe im Browser abgebrochen. Anderen Lautsprecher wählen.'));p.addListener('account_error',()=>toast('Wiedergabe im Browser braucht Spotify Premium.'));p.addListener('initialization_error',()=>toast('Dieser Browser kann Spotify nicht direkt abspielen.'));
+ p.connect();D.sdk=p;
+ /* Browser-Audio beim ersten Tippen freischalten (Autoplay-Regeln), sonst bricht die Wiedergabe ab */
+ const act=()=>{try{p.activateElement&&p.activateElement()}catch{}};addEventListener('pointerdown',act,{once:true});
+ /* beim Verlassen abmelden, damit keine verwaisten Geräte gleichen Namens bleiben */
+ addEventListener('pagehide',()=>{try{p.disconnect()}catch{}})}catch{}};const s=document.createElement('script');s.src='https://sdk.scdn.co/spotify-player.js';document.head.append(s)}
 const fmtMs=ms=>{const s=Math.max(0,Math.round((ms||0)/1000));return Math.floor(s/60)+':'+pad(s%60)};
 async function spEnsureDevice(){if(D.sp&&!D.sp.idle&&D.sp.devId)return D.sp.devId;const dv=(await sp('/me/player/devices'))?.devices||[];D.spDevs=dv;const d=dv.find(x=>x.is_active)||dv.find(x=>x.id===S.spDev)||dv[0];if(d)return d.id;if(D.sdkId)return D.sdkId;toast(isIOS?'Kein Spotify-Gerät erreichbar. Spotify-App öffnen oder Lautsprecher einschalten.':'Kein Spotify-Gerät erreichbar.');return null}
 async function spTransfer(id){if(S.demo&&!SP.t){(D.spDevs||[]).forEach(d=>d.is_active=d.id===id);D.sp.device=(D.spDevs.find(d=>d.id===id)||{}).name;D.sp.playing=true;repaint('spotify');spPop();return}
@@ -1000,22 +1052,44 @@ let volT;function spVolume(v){if(S.demo&&!SP.t){D.sp.vol=+v;return}clearTimeout(
 async function spPopLoad(force){if(S.demo&&!SP.t){D.spDemo=true;D.spDevs=D.spDevs||[{id:'d1',name:'Küche',type:'Speaker',is_active:true},{id:'d2',name:'Wohnzimmer',type:'Speaker'},{id:'d3',name:'iPhone',type:'Smartphone'}];D.spPls=[{name:'Demo-Playlist',n:24,uri:''},{name:'Zweite Demo-Playlist',n:51,uri:''}];D.spQueue=[{name:'Nächster Demo-Titel',artist:'Demo-Interpret'},{name:'Übernächster Demo-Titel',artist:'Demo-Interpret'}];D.spRecent=[{name:'Demo-Titel',artist:'Demo-Interpret',uri:''}];spPop();return}
  if(!SP.t){spPop();return}
  if(D.spDemo){D.spDemo=false;D.spDevs=D.spPls=D.spQueue=D.spRecent=null;force=1}
- /* nicht bei jedem Öffnen alles neu laden: Geräte und Warteschlange alle 15 s, Playlists und Verlauf alle 5 min */
- const now=Date.now(),full=force||!D.spPls||now-spPopAt>3e5;if(!force&&D.spDevs&&now-(D.spDevAt||0)<15000){spPop();return}D.spDevAt=now;if(full)spPopAt=now;
- try{const[dv,pl,qu,rc]=await Promise.all([sp('/me/player/devices'),full?sp('/me/playlists?limit=50').catch(()=>false):null,sp('/me/player/queue').catch(()=>null),full?sp('/me/player/recently-played?limit=10').catch(()=>null):null]);
-  if(dv)D.spDevs=dv.devices||[];if(full){if(pl===false||pl===null){if(!D.spPls)D.spPls=null;spPopAt=0}else D.spPls=(pl.items||[]).filter(Boolean).map(p=>({name:p.name,uri:p.uri,n:p.tracks?.total??p.items?.total??0}))}if(qu)D.spQueue=(qu.queue||[]).map(t=>({name:t.name,artist:(t.artists||(t.show?[t.show]:[])).map(a=>a.name).join(', ')}));if(rc)D.spRecent=(rc.items||[]).filter(x=>x&&x.track).map(x=>({name:x.track.name,artist:(x.track.artists||[]).map(a=>a.name).join(', '),uri:x.track.uri}))}
- catch(e){toast(e.message)}spPop()}
-function spPop(){const b=$('#popBody');if(!b||D.popKind!=='spotify')return;const s=D.sp,cur=s&&!s.idle?s:null,rc=s?.recent;
- if(!SP.t&&!S.demo){b.innerHTML='<h2>Spotify</h2><p class="pmut">Nicht verbunden.</p><button class="btn pri" data-act="settings">In den Einstellungen verbinden</button>';return}
- const devs=D.spDevs||[],pls=D.spPls||[],q=D.spQueue||[],rec=D.spRecent||[],cov=cur?.cover||rc?.cover;
- b.innerHTML=`<div class="spp-now">${cov?`<img src="${esc(cov)}" alt="">`:'<div class="spp-ph"></div>'}<div class="spp-i"><small class="pmut">${cur?esc(cur.device||''):'Zuletzt gehört'}</small><div class="spp-t">${esc(cur?cur.title:(rc?.title||'Gerade läuft nichts'))}</div><div class="spp-a">${esc(cur?cur.artist:(rc?.artist||''))}</div>
-  ${cur?`<div class="spp-seek" data-act="spSeek"><i style="width:${spPct()}%"></i></div><div class="spp-tm"><span id="sppPos">${fmtMs(cur.prog+(cur.playing?Date.now()-cur.at:0))}</span><span>${fmtMs(cur.dur)}</span></div>`:''}
+ /* nicht bei jedem Öffnen alles neu laden: Geräte und Warteschlange höchstens alle 15 s */
+ const now=Date.now();if(!force&&D.spDevs&&now-(D.spDevAt||0)<15000){spPop();spLibLoad();return}D.spDevAt=now;
+ try{const[dv,qu]=await Promise.all([sp('/me/player/devices'),sp('/me/player/queue').catch(()=>null)]);
+  if(dv)D.spDevs=dv.devices||[];if(qu)D.spQueue=(qu.queue||[]).map(t=>({id:t.id,name:t.name,artist:(t.artists||(t.show?[t.show]:[])).map(a=>a.name).join(', ')}))}
+ catch(e){toast(e.message)}spPop();spLibLoad()}
+const SPTYPE={Computer:'Computer',Smartphone:'Smartphone',Speaker:'Lautsprecher',TV:'Fernseher',CastAudio:'Chromecast',CastVideo:'Chromecast',AVR:'Receiver',STB:'TV-Box',Tablet:'Tablet',GameConsole:'Spielkonsole',Automobile:'Auto',AudioDongle:'Adapter'};
+/* Geräte aufräumen: dieser Browser benannt, verwaiste Dashboard-Geräte und doppelte Namen ausgeblendet */
+function spDevList(){const L=(D.spDevs||[]).filter(d=>d.id===D.sdkId||d.is_active||d.name!=='StandBy-Dashboard'),seen=new Map();
+ L.forEach(d=>{const k=d.id===D.sdkId?'#me':d.name;const o=seen.get(k);if(!o||d.is_active)seen.set(k,d)});return[...seen.values()].map(d=>({...d,label:d.id===D.sdkId?'Dieser Browser':d.name}))}
+const SPTABS=[['dev','Lautsprecher'],['queue','Als Nächstes'],['pl','Playlists'],['liked','Lieblingssongs'],['alb','Alben'],['recent','Zuletzt gehört']];
+async function spLibLoad(force){const t=D.spTab||'dev';if(!['pl','liked','alb','recent'].includes(t))return;D.spLib=D.spLib||{};const c=D.spLib[t];if(!force&&c&&(c.busy||Date.now()-c.at<3e5))return;
+ if(S.demo&&!SP.t){D.spLib[t]={at:Date.now(),items:t==='pl'?D.spPls||[]:[],err:''};spPop();return}
+ D.spLib[t]={...(c||{}),busy:true,at:Date.now()};spPop();
+ const path={pl:'/me/playlists?limit=50',liked:'/me/tracks?limit=50',alb:'/me/albums?limit=50',recent:'/me/player/recently-played?limit=30'}[t];
+ try{const r=await sp(path),it=(r?.items||[]).filter(Boolean),ar=a=>(a||[]).map(x=>x.name).join(', ');let items;
+  if(t==='pl')items=it.map(p=>({name:p.name,sub:`${p.tracks?.total??p.items?.total??0} Titel`,uri:p.uri,img:p.images?.[0]?.url}));
+  else if(t==='alb')items=it.filter(x=>x.album).map(x=>({name:x.album.name,sub:ar(x.album.artists),uri:x.album.uri,img:x.album.images?.[x.album.images.length>1?1:0]?.url}));
+  else{const seen=new Set();items=it.filter(x=>x.track&&(t!=='recent'||!seen.has(x.track.id)&&seen.add(x.track.id))).map(x=>({name:x.track.name,sub:ar(x.track.artists),uri:x.track.uri,img:x.track.album?.images?.[2]?.url}))}
+  D.spLib[t]={at:Date.now(),items,err:r?'':'Spotify braucht eine kurze Pause.'}}
+ catch(e){D.spLib[t]={at:Date.now()-24e4,items:c?.items||[],err:e.message}}spPop()}
+function spPop(){const b=$('#popBody');if(!b||D.popKind!=='spotify')return;const s=D.sp,cur=s&&!s.idle?s:null,rc=s?.recent,it=cur||rc;
+ if(!SP.t&&!S.demo){b.innerHTML='<h2>Spotify</h2><p class="pmut">Nicht verbunden.</p><button class="btn pri" data-act="settings">In den Einstellungen verbinden</button>';b._h='';return}
+ const tab=D.spTab||'dev',lk=spLink(it?.uri),L=(cls,txt)=>lk?`<a class="${cls}" href="${esc(lk)}" target="_blank" rel="noopener">${esc(txt)}</a>`:`<div class="${cls}">${esc(txt)}</div>`;
+ const devs=spDevList(),act=devs.find(d=>d.is_active);
+ const row=(x,actn,i)=>`<button class="spp-row btnrow" data-act="${actn}" data-u="${esc(x.uri||'')}" data-i="${i}">${x.img?`<img src="${esc(x.img)}" alt="">`:'<i class="spp-noimg"></i>'}<span><b>${esc(x.name)}</b><small>${esc(x.sub||'')}</small></span></button>`;
+ let list='';
+ if(tab==='dev')list=devs.length?devs.map(d=>`<button class="spp-row btnrow${d.is_active?' on':''}" data-act="spDev" data-id="${esc(d.id)}"><i class="spp-ic">${ic('speaker')}</i><span><b>${esc(d.label)}</b><small>${esc(SPTYPE[d.type]||d.type||'')}${d.is_active?' · spielt hier':''}</small></span></button>`).join(''):'<p class="pmut">Keine Geräte sichtbar. Spotify-App oder Lautsprecher einschalten.</p>';
+ else if(tab==='queue'){const q=[];(D.spQueue||[]).forEach(t=>{if(!q.length||q[q.length-1].id!==t.id)q.push(t)});list=q.length?q.slice(0,12).map(t=>`<div class="spp-row"><i class="spp-noimg"></i><span><b>${esc(t.name)}</b><small>${esc(t.artist)}</small></span></div>`).join(''):'<p class="pmut">Keine Warteschlange.</p>'}
+ else{const c=(D.spLib||{})[tab];list=!c||(c.busy&&!c.items?.length)?'<p class="pmut">Wird geladen …</p>':(c.items.length?c.items.map((x,i)=>row(x,tab==='liked'?'spLiked':(tab==='pl'||tab==='alb')?'spCtx':'spTrack',i)).join(''):'')+(c.err?`<p class="pmut">${esc(c.err)}</p>`:(!c.items.length?'<p class="pmut">Nichts gefunden.</p>':''))}
+ const h=`<div class="spp-now">${it?.cover?`<a class="spp-cov" ${lk?`href="${esc(lk)}" target="_blank" rel="noopener"`:''}><img src="${esc(it.cover)}" alt="Cover"></a>`:'<div class="spp-cov spp-ph"></div>'}<div class="spp-i">
+  <button class="spp-on" data-act="spTab" data-t="dev">${SPLOGO}<span>${cur?`Spielt auf <b>${esc(act?.label||cur.device||'')}</b>`:'Zuletzt gehört'}</span></button>${L('spp-t',it?it.title:'Gerade läuft nichts')}${it?.artist?L('spp-a',it.artist):''}
+  ${cur?`<div class="spp-seek" data-act="spSeek"><i></i></div><div class="spp-tm"><span id="sppPos"></span><span>${fmtMs(cur.dur)}</span></div>`:''}
   <div class="spp-ctl"><button class="${cur?.shuffle?'on':''}" data-act="sp" data-c="shuffle" aria-label="Zufall">${ic('shuffle')}</button><button data-act="sp" data-c="previous" aria-label="Zurück">${ic('back')}</button><button class="pp" data-act="sp" data-c="toggle" aria-label="Wiedergabe">${ic(cur?.playing?'pause':'play')}</button><button data-act="sp" data-c="next" aria-label="Weiter">${ic('fwd')}</button><button class="${cur?.repeat&&cur.repeat!=='off'?'on':''}" data-act="sp" data-c="repeat" aria-label="Wiederholen">${ic('repeat')}${cur?.repeat==='track'?'<sup>1</sup>':''}</button><button class="${cur?.liked?'on liked':''}" data-act="sp" data-c="like" aria-label="Lieblingssong">${ic('heart')}</button></div>
   ${cur&&cur.vol!=null?`<label class="spp-vol">${ic('speaker')}<input type="range" min="0" max="100" value="${cur.vol}" data-in="spVol" aria-label="Lautstärke"></label>`:''}</div></div>
- <div class="spp-cols"><section><h3>Lautsprecher</h3>${devs.length?devs.map(d=>`<button class="spp-row btnrow${d.is_active?' on':''}" data-act="spDev" data-id="${esc(d.id)}"><span>${ic('speaker')} ${esc(d.name)}</span><small>${esc(d.type||'')}${d.is_active?' · aktiv':''}</small></button>`).join(''):'<p class="pmut">Keine Geräte sichtbar. Spotify-App oder Lautsprecher einschalten.</p>'}${isIOS?'<a class="btn" href="spotify:" style="margin-top:8px">Spotify-App öffnen</a>':''}</section>
- <section><h3>Als Nächstes</h3>${q.length?q.slice(0,8).map(t=>`<div class="spp-row spp-q"><b>${esc(t.name)}</b><small>${esc(t.artist)}</small></div>`).join(''):'<p class="pmut">Keine Warteschlange.</p>'}</section>
- <section><h3>Playlists</h3>${pls.length?pls.map(p=>`<button class="spp-row btnrow" data-act="spCtx" data-u="${esc(p.uri)}"><span>${esc(p.name)}</span><small>${p.n} Titel</small></button>`).join(''):(D.spPls===null&&!(S.demo&&!SP.t)?'<p class="pmut">Playlists lassen sich gerade nicht laden.</p>':'<p class="pmut">Keine Playlists.</p>')}</section>
- <section><h3>Zuletzt gehört</h3>${rec.length?rec.map(t=>`<button class="spp-row btnrow" data-act="spTrack" data-u="${esc(t.uri)}"><span>${esc(t.name)}</span><small>${esc(t.artist)}</small></button>`).join(''):'<p class="pmut">Nichts gefunden.</p>'}</section></div>`}
+ <div class="chips spp-tabs">${SPTABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-act="spTab" data-t="${k}">${n}</button>`).join('')}</div><div class="spp-list">${list}</div>`;
+ /* nur neu zeichnen, wenn sich etwas geändert hat: kein Springen, Antippen bleibt möglich */
+ if(b._h!==h){const sc=b.querySelector('.spp-list')?.scrollTop||0,vol=document.activeElement?.dataset?.in==='spVol';if(vol)return;b._h=h;b.innerHTML=h;const nl=b.querySelector('.spp-list');if(nl)nl.scrollTop=sc}
+ const i=b.querySelector('.spp-seek i'),p=b.querySelector('#sppPos');if(cur){if(i)i.style.width=spPct()+'%';if(p)p.textContent=fmtMs(cur.prog+(cur.playing?Date.now()-cur.at:0))}}
 
 /* ---------- Detail-Fenster ---------- */
 const POPK={weather:'wx','weather-text':'wx',forecast:'wx','temp-chart':'wx','rain-chart':'wx','wx-combo':'wx',sun:'wx',uv:'wx',pollen:'wx',solar:'wx',calendar:'cal',agenda:'cal','cal-agenda':'cal',week:'cal',countdown:'cal','day-poster':'cal',news:'news',ticker:'news',spotify:'spotify',pegel:'pegel',wiki:'wiki',radio:'radio'};
@@ -1050,7 +1124,7 @@ function scaleLine(l,m){if(m===1)return l;let o=l.replace(QRE,(all,a,sep,b)=>fmt
 function srvLabel(r,m){const base=parseFloat(r.sv);if(base)return fmtQ(base*m)+' '+r.sv.replace(/^[\d.,\s½¼¾]+/,'');return'× '+fmtQ(m)+(r.sv?' ('+r.sv+')':'')}
 
 /* ---------- Stil-Bibliothek und Austausch ---------- */
-const WDESC={'clock-big':'Stunden und Minuten riesig auf der Akzentfläche, Schrift in der Schriftfarbe. Das Duo-Original.','clock-split':'Zwei Hälften: Stunden auf Akzent, Minuten auf Schriftfarbe, Farben vertauscht.','clock-stack':'Stunden über Minuten, Stunden in Akzent, Minuten in Kontrastfarbe, auf Schwarz.','clock-outline':'Nur die Kontur der Ziffern in Akzentfarbe, darunter das Datum.','clock-float':'Dünne, schwebende Ziffern in Akzentfarbe auf Schwarz.','clock-words':'Die Uhrzeit als Satz, die Stunde in Akzentfarbe.','clock-flap':'Klapptafel mit Akzentziffern, klappt bei jedem Minutenwechsel.','clock-analog':'Klassisches Zifferblatt mit 12, 3, 6, 9 und Akzent-Sekundenzeiger.','analog-solid':'Zifferblatt ohne Zahlen, vollflächig in Akzentfarbe.','analog-numbers':'Alle zwölf Ziffern, Viertelstunden betont.','analog-arc':'Zwei Ringe ohne Beschriftung: außen die Minuten, innen die Stunden.','station':'Bahnhofsuhr, immer in Originalfarben, nur nachts rot.','clock-flap-classic':'Klapptafel weiß auf schwarz, immer in Originalfarben.','gestirne':'Horoskop aus Zitaten der Kritischen Theorie, Original-Optik des Vorbilds. Im kleinsten Format nur wechselnde Pixelköpfe.','calendar':'Getöntes Monatsblatt mit großem Datum.','agenda':'Liste der nächsten Termine mit Kalenderfarbe.','cal-agenda':'Großes Datum neben den nächsten Terminen.','week':'Die nächsten sieben Tage als Spalten.','countdown':'Restzeit bis zum nächsten Termin in großen Ziffern.','day-poster':'Der Wochentag als Plakat, darunter Datum und Kalenderwoche.','weather':'Aktuelles Wetter mit Farbverlauf je Wetterlage.','weather-text':'Das Wetter als ein Satz.','forecast':'Mehrere Tage mit Symbol, Regenrisiko und Temperaturspanne.','temp-chart':'Temperaturkurve der nächsten 24 Stunden.','rain-chart':'Regenwahrscheinlichkeit der nächsten 24 Stunden als Säulen.','wx-combo':'Temperaturkurve und Regensäulen zusammen.','sun':'Sonnenbogen mit Auf- und Untergang und Tageslänge.','uv':'UV-Index groß, mit Einstufung und Tagesmaximum.','pollen':'Pollenflug der nächsten 24 Stunden nach Art.','solar':'Punkt-Weltkarte mit Tag-Nacht-Grenze, dein Standort als Kontrastpunkt.','world':'Liste mehrerer Zeitzonen.','pegel':'Wasserstand mit 24-Stunden-Kurve.','spotify':'Cover vollflächig, Steuerung und Lautsprecherwahl.','radio':'Live-Radio mit Senderwechsel und AirPlay.','photos':'Eigene Fotos mit sanftem Überblenden.','news':'Eine Schlagzeile groß, wechselt alle 10 Sekunden.','ticker':'Schlagzeilen als Laufband in Akzentfarbe.','wiki':'Wikipedia: Was an diesem Tag geschah.','recipe':'Rezept des Tages mit Start in den Kochmodus.'};
+const WDESC={'clock-big':'Stunden und Minuten riesig auf der Akzentfläche, Schrift in der Schriftfarbe. Das Duo-Original.','clock-split':'Zwei Hälften: Stunden auf Akzent, Minuten auf Schriftfarbe, Farben vertauscht.','clock-stack':'Stunden über Minuten, Stunden in Akzent, Minuten in Kontrastfarbe, auf Schwarz.','clock-outline':'Nur die Kontur der Ziffern in Akzentfarbe, darunter das Datum.','clock-float':'Dünne, schwebende Ziffern in Akzentfarbe auf Schwarz.','clock-words':'Die Uhrzeit als Satz, die Stunde in Akzentfarbe.','clock-flap':'Klapptafel mit Akzentziffern, klappt bei jedem Minutenwechsel.','clock-analog':'Klassisches Zifferblatt mit 12, 3, 6, 9 und Akzent-Sekundenzeiger.','analog-solid':'Zifferblatt ohne Zahlen, vollflächig in Akzentfarbe.','analog-numbers':'Alle zwölf Ziffern, Viertelstunden betont.','analog-arc':'Zwei Ringe ohne Beschriftung: außen die Minuten, innen die Stunden.','station':'Bahnhofsuhr, immer in Originalfarben, nur nachts rot.','clock-flap-classic':'Klapptafel weiß auf schwarz, immer in Originalfarben.','gestirne':'Horoskop aus Zitaten der Kritischen Theorie, Original-Optik des Vorbilds. Im kleinsten Format nur wechselnde Pixelköpfe.','calendar':'Getöntes Monatsblatt mit großem Datum.','agenda':'Liste der nächsten Termine mit Kalenderfarbe.','cal-agenda':'Großes Datum neben den nächsten Terminen.','week':'Die nächsten drei Tage als Spalten mit Terminen.','countdown':'Restzeit bis zum nächsten Termin in großen Ziffern.','day-poster':'Der Wochentag als Plakat, darunter Datum und Kalenderwoche.','weather':'Aktuelles Wetter mit Farbverlauf je Wetterlage.','weather-text':'Das Wetter als ein Satz.','forecast':'Mehrere Tage mit Symbol, Regenrisiko und Temperaturspanne.','temp-chart':'Temperaturkurve der nächsten 24 Stunden.','rain-chart':'Regenwahrscheinlichkeit der nächsten 24 Stunden als Säulen.','wx-combo':'Temperaturkurve und Regensäulen zusammen.','sun':'Sonnenbogen mit Auf- und Untergang und Tageslänge.','uv':'UV-Index groß, mit Einstufung und Tagesmaximum.','pollen':'Pollenflug der nächsten 24 Stunden nach Art.','solar':'Punkt-Weltkarte mit Tag-Nacht-Grenze, dein Standort als Kontrastpunkt.','world':'Liste mehrerer Zeitzonen.','pegel':'Wasserstand mit 24-Stunden-Kurve.','spotify':'Cover vollflächig, Steuerung und Lautsprecherwahl.','radio':'Live-Radio mit Senderwechsel und AirPlay.','photos':'Eigene Fotos mit sanftem Überblenden.','news':'Eine Schlagzeile groß, wechselt alle 10 Sekunden.','ticker':'Schlagzeilen als Laufband in Akzentfarbe.','wiki':'Wikipedia: Was an diesem Tag geschah.','recipe':'Rezept des Tages mit Start in den Kochmodus.'};
 const ROLE=[['accent','Akzent','Große Flächen, Zeiger, Linien, Hervorhebungen'],['on','Schrift auf Akzent','Text und Zeiger auf der Akzentfläche'],['tint','Zweitfarbe','Getönte Kacheln wie Kalender, innerer Ring'],['pop','Kontrast','Automatisch die hellere der beiden Begleitfarben, z. B. Standortpunkt'],['nr','Nachtrot','Einzige Farbe im Nachtmodus']];
 function stylePack(){const c=curCol(),cs=getComputedStyle(document.documentElement);return{format:'jp-stil',version:1,name:'StandBy-Dashboard',app:'StandBy-Dashboard '+VERSION,exported:new Date().toISOString(),colors:{accent:c.a,onAccent:c.b,secondary:c.c,secondaryInk:lum(c.c)>.3?'#141a1c':'#f4f4f6',contrast:cs.getPropertyValue('--pop').trim(),night:'#ff3b30',background:'#000000',surface:'#1c1c1e'},font:{key:S.font||'round',display:(FONTS[S.font]||FONTS.round)[1],text:'-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif'},shape:{radius:30,gap:8,grid:'quadratische Felder, quer 4 × 2, hoch 2 × 4',sizes:SIZES},css:cssVars()}}
 const cssVars=()=>{const c=curCol();return`:root{--accent:${c.a};--on-accent:${c.b};--secondary:${c.c};--night:#ff3b30;--font-display:${(FONTS[S.font]||FONTS.round)[1]};--radius:30px;--gap:8px}`};
@@ -1194,7 +1268,7 @@ async function resolveLoc(){
  return g?{lat:g.latitude,lon:g.longitude,name:'Aktueller Standort'}:{lat:52.52,lon:13.405,name:'Berlin'}}
 async function loadWeather(){if(S.demo){demoData();repaint(...WXW);applyLook();return}
  try{const L=await resolveLoc();D.loc=L;
-  const[f,a]=await Promise.all([fetch(`https://api.open-meteo.com/v1/forecast?latitude=${L.lat}&longitude=${L.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,is_day,uv_index&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,snowfall&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,snowfall_sum,uv_index_max,sunrise,sunset&forecast_hours=48&forecast_days=7&timezone=auto`).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${L.lat}&longitude=${L.lon}&current=european_aqi&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,ragweed_pollen&forecast_hours=24&timezone=auto`).then(r=>r.json()).catch(()=>null)]);
+  const[f,a]=await Promise.all([fetch(`https://api.open-meteo.com/v1/forecast?latitude=${L.lat}&longitude=${L.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,is_day,uv_index&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,snowfall&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,snowfall_sum,uv_index_max,sunrise,sunset&past_hours=12&forecast_hours=48&forecast_days=7&timezone=auto`).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${L.lat}&longitude=${L.lon}&current=european_aqi&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,ragweed_pollen&forecast_hours=24&timezone=auto`).then(r=>r.json()).catch(()=>null)]);
   D.weather=wxFrom(f,a,L);D.weatherErr=''}
  catch(e){D.weatherErr=netErr(e)?'Wetterdienst nicht erreichbar. In der Claude-Vorschau sind Abrufe aus dem Internet gesperrt; auf GitHub Pages funktioniert es.':'Wetter nicht verfügbar: '+e.message}
  repaint(...WXW);applyLook();if(D.popKind==='wx')POP.wx()}
@@ -1271,7 +1345,7 @@ async function sp(path,method='GET',body){if(Date.now()<spHold){if(method==='GET
  try{r=await fetch('https://api.spotify.com/v1'+path,{method,headers:{Authorization:'Bearer '+tok,...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined})}catch{throw Error('Keine Verbindung zu Spotify.')}
  if(r.status===204||r.status===202)return{};
  if(r.status===429){const ra=parseInt(r.headers.get('Retry-After'),10);spHold=Date.now()+Math.min(600,Math.max(10,isNaN(ra)?30:ra))*1000;throw Error('Spotify braucht eine kurze Pause. Bitte gleich noch einmal versuchen.')}
- if(r.status===403&&method!=='GET')throw Error('Dafür braucht es Spotify Premium.');if(r.status===404&&method!=='GET')throw Error('Kein aktives Spotify-Gerät. Wähle einen Lautsprecher.');if(r.status===401)throw Error('Spotify-Anmeldung abgelaufen, bitte neu verbinden.');if(!r.ok)throw Error('Spotify ist gerade nicht erreichbar.');
+ const E=m=>Object.assign(Error(m),{status:r.status});if(r.status===403&&method!=='GET')throw E('Dafür braucht es Spotify Premium oder Spotify erlaubt diese Aktion für das Gerät nicht.');if(r.status===403)throw E('Spotify gibt diese Daten für die App nicht frei.');if(r.status===404&&method!=='GET')throw Error('Kein aktives Spotify-Gerät. Wähle einen Lautsprecher.');if(r.status===401)throw Error('Spotify-Anmeldung abgelaufen, bitte neu verbinden.');if(!r.ok)throw E('Spotify ist gerade nicht erreichbar.');
  /* Manche Antworten (z. B. Warteschlange, Wiedergabe) sind kein JSON, sondern nur eine Kennung */
  const tx=await r.text().catch(()=>'');if(!tx)return{};try{return JSON.parse(tx)}catch{return{}}}
 let spSig='',recentAt=0,spLast=0,spPopAt=0;
@@ -1327,7 +1401,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='3.1.0';
+const VERSION='3.1.1';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>
@@ -1390,10 +1464,10 @@ const ACT={
  editFromSettings(){readSettings();$('#modal').hidden=true;afterSettings();enterEdit()},
  demoOn(){S.demo=true;save();afterSettings()},
  popClose(){$('#pop').hidden=true;$('#pop').innerHTML='';D.popKind=null},
- spDev(a){spTransfer(a.dataset.id)},
+ spDev(a){spTransfer(a.dataset.id)},spTab(a){D.spTab=a.dataset.t;spPop();spLibLoad()},spLiked(a){const L=((D.spLib||{}).liked||{}).items||[];if(!L.length)return;spPlayUri({uris:L.map(x=>x.uri),offset:{position:+a.dataset.i||0}})},
  spDevPop(){openPop('spotify')},
- spCtx(a){if(a.dataset.u)spPlayUri({context_uri:a.dataset.u});else toast('Im Demo-Modus wird nichts abgespielt.')},
- spTrack(a){if(a.dataset.u)spPlayUri({uris:[a.dataset.u]});else toast('Im Demo-Modus wird nichts abgespielt.')},
+ spCtx(a){if(a.dataset.u)spPlayUri({context_uri:a.dataset.u})},
+ spTrack(a){if(a.dataset.u)spPlayUri({uris:[a.dataset.u]})},
  spSeek(a,e){const r=a.getBoundingClientRect();spSeekTo((e.clientX-r.left)/r.width)},
  radioToggle(){if(!AUD.paused&&AUD.src)AUD.pause();else radioPlay(radioI)},
  radioStep(a){radioPlay(radioI+(+a.dataset.d))},

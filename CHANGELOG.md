@@ -2,6 +2,16 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 3.1.1 – 31.10.2026
+
+- Spotify-Fenster neu: oben das laufende Stück, darunter Reiter für Lautsprecher, Als Nächstes, Playlists, Lieblingssongs, Alben und Zuletzt gehört; Einträge mit Bild, einzeilig. Wird nur neu gezeichnet, wenn sich etwas ändert, damit Antippen und Scrollen funktionieren. Kein sichtbarer Scrollbalken.
+- Lautsprecher aufgeräumt: dieser Browser heißt „Dieser Browser“, verwaiste Einträge gleichen Namens entfallen, Gerätetypen auf Deutsch.
+- Wiedergabe im Browser: Audio wird beim ersten Tippen freigeschaltet, das Gerät meldet sich beim Schließen ab, Abbrüche werden als Hinweis erklärt.
+- Bibliothek: Playlists, Lieblingssongs und Alben abspielen. Sperrt Spotify den Zugriff (Entwicklungsmodus seit 2026), steht ein verständlicher Hinweis da.
+- Wetterkurven zeigen 12 Stunden zurück und 12 voraus, jetzt in der Mitte mit Linie und Punkt, Vergangenheit blass; Achse „vor 12 Std. · jetzt · in 12 Std.“.
+- „Mehrere Tage“ nennt die gezeigte Anzahl (3 oder 7 Tage).
+- „Woche“ heißt jetzt „Drei Tage“ und zeigt drei lesbare Tage; schmal untereinander.
+
 ## 3.1.0 – 31.10.2026
 
 - Spotify-Widget nach den Spotify-Richtlinien: Cover unverändert mit kleinem Eckenradius und ohne Knöpfe darauf, Spotify-Symbol, Cover, Titel und Interpret verlinken zu Spotify. 1 × 1 ohne Steuerung und Lautsprecher-Knopf, breit mit Cover links, schmal und hoch mit Cover über die Breite.

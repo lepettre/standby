@@ -77,7 +77,7 @@ Offen geblieben: Punkt 11 (Google-Client) wird mit der fest eingebauten Client-I
 1. **Nachrichten-Übersicht** (F): Ein Widget mit mehreren Schlagzeilen gleichzeitig, ohne Antippen. Weitere Optionen je Feed.
 2. **Laufband mehrzeilig** (F): Kleinere Schrift, mehrere Zeilen, dieselben Schlagzeilen versetzt, mit typografischem Spiel.
 3. **Detailfenster überarbeiten** (F): Eleganter, stimmig zum Stil, ohne sichtbare Scrollbalken oder mit gestalteten.
-4. **Spotify-Bibliothek** (F): Lieblingssongs, Alben und Playlists durchsuchen und abspielen.
+4. **Spotify-Bibliothek** (F, Grundfunktion in 3.1.1): Lieblingssongs, Alben und Playlists durchsuchen und abspielen.
 
 ## 4.2.0 – Kochmodus, ältere Ideen
 

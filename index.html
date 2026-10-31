@@ -683,6 +683,22 @@ a.spp-t,a.spp-a{display:block;color:inherit;text-decoration:none}
 .rec-l span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn.sm{padding:5px 12px;font-size:12px;flex:none}
 .sheet select{max-width:100%;min-width:0}.tog select{max-width:62%}
+
+/* iOS zoomt bei Eingabefeldern unter 16 px hinein, das Fenster wackelt dann seitlich */
+input:not([type=checkbox]):not([type=range]):not([type=color]),select,textarea{font-size:max(16px,1em)}
+.sheet,#pal,.pop-in{overflow-x:hidden;overscroll-behavior:contain;touch-action:pan-y}
+.pal-c .hex{font-size:16px}
+
+/* Radio-Sender bearbeiten */
+.rd-r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.rd-r span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.round.sm{width:30px;height:30px;font-size:13px;flex:none}
+.rd-s{flex-wrap:wrap;margin:0}
+.rd-add{display:grid;gap:8px}
+/* Rezept-Widget als Vollbild: Rezepte-Übersicht in der Kachel */
+.w-hubcard{padding:0;background:#000}
+.w-hubcard .hub{height:100%;max-width:none;padding:14px 16px 20px}
+@media (orientation:landscape){.w-hubcard .hub{padding-top:56px}}
 </style>
 </head>
 <body>
@@ -925,7 +941,7 @@ const W={
   else if(!n)b=ghost([96,88,60],'Schlagzeilen werden geladen …');
   else b=`<div class="fitbox" data-mw=".12" data-mh=".3"><a class="nw-big fitt" href="${esc(/^https?:/i.test(it.link||'')?it.link:'#')}" target="_blank" rel="noopener">${esc(it.title)}</a></div><div class="nw-meta"><span>${it.date?relTime(it.date):''}</span><span>${i+1} / ${n}</span></div>`;
   c.innerHTML=`<div class="w-head acc"><span class="trunc">${ic('rss')} ${esc(D.newsTitle||'Schlagzeilen')}</span></div>${b}`},
- recipe(c){const off=c._ro||0,day=Math.floor(Date.now()/864e5),r=RECIPES[((day+off)%RECIPES.length+RECIPES.length)%RECIPES.length],ph=D.rph[r.id];
+ recipe(c){if(c.dataset.full){if(!c.querySelector('.hub')){c.innerHTML='';c.append(recipeHub())}return}const off=c._ro||0,day=Math.floor(Date.now()/864e5),r=RECIPES[((day+off)%RECIPES.length+RECIPES.length)%RECIPES.length],ph=D.rph[r.id];
   c.setAttribute('style',pv(r));
   c.innerHTML=(ph?`<img src="${ph}" alt=""><div class="shade"></div><div class="tint"></div>`:'')+`<div class="rk-in"><div class="w-head"><span class="rk-c">${esc(r.c[0]||'Rezept')}</span><button class="ghost" data-act="recipeNext" aria-label="Anderes Rezept">${ic('shuffle')}</button></div><div class="fitbox" data-mw=".17" data-mh=".5"><div class="rk-t fitt">${esc(r.t)}</div></div><div class="rk-m">${esc([rTime(r),r.sv].filter(Boolean).join(', '))}${D.rcred[r.id]?` · Foto: ${esc(D.rcred[r.id].name)} / Unsplash`:''}</div><div class="rk-b"><button class="go" data-act="openRecipe" data-id="${r.id}">${ic('play')} Kochen starten</button></div></div>`}
 };
@@ -1052,6 +1068,13 @@ function pegelSVG(pts){if(pts.length<2)return'';const t0=pts[0].t,t1=pts[pts.len
 const RADIO_DEFAULT='Deutschlandfunk | https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3\nDeutschlandfunk Kultur | https://st02.sslstream.dlf.de/dlf/02/128/mp3/stream.mp3\nDeutschlandfunk Nova | https://st03.sslstream.dlf.de/dlf/03/128/mp3/stream.mp3';
 const AUD=new Audio();AUD.preload='none';AUD.setAttribute('x-webkit-airplay','allow');
 let radioI=LS.get('radio_i',0);
+/* Sender bearbeiten: Liste mit Entfernen, Vorschläge zum Antippen, eigener Sender per Name und Adresse; gespeichert wie bisher als Text in S.radio */
+const radioSave=L=>{S.radio=L.map(([n,u])=>n+' | '+u).join('\n')||' ';save()};
+const radioSugg=()=>RADIO_DEFAULT.split('\n').map(l=>l.split('|').map(x=>x.trim()));
+function radioEd(){const L=radioList(),have=new Set(L.map(x=>x[1])),sg=radioSugg().filter(x=>!have.has(x[1]));
+ return`${L.length?L.map(([n],i)=>`<div class="rd-r"><span>${esc(n)}</span><button class="round sm" data-act="rdDel" data-i="${i}" aria-label="${esc(n)} entfernen">${ic('xmark')}</button></div>`).join(''):'<p class="pmut">Noch keine Sender.</p>'}
+ ${sg.length?`<span class="lbl">Vorschläge</span><div class="chips rd-s">${sg.map(([n],i)=>`<button data-act="rdSugg" data-n="${esc(n)}">${ic('plus')} ${esc(n)}</button>`).join('')}</div>`:''}
+ <span class="lbl">Eigener Sender</span><div class="rd-add"><input type="text" id="rdN" placeholder="Name" autocomplete="off"><input type="url" id="rdU" placeholder="Stream-Adresse (https://…)" autocomplete="off" inputmode="url"><button class="btn pri" data-act="rdAdd">Hinzufügen</button></div>`}
 const radioList=()=>(S.radio||RADIO_DEFAULT).split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(x=>x[0]&&/^https?:/.test(x[1]||''));
 function radioPlay(i){const L=radioList();if(!L.length){toast('Keine Sender eingetragen.');return}radioI=((i%L.length)+L.length)%L.length;LS.set('radio_i',radioI);AUD.src=L[radioI][1];AUD.play().catch(()=>toast('Der Sender lässt sich gerade nicht abspielen.'));
  if('mediaSession' in navigator){try{navigator.mediaSession.metadata=new MediaMetadata({title:L[radioI][0],artist:'Live'})}catch{}}repaint('radio');if(D.popKind==='radio')POP.radio()}
@@ -1221,8 +1244,8 @@ function layoutGrid(L){const G0=L._G,T=isTall(G0),G=T?{...G0,cols:G0.rows,rows:G
  if(r.miss){const alt=pack(sizes,G,[...idx].sort((a,b)=>sizes[b][0]*sizes[b][1]-sizes[a][0]*sizes[a][1]||a-b));if(alt.miss<r.miss)r=alt}
  if(T&&r.free)r.free=[r.free[1],r.free[0]];const sl=[...L.querySelectorAll(':scope>.slot')];let used=0;sl.forEach((e,i)=>{let p=r.pos[i],[w,h]=sizes[i]||[1,1];if(p&&T){p=[p[1],p[0]];[w,h]=[h,w]}if(p){e.style.display='';e.style.gridArea=`${p[0]+1}/${p[1]+1}/span ${h}/span ${w}`;used+=w*h}else{e.style.display='none'}});
  return{used,free:r.free,miss:r.miss}}
-function slot(keys,i,size){const w=el('div','slot'),s=el('div','stack');
- if(keys.length)keys.forEach(k=>{const p=el('div','page');p.append(mount(k));s.append(p)});else{const p=el('div','page');p.innerHTML='<div class="card empty"></div>';s.append(p)}
+function slot(keys,i,size){const w=el('div','slot'),s=el('div','stack');w.dataset.size=size;
+ if(keys.length)keys.forEach(k=>{const p=el('div','page'),c=size==='full'&&k==='recipe'?(()=>{const x=el('div','card w-recipe w-hubcard');x.dataset.key='recipe';x.dataset.full='1';mounted.push({key:'recipe',el:x});W.recipe(x);return x})():mount(k);p.append(c);s.append(p)});else{const p=el('div','page');p.innerHTML='<div class="card empty"></div>';s.append(p)}
  w.append(s);
  if(keys.length>1){const d=el('div','dots');d.innerHTML=keys.map((_,j)=>`<i class="${j?'':'on'}"></i>`).join('');w.append(d);s.addEventListener('scroll',()=>{const j=Math.round(s.scrollTop/s.clientHeight);d.querySelectorAll('i').forEach((x,k)=>x.classList.toggle('on',k===j))},{passive:true})}
  if(editing)w.insertAdjacentHTML('beforeend',`<button class="ed-del" data-act="wRemove" data-s="${i}" aria-label="Widget entfernen">−</button><button class="ed-size" data-act="eSize" data-s="${i}" aria-label="Größe ändern">${sizeName(size)}</button><button class="ed-add" data-act="wGallery" data-s="${i}">${ic('plus')} Widget</button>${keys.length>1?`<div class="ed-pg"><button data-act="pgStep" data-s="${i}" data-d="-1" aria-label="Vorheriges Widget">${ic('chevron-down','up')}</button><button data-act="pgStep" data-s="${i}" data-d="1" aria-label="Nächstes Widget">${ic('chevron-down')}</button></div>`:''}`);
@@ -1439,7 +1462,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='3.2.0';
+const VERSION='3.2.1';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>
@@ -1448,28 +1471,28 @@ function openSettings(keepScroll){const con=!!SP.t,v=k=>esc(S[k]),sc=keepScroll?
  $('#modal').innerHTML=`<div class="sheet"><div class="pmut" style="margin-bottom:4px">StandBy-Dashboard · Version ${VERSION}</div><h2>Einstellungen<button class="round" data-act="saveSettings" aria-label="Schließen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></h2>
  <div class="sec"><h3>Rezepte <span class="badge">${RECIPES.length}</span></h3><div class="row"><label class="btn pri">Rezepte importieren<input type="file" id="s_rimp" accept=".json,application/json" hidden></label>${LS.get('recipes_hidden',[]).length?`<button class="btn" data-act="recRestore">${LS.get('recipes_hidden',[]).length} ausgeblendete zurückholen</button>`:''}</div><p>Export-Datei der Rezepte-App (JSON). Gleiche Rezepte werden ersetzt.</p><details class="rec-l"><summary>Rezepte einzeln löschen</summary>${RECIPES.map(r=>`<div><span>${esc(r.t)}</span><button class="btn sm" data-act="recDel" data-id="${esc(r.id)}">Löschen</button></div>`).join('')}</details></div>
  <div class="sec"><h3>Datensicherung</h3><div class="row"><button class="btn pri" data-act="bkExport">Sichern (Datei)</button><label class="btn">Wiederherstellen<input type="file" id="s_bkimp" accept=".json,application/json" hidden></label></div><p>Sichert Ansichten, Widget- und alle übrigen Einstellungen, Farben, Schrift, importierte Rezepte und die ICS-Datei. Nicht enthalten: Anmeldungen bei Spotify und Google sowie Fotos. Safari kann Website-Daten nach längerer Nichtnutzung löschen; als Home-Bildschirm-App ist das Dashboard davon ausgenommen. Die Datei ist die sichere Kopie.</p></div>
- <div class="sec"><h3>Demo-Modus</h3><label class="tog">Ausgedachte Termine, Nachrichten, Wetter und Musik zeigen<input type="checkbox" id="s_demo" ${S.demo?"checked":""}></label><p>Zum Ausprobieren ohne Anmeldungen, z. B. in der Claude-Vorschau. Unten links steht dann „Demo“.</p></div>
- <div class="sec"><h3>Darstellung</h3><button class="btn pri" data-act="palOpen">Farben und Schrift direkt im Dashboard anpassen</button><button class="btn" data-act="libOpen">Stil-Bibliothek und Austausch</button>
+ <div class="sec"><h3>Demo-Modus</h3><label class="tog">Ausgedachte Termine, Nachrichten, Wetter und Musik zeigen<input type="checkbox" id="s_demo" ${S.demo?"checked":""}></label><p>Zum Ausprobieren ohne Anmeldungen.</p></div>
+ <div class="sec"><h3>Darstellung</h3><button class="btn pri" data-act="palOpen">Farben und Schrift</button><button class="btn" data-act="libOpen">Stil-Bibliothek und Austausch</button>
   <label class="tog">Nachtmodus<select id="s_nm"><option value="manual"${S.nightMode==='manual'?' selected':''}>Manuell (Mond-Knopf)</option><option value="time"${S.nightMode==='time'?' selected':''}>Nach Uhrzeit</option><option value="sun"${S.nightMode==='sun'?' selected':''}>Sonnenuntergang bis -aufgang</option></select></label>
   <div class="row" id="nmTimes" ${S.nightMode==='time'?'':'hidden'}><label class="tog" style="flex:1">von<input type="time" id="s_nf" value="${esc(S.nightFrom)}"></label><label class="tog" style="flex:1">bis<input type="time" id="s_nt" value="${esc(S.nightTo)}"></label></div>
   <p>Mit Timer schaltet der Mond-Knopf nur bis zum nächsten Wechsel um.</p>
   <label class="tog">24-Stunden-Format<input type="checkbox" id="s_h24" ${S.h24?'checked':''}></label>
   <label class="tog">Display anlassen<select id="s_wake"><option value="off"${S.wakeMode==='off'?' selected':''}>Nie (geht normal aus)</option><option value="cook"${S.wakeMode==='cook'?' selected':''}>Nur im Kochmodus</option><option value="always"${S.wakeMode==='always'?' selected':''}>Immer</option></select></label></div>
- <div class="sec"><h3>Ansichten</h3><p>Wie bei Apple: lange auf ein Widget drücken, dann Widgets hinzufügen, entfernen, Layout wählen oder neue Ansichten anlegen. Zwischen Ansichten wischst du seitlich.</p><button class="btn" data-act="editFromSettings">Jetzt bearbeiten</button></div>
- <div class="sec"><h3>Wetter</h3><span class="lbl">Ort (leer: aktueller Standort, sonst Berlin)</span><input type="text" id="s_city" value="${v('city')}" placeholder="z. B. Berlin"></div>
+ <div class="sec"><h3>Ansichten</h3><p>Wie bei Apple: lange auf ein Widget drücken, dann Widgets hinzufügen, entfernen, Layout wählen oder neue Ansichten anlegen. Zwischen Ansichten wischst du seitlich.</p><button class="btn" data-act="editFromSettings">Jetzt bearbeiten</button>${DASHES.some(d=>d.layout==='recipes')?'':'<button class="btn" data-act="dRecipes">Rezepte-Ansicht wieder hinzufügen</button>'}</div>
+ <div class="sec"><h3>Wetter</h3><span class="lbl">Ort</span><input type="text" id="s_city" value="${v('city')}" placeholder="Leer lassen für aktuellen Standort"></div>
  <div class="sec"><h3>Weltzeit</h3><span class="lbl">Zeitzonen, kommagetrennt (IANA, z. B. Europe/Oslo). Auf der Weltkarte erscheinen alle Orte aus der Liste der bekannten Städte.</span><input type="text" id="s_zones" value="${v('zones')}"></div>
- <div class="sec"><h3>Google Kalender <span class="badge ${LS.get('g_ok',false)?'ok':''}">${LS.get('g_ok',false)?'Verbunden':'Nicht verbunden'}</span></h3><p>Die Client-ID ist fest eingebaut. Solange die App bei Google im Status „Testen“ ist, klappt die Anmeldung nur für eingetragene Testnutzer.</p><span class="lbl">Autorisierter JavaScript-Ursprung, in Google Cloud eintragen</span><input type="text" readonly value="${esc(location.origin)}">
+ <div class="sec"><h3>Google Kalender <span class="badge ${LS.get('g_ok',false)?'ok':''}">${LS.get('g_ok',false)?'Verbunden':'Nicht verbunden'}</span></h3>
   <div class="row">${LS.get('g_ok',false)?'<button class="btn" data-act="gOut">Trennen</button><button class="btn" data-act="gRefresh">Neu anmelden</button>':'<button class="btn pri" data-act="gIn">Mit Google verbinden</button>'}</div>
   ${D.gCals.length?`<span class="lbl">Angezeigte Kalender</span>${D.gCals.map(x=>`<label class="tog"><span class="trunc"><i class="dot" style="background:${esc(x.color)}"></i>${esc(x.name)}</span><input type="checkbox" data-ch="gSel" value="${esc(x.id)}" ${(S.gSel||[]).includes(x.id)?'checked':''}></label>`).join('')}`:''}
   ${D.gErr?`<p style="color:#ff8a80">${esc(D.gErr)}</p>`:''}<p>Nur Lesezugriff. Google beendet die Anmeldung nach einer Stunde; ein Tipp aufs Display erneuert sie.</p></div>
  <div class="sec"><h3>Zusätzlich: ICS-Feed <span class="badge ${S.ics&&!D.calErr?'ok':''}">${!S.ics?'Kein Feed':D.calErr?'Fehler':'Aktiv'}</span></h3><span class="lbl">Optional, z. B. für iCloud: Link eines öffentlich geteilten Kalenders</span><input type="url" id="s_ics" value="${v('ics')}" placeholder="https://…/kalender.ics"><span class="lbl">Oder eine ICS-Datei hochladen (bleibt nur auf diesem Gerät)</span><div class="row"><label class="btn">${LS.get('ics_file')?'Andere Datei wählen':'ICS-Datei wählen'}<input type="file" id="s_icsf" accept=".ics,text/calendar" hidden></label>${LS.get('ics_file')?`<button class="btn" data-act="icsFileDel">„${esc(LS.get('ics_file').name)}“ entfernen</button>`:''}</div></div>
  <div class="sec"><h3>Kalender je Widget</h3>${calSrc().length?Object.entries(CALTYPES).map(([k,n])=>`<span class="lbl">${n}</span><div class="wc-row">${calSrc().map(x=>`<label><input type="checkbox" data-ch="wcal" data-w="${k}" value="${esc(x.id)}" ${!S.wcal?.[k]||S.wcal[k].includes(x.id)?'checked':''}><i class="dot" style="background:${esc(x.color)};margin:0"></i>${esc(x.name)}</label>`).join('')}</div>`).join(''):'<p>Erst Google verbinden oder einen ICS-Feed eintragen, dann lässt sich hier pro Widget wählen, welche Kalender es zeigt.</p>'}</div>
  <div class="sec"><h3>Pegel</h3><span class="lbl">Messstelle wie bei pegelonline.wsv.de</span><input type="text" id="s_pegel" value="${esc(S.pegel||'KÖLN')}"></div>
- <div class="sec"><h3>Radio</h3><span class="lbl">Ein Sender pro Zeile: Name | Stream-Adresse</span><textarea id="s_radio" rows="5">${esc(S.radio||RADIO_DEFAULT)}</textarea></div>
+ <div class="sec"><h3>Radio</h3><div id="radioEd">${radioEd()}</div></div>
  <div class="sec"><h3>Nachrichten</h3><span class="lbl">RSS- oder Atom-Feed</span><input type="url" id="s_rss" value="${v('rss')}"></div>
  <div class="sec"><h3>CORS-Proxy</h3><input type="url" id="s_proxy" value="${v('proxy')}" placeholder="https://dein-proxy.example/?url={url}"><p>Kalender- und die meisten RSS-Feeds lassen keinen direkten Abruf aus dem Browser zu. Der Proxy wird vorangestellt; {url} markiert die Stelle der Feed-Adresse, sonst wird sie angehängt.</p></div>
- <div class="sec"><h3>Spotify <span class="badge ${con?'ok':''}">${con?'Verbunden':'Nicht verbunden'}</span></h3><p>Die Client-ID ist fest eingebaut. Spotify-Apps im Entwicklungsmodus funktionieren nur für Konten, die im Spotify-Dashboard freigeschaltet sind.</p><span class="lbl">Redirect-URI, im Spotify-Dashboard eintragen</span><input type="text" readonly value="${esc(redir())}">
-  <div class="row">${con?'<button class="btn" data-act="spDisconnect">Trennen</button><button class="btn" data-act="spConnect">Neu verbinden</button>':'<button class="btn pri" data-act="spConnect">Mit Spotify verbinden</button>'}</div><p>Play, Pause und Skip funktionieren nur mit Spotify Premium. Wer vor diesem Update verbunden war, muss einmal neu verbinden, damit „Zuletzt gehört“ funktioniert.</p></div>
+ <div class="sec"><h3>Spotify <span class="badge ${con?'ok':''}">${con?'Verbunden':'Nicht verbunden'}</span></h3>
+  <div class="row">${con?'<button class="btn" data-act="spDisconnect">Trennen</button><button class="btn" data-act="spConnect">Neu verbinden</button>':'<button class="btn pri" data-act="spConnect">Mit Spotify verbinden</button>'}</div></div>
  <div class="sec"><h3>Fotos <span class="badge">${D.userPhotos.length} eigene</span></h3>${D.userPhotos.length?`<div class="ph-grid">${D.userPhotos.map((u,i)=>`<div><img src="${u}" alt=""><button data-act="phDel" data-i="${i}" aria-label="Foto löschen">${ic('xmark')}</button></div>`).join('')}</div>`:''}<div class="row"><label class="btn pri">Fotos hinzufügen<input type="file" id="s_ph" accept="image/*" multiple hidden></label>${D.userPhotos.length?'<button class="btn" data-act="phClear">Eigene Fotos löschen</button>':''}</div><label class="lbl" for="s_phi">Angabe auf dem Foto</label><select id="s_phi"><option value="date"${S.phInfo!=='none'?' selected':''}>Aufnahmedatum, falls im Bild gespeichert</option><option value="none"${S.phInfo==='none'?' selected':''}>Nichts</option></select><p>Werden nur auf diesem Gerät gespeichert. Das Aufnahmedatum wird beim Hinzufügen aus den Bilddaten gelesen; bei früher hinzugefügten Fotos fehlt es. Rezeptfotos fügst du im Kochmodus über die Kamera hinzu.</p></div>
  <div class="sec"><h3>Über und Quellen</h3><button class="btn" data-act="aboutOpen">Version, Quellen und Lizenzen</button></div>
  <div class="sec"><h3>Rezeptfotos von Unsplash <span class="badge ${S.unKey?'ok':''}">${S.unKey?'Aktiv':'Aus'}</span></h3><span class="lbl">Access Key (kostenlos auf unsplash.com/developers)</span><input type="text" id="s_un" value="${v('unKey')}" autocomplete="off"><p>Optional. Im Kochmodus erscheint dann eine Lupe: Du suchst und wählst selbst ein passendes Foto aus. Fotograf und Unsplash werden genannt.</p></div>
@@ -1480,7 +1503,7 @@ function openSettings(keepScroll){const con=!!SP.t,v=k=>esc(S[k]),sc=keepScroll?
  $('#s_bkimp').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await rdF(f));if(j.format!=='standby-backup'||!j.settings||!j.dashes)throw 0;if(!confirm('Alle Einstellungen und Ansichten auf diesem Gerät werden durch die Sicherung ersetzt.'))return;LS.set('settings',j.settings);LS.set('dashes',j.dashes);if(j.dash_v)LS.set('dash_v',j.dash_v);Object.entries(j.extra||{}).forEach(([k,v])=>{if(BK_EXTRA.includes(k))LS.set(k,v)});location.reload()}catch{toast('Die Datei ist keine Sicherung dieses Dashboards.')}};
  $('#s_ph').onchange=e=>{readSettings();addPhotos([...e.target.files]).then(()=>openSettings(true))};
  $('#modal').hidden=false;if(sc)$('.sheet').scrollTop=sc}
-function readSettings(){const g=id=>($('#'+id)?.value||'').trim();if(!$('#s_h24'))return;S.h24=$('#s_h24').checked;S.wakeMode=$('#s_wake').value;S.city=g('s_city');S.zones=g('s_zones');S.ics=g('s_ics');S.proxy=g('s_proxy');S.rss=g('s_rss');S.pegel=g('s_pegel');S.radio=($('#s_radio')?.value||'').trim();S.demo=$('#s_demo').checked;if($('#s_phi'))S.phInfo=$('#s_phi').value;S.unKey=g('s_un');const nm=$('#s_nm').value;if(nm!==S.nightMode)S.nOv=null;S.nightMode=nm;S.nightFrom=$('#s_nf').value||'22:00';S.nightTo=$('#s_nt').value||'07:00';save()}
+function readSettings(){const g=id=>($('#'+id)?.value||'').trim();if(!$('#s_h24'))return;S.h24=$('#s_h24').checked;S.wakeMode=$('#s_wake').value;S.city=g('s_city');S.zones=g('s_zones');S.ics=g('s_ics');S.proxy=g('s_proxy');S.rss=g('s_rss');S.pegel=g('s_pegel');S.demo=$('#s_demo').checked;if($('#s_phi'))S.phInfo=$('#s_phi').value;S.unKey=g('s_un');const nm=$('#s_nm').value;if(nm!==S.nightMode)S.nOv=null;S.nightMode=nm;S.nightFrom=$('#s_nf').value||'22:00';S.nightTo=$('#s_nt').value||'07:00';save()}
 function afterSettings(){applyLook();loadWiki();loadPegel();$('#demoTag').hidden=!S.demo;if(!S.demo){D.evDemo=[];D.news=[];D.sp=null;D.weather=null;/* keine Demo-Reste im Spotify-Fenster */D.spDevs=null;D.spPls=null;D.spQueue=null;D.spRecent=null;D.spDevAt=0;spPopAt=0;spSig=''}if(S.wakeMode==='always'||(S.wakeMode==='cook'&&cook))wake();else unwake();loadWeather();loadCalendar();loadNews();renderStage();loadSpotify()}
 const edit=fn=>{readSettings();fn();save();openSettings(true)};
 
@@ -1510,6 +1533,10 @@ const ACT={
  demoOn(){S.demo=true;save();afterSettings()},
  popClose(){$('#pop').hidden=true;$('#pop').innerHTML='';D.popKind=null},
  spDev(a){spTransfer(a.dataset.id)},
+ rdDel(a){const L=radioList();L.splice(+a.dataset.i,1);radioSave(L);$('#radioEd').innerHTML=radioEd();repaint('radio')},
+ rdSugg(a){const x=radioSugg().find(y=>y[0]===a.dataset.n);if(!x)return;radioSave([...radioList(),x]);$('#radioEd').innerHTML=radioEd();repaint('radio')},
+ rdAdd(){const n=$('#rdN').value.trim(),u=$('#rdU').value.trim();if(!n||!/^https?:\/\/\S+$/i.test(u)){toast('Bitte Name und eine Stream-Adresse mit https:// eingeben.');return}radioSave([...radioList(),[n.replace(/\|/g,'/'),u]]);$('#radioEd').innerHTML=radioEd();repaint('radio')},
+ dRecipes(){readSettings();if(!DASHES.some(d=>d.layout==='recipes'))DASHES.push({id:'rezepte',name:'Rezepte',layout:'recipes'});S.dash='rezepte';save();$('#modal').hidden=true;renderStage()},
  icsFileDel(){readSettings();LS.set('ics_file',null);loadCalendar();openSettings(true)},
  phDel(a){readSettings();const k=(D.photoKeys||[])[+a.dataset.i];if(k==null)return;idbDo('photos',s=>s.delete(k)).then(loadPhotos).then(()=>openSettings(true))},
  recDel(a){readSettings();const id=a.dataset.id,u=LS.get('recipes_user',[]);if(u.some(r=>r.id===id))LS.set('recipes_user',u.filter(r=>r.id!==id));if(RECIPES0.some(r=>r.id===id))LS.set('recipes_hidden',[...new Set([...LS.get('recipes_hidden',[]),id])]);buildRecipes();repaint('recipe');openSettings(true)},

@@ -2,6 +2,14 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 3.2.1 – 31.10.2026
+
+- Einstellungen und Farben wackeln nicht mehr seitlich: Eingabefelder mindestens 16 px (sonst zoomt iOS hinein), kein seitliches Scrollen.
+- Überflüssige Hinweise entfernt (Google-Console-Ursprung, Spotify-Redirect, alte Premium-Notiz, Ort-Erklärung, Claude-Vorschau); Knopf „Farben und Schrift“.
+- Rezept-Widget als Vollbild zeigt die Rezepte-Übersicht mit Suche und Kategorien.
+- Fehlt die Rezepte-Ansicht, lässt sie sich in den Einstellungen unter „Ansichten“ wieder hinzufügen.
+- Radio-Sender: Liste mit Entfernen, Vorschläge zum Antippen, eigener Sender mit Name und Stream-Adresse.
+
 ## 3.2.0 – 31.10.2026
 
 - Datensicherung: Ansichten, Widget- und übrige Einstellungen, Farben, Schrift, importierte Rezepte und ICS-Datei als Datei sichern (auf dem iPhone über das Teilen-Menü) und wiederherstellen. Anmeldungen und Fotos sind nicht enthalten.

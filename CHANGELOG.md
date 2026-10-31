@@ -2,6 +2,12 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 3.1.2 – 31.10.2026
+
+- Hochformat ist das gedrehte Querformat: Kacheln drehen mit (quer 2 × 1 wird hoch 1 × 2), die Anordnung bleibt gleich. Galerie-Vorschau folgt.
+- Drei Tage in schmalen Kacheln: Tag als Zeile über den Einträgen, Titel in voller Breite.
+- Spotify auf dem iPhone: Startet die Wiedergabe auf dem iPhone selbst nicht, weil iOS die Spotify-App im Hintergrund anhält, erscheint ein Hinweis, die App einmal zu öffnen.
+
 ## 3.1.1 – 31.10.2026
 
 - Spotify-Fenster neu: oben das laufende Stück, darunter Reiter für Lautsprecher, Als Nächstes, Playlists, Lieblingssongs, Alben und Zuletzt gehört; Einträge mit Bild, einzeilig. Wird nur neu gezeichnet, wenn sich etwas ändert, damit Antippen und Scrollen funktionieren. Kein sichtbarer Scrollbalken.

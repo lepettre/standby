@@ -654,14 +654,14 @@ a.spp-t,a.spp-a{display:block;color:inherit;text-decoration:none}
 .spp-list .spp-row small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spp-list .spp-row.on b{color:#1ed760}
 
-/* Drei Tage schmal: Tage untereinander, Termine als Zeilen */
+/* Drei Tage schmal: Tage untereinander, Tag als Zeile über den Einträgen, Titel in voller Breite */
 @container (max-width:240px){
  .wk{grid-template-columns:1fr;grid-auto-rows:min-content;gap:8px}
- .wk-d{display:grid;grid-template-columns:2.4em minmax(0,1fr);column-gap:8px;row-gap:3px;align-items:start}
- .wk-h{grid-row:1/span 4;margin:0}
- .wk-h b{font-size:14px;width:1.9em;height:1.9em}
- .wk-e{grid-column:2;font-size:12px}
- .wk-more{grid-column:2;text-align:left}
+ .wk-d{gap:3px}
+ .wk-h{flex-direction:row;align-items:baseline;gap:6px;margin:0}
+ .wk-h b{font-size:13px;width:auto;height:auto;padding:1px 6px;border-radius:99px}
+ .wk-e{font-size:12px}
+ .wk-more{text-align:left}
 }
 @container (max-width:240px) and (max-height:240px){.wk-d .wk-e:nth-of-type(n+4){display:none}.wk-d:nth-child(3){display:none}}
 </style>
@@ -1046,7 +1046,9 @@ const fmtMs=ms=>{const s=Math.max(0,Math.round((ms||0)/1000));return Math.floor(
 async function spEnsureDevice(){if(D.sp&&!D.sp.idle&&D.sp.devId)return D.sp.devId;const dv=(await sp('/me/player/devices'))?.devices||[];D.spDevs=dv;const d=dv.find(x=>x.is_active)||dv.find(x=>x.id===S.spDev)||dv[0];if(d)return d.id;if(D.sdkId)return D.sdkId;toast(isIOS?'Kein Spotify-Gerät erreichbar. Spotify-App öffnen oder Lautsprecher einschalten.':'Kein Spotify-Gerät erreichbar.');return null}
 async function spTransfer(id){if(S.demo&&!SP.t){(D.spDevs||[]).forEach(d=>d.is_active=d.id===id);D.sp.device=(D.spDevs.find(d=>d.id===id)||{}).name;D.sp.playing=true;repaint('spotify');spPop();return}
  try{await sp('/me/player','PUT',{device_ids:[id],play:true});S.spDev=id;save()}catch(e){toast(e.message)}setTimeout(()=>{loadSpotify();spPopLoad(1)},700)}
-async function spPlayUri(body){if(S.demo&&!SP.t){toast('Im Demo-Modus wird nichts abgespielt.');return}try{const id=await spEnsureDevice();if(!id)return;await sp('/me/player/play?device_id='+encodeURIComponent(id),'PUT',body)}catch(e){toast(e.message)}setTimeout(()=>{loadSpotify();spPopLoad(1)},700)}
+/* iOS hält die Spotify-App im Hintergrund an; Start per Fernsteuerung bleibt dann stumm */
+function spIosHint(id){const d=(D.spDevs||[]).find(x=>x.id===id);if(!isIOS||!d||!/smartphone|tablet/i.test(d.type||''))return;setTimeout(async()=>{await loadSpotify();if(!D.sp||D.sp.idle||!D.sp.playing)toast('iOS startet Spotify im Hintergrund nicht. Spotify-App einmal öffnen, danach lässt es sich von hier steuern.')},3000)}
+async function spPlayUri(body){if(S.demo&&!SP.t){toast('Im Demo-Modus wird nichts abgespielt.');return}try{const id=await spEnsureDevice();if(!id)return;await sp('/me/player/play?device_id='+encodeURIComponent(id),'PUT',body);spIosHint(id)}catch(e){toast(e.message)}setTimeout(()=>{loadSpotify();spPopLoad(1)},700)}
 async function spSeekTo(f){const s=D.sp;if(!s||!s.dur)return;const pos=Math.round(Math.max(0,Math.min(1,f))*s.dur);if(S.demo&&!SP.t){s.prog=pos;s.at=Date.now();spPop();return}try{await sp('/me/player/seek?position_ms='+pos,'PUT');s.prog=pos;s.at=Date.now()}catch(e){toast(e.message)}}
 let volT;function spVolume(v){if(S.demo&&!SP.t){D.sp.vol=+v;return}clearTimeout(volT);volT=setTimeout(()=>sp('/me/player/volume?volume_percent='+v,'PUT').catch(e=>toast(e.message)),250)}
 async function spPopLoad(force){if(S.demo&&!SP.t){D.spDemo=true;D.spDevs=D.spDevs||[{id:'d1',name:'Küche',type:'Speaker',is_active:true},{id:'d2',name:'Wohnzimmer',type:'Speaker'},{id:'d3',name:'iPhone',type:'Smartphone'}];D.spPls=[{name:'Demo-Playlist',n:24,uri:''},{name:'Zweite Demo-Playlist',n:51,uri:''}];D.spQueue=[{name:'Nächster Demo-Titel',artist:'Demo-Interpret'},{name:'Übernächster Demo-Titel',artist:'Demo-Interpret'}];D.spRecent=[{name:'Demo-Titel',artist:'Demo-Interpret',uri:''}];spPop();return}
@@ -1181,9 +1183,11 @@ function pack(sizes,G,order){const occ=[...Array(G.rows)].map(()=>Array(G.cols).
  for(const i of order){const[w,h]=sizes[i];let ok=null;for(let r=0;r+h<=G.rows&&!ok;r++)for(let c=0;c+w<=G.cols&&!ok;c++){let f=true;for(let y=r;y<r+h&&f;y++)for(let x=c;x<c+w;x++)if(occ[y][x]){f=false;break}if(f)ok=[r,c]}
   if(ok){for(let y=ok[0];y<ok[0]+h;y++)for(let x=ok[1];x<ok[1]+w;x++)occ[y][x]=1}pos[i]=ok}
  let free=null;for(let r=0;r<G.rows&&!free;r++)for(let c=0;c<G.cols;c++)if(!occ[r][c]){free=[r,c];break}return{pos,free,miss:pos.filter(x=>!x).length}}
-function layoutGrid(L){const G=L._G,mods=dash().mods||[],sizes=mods.map(m=>span(m.s,G)),idx=mods.map((_,i)=>i);let r=pack(sizes,G,idx);
+/* Hochformat = gedrehtes Querformat: Größen und Positionen werden gespiegelt (2 × 1 quer wird 1 × 2 hoch), die Anordnung bleibt gleich */
+const isTall=G=>G.rows>G.cols;
+function layoutGrid(L){const G0=L._G,T=isTall(G0),G=T?{...G0,cols:G0.rows,rows:G0.cols}:G0,mods=dash().mods||[],sizes=mods.map(m=>span(m.s,G)),idx=mods.map((_,i)=>i);let r=pack(sizes,G,idx);
  if(r.miss){const alt=pack(sizes,G,[...idx].sort((a,b)=>sizes[b][0]*sizes[b][1]-sizes[a][0]*sizes[a][1]||a-b));if(alt.miss<r.miss)r=alt}
- const sl=[...L.querySelectorAll(':scope>.slot')];let used=0;sl.forEach((e,i)=>{const p=r.pos[i],[w,h]=sizes[i]||[1,1];if(p){e.style.display='';e.style.gridArea=`${p[0]+1}/${p[1]+1}/span ${h}/span ${w}`;used+=w*h}else{e.style.display='none'}});
+ if(T&&r.free)r.free=[r.free[1],r.free[0]];const sl=[...L.querySelectorAll(':scope>.slot')];let used=0;sl.forEach((e,i)=>{let p=r.pos[i],[w,h]=sizes[i]||[1,1];if(p&&T){p=[p[1],p[0]];[w,h]=[h,w]}if(p){e.style.display='';e.style.gridArea=`${p[0]+1}/${p[1]+1}/span ${h}/span ${w}`;used+=w*h}else{e.style.display='none'}});
  return{used,free:r.free,miss:r.miss}}
 function slot(keys,i,size){const w=el('div','slot'),s=el('div','stack');
  if(keys.length)keys.forEach(k=>{const p=el('div','page');p.append(mount(k));s.append(p)});else{const p=el('div','page');p.innerHTML='<div class="card empty"></div>';s.append(p)}
@@ -1204,7 +1208,7 @@ function paintEbar(){const d=dash(),b=$('#ebar');b.innerHTML=`<input id="eName" 
 function enterEdit(){if(editing)return;editing=true;document.body.classList.add('editing');$('#hdr').classList.add('off');$('#menu').hidden=true;paintEbar();renderStage()}
 function exitEdit(){editing=false;document.body.classList.remove('editing');$('#ebar').hidden=true;$('#gal').hidden=true;$('#stage').style.paddingTop='';save();renderStage();showHdr()}
 const WCAT=[['Uhren',['clock-big','clock-split','clock-stack','clock-outline','clock-float','clock-words','clock-flap','clock-analog','analog-solid','analog-numbers','analog-arc']],['Klassiker',['station','clock-flap-classic','gestirne']],['Kalender',['calendar','agenda','cal-agenda','week','countdown','day-poster']],['Wetter',['weather','weather-text','forecast','temp-chart','rain-chart','wx-combo','uv','pollen']],['Sonne, Welt und Wasser',['sun','solar','world','pegel']],['Medien und Wissen',['spotify','radio','photos','news','ticker','wiki']],['Küche',['recipe']]];
-function openGallery(){const g=$('#gal'),G=gridDims(),sz=galMode==='new'?galSize:(dash().mods[galSlot]||{}).s||'1x1',[w,h]=span(sz,G),ar=w*G.cell/(h*G.cell);
+function openGallery(){const g=$('#gal'),G=gridDims(),sz=galMode==='new'?galSize:(dash().mods[galSlot]||{}).s||'1x1',T=isTall(G),[w,h]=(s=>T?[s[1],s[0]]:s)(span(sz,T?{...G,cols:G.rows,rows:G.cols}:G)),ar=w*G.cell/(h*G.cell);
  g.innerHTML=`<div class="pal-h"><b>${galMode==='new'?'Neues Modul':'Widget hinzufügen'}</b><button class="go sm" data-act="galClose" style="--fg:#fff;--bg:#000">Abbrechen</button></div>${galMode==='new'?`<div class="pal-l">Größe</div><div class="pal-row">${SIZES.map(x=>`<button class="combo${x===galSize?' on':''}" data-act="galSize" data-s="${x}">${sizeName(x)}</button>`).join('')}</div>`:''}${WCAT.map(([n,ks])=>`<div class="pal-l">${n}</div><div class="gal-g" style="grid-template-columns:repeat(auto-fill,minmax(${ar>1.3?230:ar<.8?110:140}px,1fr))">${ks.map(k=>`<button class="gal-i" data-act="galPick" data-k="${k}"><div class="gal-p" style="aspect-ratio:${ar.toFixed(3)}"></div><span>${WIDGETS[k]}</span></button>`).join('')}</div>`).join('')}`;g.hidden=false;
  g.querySelectorAll('.gal-i').forEach(b=>{const c=el('div','card w-'+b.dataset.k);b.querySelector('.gal-p').append(c);prevCard(c,w,h);try{W[b.dataset.k](c)}catch{}});requestAnimationFrame(()=>{prevFit(g);refit(g)})}
 let lpT=null,lpX=0,lpY=0,lpFired=false;
@@ -1358,7 +1362,7 @@ async function loadSpotify(){if(S.demo&&!SP.t){if(!D.sp)demoData();repaint('spot
  const sig=JSON.stringify([D.sp?.title,D.sp?.playing,D.sp?.idle,D.sp?.recent?.title,D.sp?.device,!!SP.t]);if(sig!==spSig){spSig=sig;repaint('spotify')}if(D.popKind==='spotify')spPop()}
 const spPct=()=>{const s=D.sp;if(!s||!s.dur)return 0;return Math.min(100,(s.prog+(s.playing?Date.now()-s.at:0))/s.dur*100)};
 async function spCtl(c){if(S.demo&&!SP.t){const s=D.sp;if(!s)return;if(c==='toggle'){s.prog+=s.playing?Date.now()-s.at:0;s.at=Date.now();s.playing=!s.playing}else if(c==='shuffle')s.shuffle=!s.shuffle;else if(c==='repeat')s.repeat={off:'context',context:'track',track:'off'}[s.repeat||'off'];else if(c==='like')s.liked=!s.liked;else{s.prog=0;s.at=Date.now()}spSig='';repaint('spotify');spPop();return}
- try{const s=D.sp;if(c==='toggle'){if(s&&!s.idle&&s.playing)await sp('/me/player/pause','PUT');else{const id=await spEnsureDevice();if(!id)return;await sp('/me/player/play?device_id='+encodeURIComponent(id),'PUT')}}
+ try{const s=D.sp;if(c==='toggle'){if(s&&!s.idle&&s.playing)await sp('/me/player/pause','PUT');else{const id=await spEnsureDevice();if(!id)return;await sp('/me/player/play?device_id='+encodeURIComponent(id),'PUT');spIosHint(id)}}
   else if(c==='next'||c==='previous')await sp('/me/player/'+c,'POST');
   else if(c==='shuffle')await sp('/me/player/shuffle?state='+!(s&&s.shuffle),'PUT');
   else if(c==='repeat')await sp('/me/player/repeat?state='+({off:'context',context:'track',track:'off'}[s?.repeat||'off']),'PUT');
@@ -1401,7 +1405,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='3.1.1';
+const VERSION='3.1.2';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>

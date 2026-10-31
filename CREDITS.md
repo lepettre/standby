@@ -45,6 +45,7 @@ Umsetzung im Dialog mit Claude (Anthropic).
 
 | Element | Herkunft | Lizenz | Status |
 | --- | --- | --- | --- |
+| Spotify-Symbol (Entwurf 3.1.0) | Pfad aus Simple Icons (simple-icons, npm), Marke von Spotify AB | Simple Icons: CC0 1.0 (Paketangabe gelesen); Markennutzung nach Spotify Design Guidelines | offen (Guidelines zu Logogröße, Farbe, Cover-Radius an der Quelle nachlesen) |
 | App-Icon und Favicon (`icons/`, ab 3.0.2) | Eigenes Werk, gestaltet mit Claude nach dem eigenen Widget „Uhr als Ringe“ | eigenes Werk | – |
 | Inline-SVG-Icons (39 Stück, u. a. cloud, moon, music, heart, repeat, radio, airplay, shuffle) | Pfade entsprechen weitgehend Lucide (lucide.dev), teils von Feather Icons abgeleitet; einige schlicht selbst gezeichnet (play, pause, grid) | Lucide: ISC License; Feather: MIT License | übernommen (Herkunft je Icon in Code prüfen, Lizenztext beilegen) |
 | Landmaske der Punkt-Weltkarte (90 × 40 Raster) | Erzeugt mit dem Python-Paket global-land-mask (Todd Karin), das auf dem GLOBE-Höhenmodell der NOAA beruht | global-land-mask: MIT License; GLOBE-Daten: US-Regierung, frei | übernommen (Lizenz des Pakets prüfen) |

@@ -599,6 +599,29 @@ body.night .chips button.on{background:var(--nr)!important;color:#000!important}
 @container (max-height:260px){.fc-lg{display:none}}
 @container (min-aspect-ratio: 3/2){.fc-lg{display:none}.w-forecast .fc-d{grid-template-columns:1fr}}
 @container (max-aspect-ratio: 3/4){.w-temp-chart .ch,.w-wx-combo .ch{flex:0 0 42cqh;margin-top:auto}}
+
+/* Spotify-Widget nach den Spotify-Richtlinien (Entwurf 3.1.0) */
+.sp2{height:100%;display:flex;flex-direction:column;gap:12px;padding:16px 18px;position:relative}
+.sp2-cov{display:block;flex:none;width:min(46cqw,42cqh);aspect-ratio:1;border-radius:6px;overflow:hidden;background:#282828}
+.sp2-cov img{width:100%;height:100%;object-fit:cover;display:block}
+.sp2-i{flex:1;min-height:0;display:flex;flex-direction:column;min-width:0}
+.sp2-top{position:absolute;top:16px;right:18px;display:flex;align-items:center;gap:8px;max-width:50%}
+.sp-logo{width:24px;height:24px;color:#1ed760;flex:none}
+.sp2 .sp-dv{background:#2a2a2a;max-width:100%}
+.sp2-meta{margin-top:auto;min-width:0}
+.sp2-l{font-size:12px;color:#b3b3b3;margin-bottom:2px}
+.sp2-t,.sp2-a{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:inherit;text-decoration:none}
+.sp2-t{font:800 max(16px,min(7cqh,8cqw))/1.15 var(--round)}
+.sp2-t{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.sp2-a{font-size:max(13px,min(4.6cqh,5.5cqw));color:#b3b3b3;margin-top:2px}
+.sp2 .sp-ctl{padding:0;justify-content:space-around}
+.sp2 .sp-bar{margin:8px 0 4px}
+/* breit: Cover links in voller Höhe */
+@container (min-aspect-ratio: 3/2){.sp2{flex-direction:row;gap:16px}.sp2-cov{width:auto;height:100%}.sp2-top{position:static;max-width:100%;justify-content:space-between}.sp2-i{position:relative}}
+/* 1 × 1: Cover, Logo, Titel und Interpret; Steuerung im Detailfenster */
+@container (max-width:240px) and (max-height:240px){.sp2{gap:8px;padding:14px}.sp2-cov{width:52cqw}.sp2-top{top:14px;right:14px}.sp2 .sp-dv,.sp2 .sp-ctl,.sp2 .sp-bar,.sp2-l{display:none}.sp2-t{font-size:15px;-webkit-line-clamp:1}.sp2-a{font-size:12px}}
+/* schmal und hoch: Cover über die Breite */
+@container (max-width:240px) and (min-height:300px){.sp2-cov{width:100%}.sp2-top{position:static;order:-1;justify-content:space-between;max-width:100%}.sp2 .sp-ctl{margin-top:6px}}
 </style>
 </head>
 <body>
@@ -814,9 +837,14 @@ const W={
   let sl='Sonnenuntergang',sv=w.sunset[0];if(now<ms(w.sunrise[0])){sl='Sonnenaufgang';sv=w.sunrise[0]}else if(now>ms(w.sunset[0])){sl='Sonnenaufgang';sv=w.sunrise[1]}
   c.innerHTML=`<div class="wx-top"><div><div class="wx-loc">${esc(w.name)}</div><div class="wx-temp">${w.temp}°</div><div class="wx-cond">${txt}</div><div class="wx-cond" style="opacity:.75">H ${w.hi}°  T ${w.lo}°</div></div>${ic(ico,'wx-ico')}</div><div class="wx-row"><div><small>${sl}</small><b>${sv.slice(11,16)}</b></div><div><small>Wind</small><b>${w.wind} km/h</b></div><div><small>Luftqualität</small><b>${w.aqi!=null?Math.round(w.aqi)+' EAQI':'–'}</b></div></div>`},
  spotify(c){const s=D.sp;
-  if(!SP.t&&!S.demo){c.innerHTML=`<div class="sp-in"><div class="w-head"><span>${ic('music')} Spotify</span></div><div style="margin:auto 0"><button class="go" data-act="settings" style="--fg:#1ed760;--bg:#000">Spotify verbinden</button></div></div>`;return}
-  const cur=s&&!s.idle?s:null,r=s?.recent,cov=cur?.cover||r?.cover;
-  c.innerHTML=(cov?`<img class="sp-bg" src="${esc(cov)}" alt=""><div class="sp-shade"></div><div class="tint"></div>`:'<div class="sp-shade sp-nocov"></div>')+`<div class="sp-in"><div class="w-head"><span>${ic('music')}${cur?'':' Zuletzt gehört'}</span><button class="sp-dv" data-act="spDevPop">${ic('speaker')} <span class="trunc">${esc(cur?.device||'Lautsprecher')}</span></button></div><div style="margin-top:auto"><div class="sp-t">${esc(cur?cur.title:(r?.title||'Gerade läuft nichts'))}</div><div class="sp-a">${esc(cur?cur.artist:(r?.artist||''))}</div>${cur?`<div class="sp-bar"><i style="width:${spPct()}%"></i></div>`:''}<div class="sp-ctl"><button data-act="sp" data-c="previous" aria-label="Zurück">${ic('back')}</button><button class="pp" data-act="sp" data-c="toggle" aria-label="Wiedergabe">${ic(cur?.playing?'pause':'play')}</button><button data-act="sp" data-c="next" aria-label="Weiter">${ic('fwd')}</button></div></div></div>`},
+  if(!SP.t&&!S.demo){c.innerHTML=`<div class="sp2"><div class="sp2-i"><div class="sp2-top">${SPLOGO}</div><div style="margin:auto 0"><button class="go" data-act="settings" style="--fg:#1ed760;--bg:#000">Spotify verbinden</button></div></div></div>`;return}
+  /* Spotify-Richtlinien: Cover unverändert und unbeschnitten, kleiner Eckenradius, nichts darauf; Logo sichtbar; Titel und Interpret verlinken zu Spotify */
+  const cur=s&&!s.idle?s:null,r=s?.recent,it=cur||r,cov=it?.cover,lk=spLink(it?.uri);
+  const A=(cls,txt)=>lk?`<a class="${cls}" href="${esc(lk)}" target="_blank" rel="noopener">${esc(txt)}</a>`:`<div class="${cls}">${esc(txt)}</div>`;
+  c.innerHTML=`<div class="sp2">${cov?(lk?`<a class="sp2-cov" href="${esc(lk)}" target="_blank" rel="noopener"><img src="${esc(cov)}" alt="Cover"></a>`:`<div class="sp2-cov"><img src="${esc(cov)}" alt="Cover"></div>`):'<div class="sp2-cov sp2-nocov"></div>'}
+   <div class="sp2-i"><div class="sp2-top">${SPLOGO}<button class="sp-dv" data-act="spDevPop">${ic('speaker')} <span class="trunc">${esc(cur?.device||'Lautsprecher')}</span></button></div>
+   <div class="sp2-meta">${cur?'':'<div class="sp2-l">Zuletzt gehört</div>'}${A('sp2-t',it?it.title:'Gerade läuft nichts')}${it?.artist?A('sp2-a',it.artist):''}</div>
+   ${cur?`<div class="sp-bar"><i style="width:${spPct()}%"></i></div>`:''}<div class="sp-ctl"><button data-act="sp" data-c="previous" aria-label="Zurück">${ic('back')}</button><button class="pp" data-act="sp" data-c="toggle" aria-label="Wiedergabe">${ic(cur?.playing?'pause':'play')}</button><button data-act="sp" data-c="next" aria-label="Weiter">${ic('fwd')}</button></div></div></div>`},
  photos(c){if(!c._ph){c.innerHTML='<img class="pl on" alt=""><img class="pl" alt=""><div class="ph-shade"></div><div class="tint"></div><div class="ph-time"></div>';c._ph={cur:0}}
   const L=photoList(),url=L[D.photoIdx%L.length],im=c.querySelectorAll('.pl'),cur=im[c._ph.cur];
   const pd=S.phInfo!=='none'&&D.userPhotos.length?(D.photoDates||[])[D.photoIdx%L.length]:null;c.querySelector('.ph-time').textContent=pd?new Date(pd+'T12:00').toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'}):'';
@@ -1225,6 +1253,9 @@ async function loadNews(){if(S.demo){demoData();repaint('news','ticker');return}
 /* ---------- Spotify ---------- */
 const SP={get t(){return LS.get('sp_tok',null)},set t(v){LS.set('sp_tok',v)}};
 /* Öffentliche Client-IDs (kein Geheimnis bei PKCE bzw. Google Identity Services), fest eingebaut ab 3.1.0 */
+/* Spotify-Symbol: Pfad aus Simple Icons (CC0 1.0); Marke von Spotify AB, Nutzung nach den Spotify Design Guidelines */
+const SPLOGO='<svg class="sp-logo" viewBox="0 0 24 24" role="img" aria-label="Spotify"><path fill="currentColor" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>';
+const spLink=u=>{const m=/^spotify:(track|episode|album|playlist|artist|show):([A-Za-z0-9]+)$/.exec(u||'');return m?`https://open.spotify.com/${m[1]}/${m[2]}`:''};
 const SP_ID='8e477eb792e146a7ad22d9d738a0b126',G_ID='739550339217-7e3h14l35u4p195g1gdb7lflp8tspadh.apps.googleusercontent.com';
 const SCOPES='user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played playlist-read-private playlist-read-collaborative user-library-read user-library-modify streaming user-read-email user-read-private';
 const redir=()=>location.origin+location.pathname.replace(/index\.html$/,'');

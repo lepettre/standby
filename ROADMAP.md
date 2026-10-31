@@ -49,7 +49,7 @@ Offen geblieben: Punkt 11 (Google-Client) wird mit der fest eingebauten Client-I
 ## 3.1.0 – Quellen, Richtlinien, neutrale Voreinstellungen, Farbsystem
 
 1. **Quellen sichtbar machen** (F, P): Alle Pflichtnennungen aus CREDITS.md Abschnitt 7 umsetzen, dazu eine Seite „Über und Quellen“ in den Einstellungen mit Version, Urheber und allen Lizenzen.
-2. **Spotify-Richtlinien** (P): Spotify-Logo zeigen, Cover unverändert und unbeschnitten mit kleinem Eckenradius, keine Tönung und keine Knöpfe auf dem Cover, Titel und Interpret verlinken zu Spotify. Das ändert die Optik des Spotify-Widgets grundlegend; Entwurf vorher zeigen.
+2. **Spotify-Richtlinien** (P, erledigt in 3.1.0, Guidelines noch an der Quelle prüfen): Spotify-Logo zeigen, Cover unverändert und unbeschnitten mit kleinem Eckenradius, keine Tönung und keine Knöpfe auf dem Cover, Titel und Interpret verlinken zu Spotify. Das ändert die Optik des Spotify-Widgets grundlegend; Entwurf vorher zeigen.
 3. **Neutrale Voreinstellungen** (F, erledigt in 3.0.5): Radio, RSS-Feed, Orte und Demo-Inhalte ohne persönlichen Bezug.
 4. **Farbkombinationen** (F): „Vivid“ kürzer und systematisch benennen, alle Namen nach einem Muster (z. B. „Gelb · Schwarz“). „Gelb + Ultramarin“ löschen. Eine Kombination mit dunkler Hauptfarbe ergänzen.
 5. **Sechsstellige Farbcodes** (F): Neben jedem der drei Farbfelder ein Eingabefeld für Hex-Codes wie `#FFE600`.

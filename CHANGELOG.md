@@ -2,6 +2,12 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 3.1.0 – 31.10.2026
+
+- Spotify-Widget nach den Spotify-Richtlinien: Cover unverändert mit kleinem Eckenradius und ohne Knöpfe darauf, Spotify-Symbol, Cover, Titel und Interpret verlinken zu Spotify. 1 × 1 ohne Steuerung und Lautsprecher-Knopf, breit mit Cover links, schmal und hoch mit Cover über die Breite.
+- Keine Demo-Inhalte mehr, sobald Spotify verbunden ist (vorher erschienen Demo-Playlists und -Lautsprecher, die nicht funktionierten); Demo-Reste werden beim Ausschalten des Demo-Modus gelöscht.
+- Platzhalter ohne Knopf „Demo-Daten ansehen“.
+
 ## 3.0.5 – 31.10.2026
 
 - Neutrale Voreinstellungen (aus 3.1.0 vorgezogen): Schlagzeilen von tagesschau.de, Radio nur Deutschlandfunk, Kultur und Nova, Ersatzort und Demo-Ort Berlin, Pegel Köln, neutrale Demo-Termine.

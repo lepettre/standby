@@ -713,7 +713,7 @@ const pv=r=>{const[b,f]=pairOf(r);return`--bg:${b};--fg:${f}`};
 /* ---------- Kalender-Helfer ---------- */
 function evList(n,type){const t=new Date(),up=evFor(type).filter(e=>e.end>t).sort((a,b)=>a.start-b.start).slice(0,n);let last='';
  return up.length?`<ul class="ag">${up.map(e=>{const s=e.start<sod(t)?t:e.start,day=sameDay(s,t)?'Heute':sameDay(s,new Date(+sod(t)+864e5))?'Morgen':s.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'short'});const h=day!==last?(last=day,`<li class="day">${day}</li>`):'';return h+`<li${e.color?` style="--c:${e.color}"`:''}><div style="min-width:0"><div class="trunc">${esc(e.title||'Ohne Titel')}</div><time>${e.allDay?'Ganztägig':fmtT(e.start)+' – '+fmtT(e.end)}</time></div></li>`}).join('')}</ul>`:ghost([70,40,55],'Keine anstehenden Termine')}
-const ghost=(rows,label)=>`<div class="skel">${rows.map(w=>`<i style="width:${w}%"></i>`).join('')}<div class="skel-l">${label}</div><button class="demo-b" data-act="demoOn">Demo-Daten ansehen</button></div>`;
+const ghost=(rows,label)=>`<div class="skel">${rows.map(w=>`<i style="width:${w}%"></i>`).join('')}<div class="skel-l">${label}</div></div>`;
 function calStatus(){if(S.demo)return'';if(!S.ics.trim()&&!LS.get('g_ok',false))return ghost([78,46,64,34],'Noch kein Kalender verbunden. In den Einstellungen Google verbinden.');
  const er=[D.calErr,D.gErr].filter(Boolean);return er.length?`<div class="cal-err">${er.map(esc).join('<br>')}${D.gExpired?` <button class="go sm" data-act="gRefresh" style="--fg:currentColor;--bg:transparent;border:1.5px solid currentColor">Erneuern</button>`:''}</div>`:''}
 const repaintCal=()=>repaint(...CALW);
@@ -992,13 +992,14 @@ const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform===
 function spSdk(){if(isIOS||!SP.t||window._sdk)return;window._sdk=1;window.onSpotifyWebPlaybackSDKReady=()=>{try{const p=new Spotify.Player({name:'StandBy-Dashboard',getOAuthToken:cb=>spToken().then(cb),volume:.7});p.addListener('ready',({device_id})=>{D.sdkId=device_id});p.connect();D.sdk=p}catch{}};const s=document.createElement('script');s.src='https://sdk.scdn.co/spotify-player.js';document.head.append(s)}
 const fmtMs=ms=>{const s=Math.max(0,Math.round((ms||0)/1000));return Math.floor(s/60)+':'+pad(s%60)};
 async function spEnsureDevice(){if(D.sp&&!D.sp.idle&&D.sp.devId)return D.sp.devId;const dv=(await sp('/me/player/devices'))?.devices||[];D.spDevs=dv;const d=dv.find(x=>x.is_active)||dv.find(x=>x.id===S.spDev)||dv[0];if(d)return d.id;if(D.sdkId)return D.sdkId;toast(isIOS?'Kein Spotify-Gerät erreichbar. Spotify-App öffnen oder Lautsprecher einschalten.':'Kein Spotify-Gerät erreichbar.');return null}
-async function spTransfer(id){if(S.demo){(D.spDevs||[]).forEach(d=>d.is_active=d.id===id);D.sp.device=(D.spDevs.find(d=>d.id===id)||{}).name;D.sp.playing=true;repaint('spotify');spPop();return}
+async function spTransfer(id){if(S.demo&&!SP.t){(D.spDevs||[]).forEach(d=>d.is_active=d.id===id);D.sp.device=(D.spDevs.find(d=>d.id===id)||{}).name;D.sp.playing=true;repaint('spotify');spPop();return}
  try{await sp('/me/player','PUT',{device_ids:[id],play:true});S.spDev=id;save()}catch(e){toast(e.message)}setTimeout(()=>{loadSpotify();spPopLoad(1)},700)}
-async function spPlayUri(body){if(S.demo){toast('Im Demo-Modus wird nichts abgespielt.');return}try{const id=await spEnsureDevice();if(!id)return;await sp('/me/player/play?device_id='+encodeURIComponent(id),'PUT',body)}catch(e){toast(e.message)}setTimeout(()=>{loadSpotify();spPopLoad(1)},700)}
-async function spSeekTo(f){const s=D.sp;if(!s||!s.dur)return;const pos=Math.round(Math.max(0,Math.min(1,f))*s.dur);if(S.demo){s.prog=pos;s.at=Date.now();spPop();return}try{await sp('/me/player/seek?position_ms='+pos,'PUT');s.prog=pos;s.at=Date.now()}catch(e){toast(e.message)}}
-let volT;function spVolume(v){if(S.demo){D.sp.vol=+v;return}clearTimeout(volT);volT=setTimeout(()=>sp('/me/player/volume?volume_percent='+v,'PUT').catch(e=>toast(e.message)),250)}
-async function spPopLoad(force){if(S.demo){D.spDevs=D.spDevs||[{id:'d1',name:'Küche',type:'Speaker',is_active:true},{id:'d2',name:'Wohnzimmer',type:'Speaker'},{id:'d3',name:'iPhone',type:'Smartphone'}];D.spPls=[{name:'Demo-Playlist',n:24,uri:''},{name:'Zweite Demo-Playlist',n:51,uri:''}];D.spQueue=[{name:'Nächster Demo-Titel',artist:'Demo-Interpret'},{name:'Übernächster Demo-Titel',artist:'Demo-Interpret'}];D.spRecent=[{name:'Demo-Titel',artist:'Demo-Interpret',uri:''}];spPop();return}
+async function spPlayUri(body){if(S.demo&&!SP.t){toast('Im Demo-Modus wird nichts abgespielt.');return}try{const id=await spEnsureDevice();if(!id)return;await sp('/me/player/play?device_id='+encodeURIComponent(id),'PUT',body)}catch(e){toast(e.message)}setTimeout(()=>{loadSpotify();spPopLoad(1)},700)}
+async function spSeekTo(f){const s=D.sp;if(!s||!s.dur)return;const pos=Math.round(Math.max(0,Math.min(1,f))*s.dur);if(S.demo&&!SP.t){s.prog=pos;s.at=Date.now();spPop();return}try{await sp('/me/player/seek?position_ms='+pos,'PUT');s.prog=pos;s.at=Date.now()}catch(e){toast(e.message)}}
+let volT;function spVolume(v){if(S.demo&&!SP.t){D.sp.vol=+v;return}clearTimeout(volT);volT=setTimeout(()=>sp('/me/player/volume?volume_percent='+v,'PUT').catch(e=>toast(e.message)),250)}
+async function spPopLoad(force){if(S.demo&&!SP.t){D.spDemo=true;D.spDevs=D.spDevs||[{id:'d1',name:'Küche',type:'Speaker',is_active:true},{id:'d2',name:'Wohnzimmer',type:'Speaker'},{id:'d3',name:'iPhone',type:'Smartphone'}];D.spPls=[{name:'Demo-Playlist',n:24,uri:''},{name:'Zweite Demo-Playlist',n:51,uri:''}];D.spQueue=[{name:'Nächster Demo-Titel',artist:'Demo-Interpret'},{name:'Übernächster Demo-Titel',artist:'Demo-Interpret'}];D.spRecent=[{name:'Demo-Titel',artist:'Demo-Interpret',uri:''}];spPop();return}
  if(!SP.t){spPop();return}
+ if(D.spDemo){D.spDemo=false;D.spDevs=D.spPls=D.spQueue=D.spRecent=null;force=1}
  /* nicht bei jedem Öffnen alles neu laden: Geräte und Warteschlange alle 15 s, Playlists und Verlauf alle 5 min */
  const now=Date.now(),full=force||!D.spPls||now-spPopAt>3e5;if(!force&&D.spDevs&&now-(D.spDevAt||0)<15000){spPop();return}D.spDevAt=now;if(full)spPopAt=now;
  try{const[dv,pl,qu,rc]=await Promise.all([sp('/me/player/devices'),full?sp('/me/playlists?limit=50').catch(()=>false):null,sp('/me/player/queue').catch(()=>null),full?sp('/me/player/recently-played?limit=10').catch(()=>null):null]);
@@ -1013,7 +1014,7 @@ function spPop(){const b=$('#popBody');if(!b||D.popKind!=='spotify')return;const
   ${cur&&cur.vol!=null?`<label class="spp-vol">${ic('speaker')}<input type="range" min="0" max="100" value="${cur.vol}" data-in="spVol" aria-label="Lautstärke"></label>`:''}</div></div>
  <div class="spp-cols"><section><h3>Lautsprecher</h3>${devs.length?devs.map(d=>`<button class="spp-row btnrow${d.is_active?' on':''}" data-act="spDev" data-id="${esc(d.id)}"><span>${ic('speaker')} ${esc(d.name)}</span><small>${esc(d.type||'')}${d.is_active?' · aktiv':''}</small></button>`).join(''):'<p class="pmut">Keine Geräte sichtbar. Spotify-App oder Lautsprecher einschalten.</p>'}${isIOS?'<a class="btn" href="spotify:" style="margin-top:8px">Spotify-App öffnen</a>':''}</section>
  <section><h3>Als Nächstes</h3>${q.length?q.slice(0,8).map(t=>`<div class="spp-row spp-q"><b>${esc(t.name)}</b><small>${esc(t.artist)}</small></div>`).join(''):'<p class="pmut">Keine Warteschlange.</p>'}</section>
- <section><h3>Playlists</h3>${pls.length?pls.map(p=>`<button class="spp-row btnrow" data-act="spCtx" data-u="${esc(p.uri)}"><span>${esc(p.name)}</span><small>${p.n} Titel</small></button>`).join(''):(D.spPls===null&&!S.demo?'<p class="pmut">Playlists lassen sich gerade nicht laden.</p>':'<p class="pmut">Keine Playlists.</p>')}</section>
+ <section><h3>Playlists</h3>${pls.length?pls.map(p=>`<button class="spp-row btnrow" data-act="spCtx" data-u="${esc(p.uri)}"><span>${esc(p.name)}</span><small>${p.n} Titel</small></button>`).join(''):(D.spPls===null&&!(S.demo&&!SP.t)?'<p class="pmut">Playlists lassen sich gerade nicht laden.</p>':'<p class="pmut">Keine Playlists.</p>')}</section>
  <section><h3>Zuletzt gehört</h3>${rec.length?rec.map(t=>`<button class="spp-row btnrow" data-act="spTrack" data-u="${esc(t.uri)}"><span>${esc(t.name)}</span><small>${esc(t.artist)}</small></button>`).join(''):'<p class="pmut">Nichts gefunden.</p>'}</section></div>`}
 
 /* ---------- Detail-Fenster ---------- */
@@ -1274,7 +1275,7 @@ async function sp(path,method='GET',body){if(Date.now()<spHold){if(method==='GET
  /* Manche Antworten (z. B. Warteschlange, Wiedergabe) sind kein JSON, sondern nur eine Kennung */
  const tx=await r.text().catch(()=>'');if(!tx)return{};try{return JSON.parse(tx)}catch{return{}}}
 let spSig='',recentAt=0,spLast=0,spPopAt=0;
-async function loadSpotify(){if(S.demo){if(!D.sp)demoData();repaint('spotify');spPop();return}if(!SP.t){D.sp=null;repaint('spotify');return}spSdk();if(Date.now()<spHold)return;spLast=Date.now();
+async function loadSpotify(){if(S.demo&&!SP.t){if(!D.sp)demoData();repaint('spotify');spPop();return}if(!SP.t){D.sp=null;repaint('spotify');return}spSdk();if(Date.now()<spHold)return;spLast=Date.now();
  try{const p=await sp('/me/player?additional_types=episode'),it=p&&p.item;
   if(it){const prev=D.sp;D.sp={id:it.id,uri:it.uri,title:it.name,artist:(it.artists||(it.show?[it.show]:[])).map(a=>a.name).join(', '),cover:(it.album?.images||it.images||[])[0]?.url,playing:p.is_playing,prog:p.progress_ms,dur:it.duration_ms,at:Date.now(),device:p.device?.name,devId:p.device?.id,vol:p.device&&p.device.supports_volume!==false?p.device.volume_percent:null,shuffle:p.shuffle_state,repeat:p.repeat_state,liked:prev&&prev.id===it.id?prev.liked:undefined};
    if(D.sp.liked===undefined&&it.type==='track'){try{const r=await sp('/me/tracks/contains?ids='+it.id);D.sp.liked=!!(r&&r[0])}catch{D.sp.liked=false}}}
@@ -1282,7 +1283,7 @@ async function loadSpotify(){if(S.demo){if(!D.sp)demoData();repaint('spotify');s
  catch(e){if(e.message!==D.spErr)toast(e.message);D.spErr=e.message;if(!SP.t)D.sp=null}
  const sig=JSON.stringify([D.sp?.title,D.sp?.playing,D.sp?.idle,D.sp?.recent?.title,D.sp?.device,!!SP.t]);if(sig!==spSig){spSig=sig;repaint('spotify')}if(D.popKind==='spotify')spPop()}
 const spPct=()=>{const s=D.sp;if(!s||!s.dur)return 0;return Math.min(100,(s.prog+(s.playing?Date.now()-s.at:0))/s.dur*100)};
-async function spCtl(c){if(S.demo){const s=D.sp;if(!s)return;if(c==='toggle'){s.prog+=s.playing?Date.now()-s.at:0;s.at=Date.now();s.playing=!s.playing}else if(c==='shuffle')s.shuffle=!s.shuffle;else if(c==='repeat')s.repeat={off:'context',context:'track',track:'off'}[s.repeat||'off'];else if(c==='like')s.liked=!s.liked;else{s.prog=0;s.at=Date.now()}spSig='';repaint('spotify');spPop();return}
+async function spCtl(c){if(S.demo&&!SP.t){const s=D.sp;if(!s)return;if(c==='toggle'){s.prog+=s.playing?Date.now()-s.at:0;s.at=Date.now();s.playing=!s.playing}else if(c==='shuffle')s.shuffle=!s.shuffle;else if(c==='repeat')s.repeat={off:'context',context:'track',track:'off'}[s.repeat||'off'];else if(c==='like')s.liked=!s.liked;else{s.prog=0;s.at=Date.now()}spSig='';repaint('spotify');spPop();return}
  try{const s=D.sp;if(c==='toggle'){if(s&&!s.idle&&s.playing)await sp('/me/player/pause','PUT');else{const id=await spEnsureDevice();if(!id)return;await sp('/me/player/play?device_id='+encodeURIComponent(id),'PUT')}}
   else if(c==='next'||c==='previous')await sp('/me/player/'+c,'POST');
   else if(c==='shuffle')await sp('/me/player/shuffle?state='+!(s&&s.shuffle),'PUT');
@@ -1326,7 +1327,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='3.0.5';
+const VERSION='3.1.0';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>
@@ -1361,7 +1362,7 @@ function openSettings(keepScroll){const con=!!SP.t,v=k=>esc(S[k]),sc=keepScroll?
  $('#s_ph').onchange=e=>{readSettings();addPhotos([...e.target.files]).then(()=>openSettings(true))};
  $('#modal').hidden=false;if(sc)$('.sheet').scrollTop=sc}
 function readSettings(){const g=id=>($('#'+id)?.value||'').trim();if(!$('#s_h24'))return;S.h24=$('#s_h24').checked;S.wakeMode=$('#s_wake').value;S.city=g('s_city');S.zones=g('s_zones');S.ics=g('s_ics');S.proxy=g('s_proxy');S.rss=g('s_rss');S.pegel=g('s_pegel');S.radio=($('#s_radio')?.value||'').trim();S.demo=$('#s_demo').checked;if($('#s_phi'))S.phInfo=$('#s_phi').value;S.unKey=g('s_un');const nm=$('#s_nm').value;if(nm!==S.nightMode)S.nOv=null;S.nightMode=nm;S.nightFrom=$('#s_nf').value||'22:00';S.nightTo=$('#s_nt').value||'07:00';save()}
-function afterSettings(){applyLook();loadWiki();loadPegel();$('#demoTag').hidden=!S.demo;if(!S.demo){D.evDemo=[];D.news=[];D.sp=null;D.weather=null}if(S.wakeMode==='always'||(S.wakeMode==='cook'&&cook))wake();else unwake();loadWeather();loadCalendar();loadNews();renderStage()}
+function afterSettings(){applyLook();loadWiki();loadPegel();$('#demoTag').hidden=!S.demo;if(!S.demo){D.evDemo=[];D.news=[];D.sp=null;D.weather=null;/* keine Demo-Reste im Spotify-Fenster */D.spDevs=null;D.spPls=null;D.spQueue=null;D.spRecent=null;D.spDevAt=0;spPopAt=0;spSig=''}if(S.wakeMode==='always'||(S.wakeMode==='cook'&&cook))wake();else unwake();loadWeather();loadCalendar();loadNews();renderStage();loadSpotify()}
 const edit=fn=>{readSettings();fn();save();openSettings(true)};
 
 /* ---------- Aktionen ---------- */

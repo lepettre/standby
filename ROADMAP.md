@@ -69,15 +69,15 @@ Offen geblieben: Punkt 11 (Google-Client) wird mit der fest eingebauten Client-I
 2. **Größe per Fingergeste und Eckpfeil** (F, erledigt; Fingergeste nur in Safari): Im Wackelmodus mit zwei Fingern auf- und zuziehen; ohne Touch per Ziehgriff an der Ecke. Das Durchschalten der Größen per Etikett entfällt.
 3. **Vollbild neu denken** (F, erledigt): Vollbild verdrängt bisher alle anderen Module in einen unsichtbaren Bereich. Lösung: Vollbild als eigene Ansicht oder als vorübergehende Vergrößerung, nicht als Modulgröße.
 4. **Allgemeine Einstellungen entrümpeln** (F, erledigt): Alles, was ein Widget selbst regelt, wandert ins Widget. In den allgemeinen Einstellungen bleiben Verbindungen (Spotify, Google, CORS-Proxy, Unsplash), Darstellung, Nachtmodus, Datensicherung, Über.
-5. **Weltuhr** (F, Ortssuche erledigt; elegantere Darstellung offen): Beim Tippen Städte vorschlagen (Ortssuche), Auswahl nach Städtenamen statt Zeitzonen-Kennungen, elegantere Darstellung.
+5. **Weltuhr** (F, erledigt in 4.0.0 und 4.1.0): Beim Tippen Städte vorschlagen (Ortssuche), Auswahl nach Städtenamen statt Zeitzonen-Kennungen, elegantere Darstellung.
 6. **Migration** (P, erledigt): Gespeicherte 3.x-Einstellungen automatisch übernehmen.
 
-## 4.1.0 – Neue Darstellungen, schönere Fenster
+## 4.1.0 – Neue Darstellungen, schönere Fenster (ausgeliefert)
 
-1. **Nachrichten-Übersicht** (F): Ein Widget mit mehreren Schlagzeilen gleichzeitig, ohne Antippen. Weitere Optionen je Feed.
-2. **Laufband mehrzeilig** (F): Kleinere Schrift, mehrere Zeilen, dieselben Schlagzeilen versetzt, mit typografischem Spiel.
-3. **Detailfenster überarbeiten** (F): Eleganter, stimmig zum Stil, ohne sichtbare Scrollbalken oder mit gestalteten.
-4. **Spotify-Bibliothek** (F, Grundfunktion in 3.1.1): Lieblingssongs, Alben und Playlists durchsuchen und abspielen.
+1. **Nachrichten-Übersicht** (F, erledigt in 4.1.0): Ein Widget mit mehreren Schlagzeilen gleichzeitig, ohne Antippen. Weitere Optionen je Feed.
+2. **Laufband mehrzeilig** (F, erledigt in 4.1.0): Kleinere Schrift, mehrere Zeilen, dieselben Schlagzeilen versetzt, mit typografischem Spiel.
+3. **Detailfenster überarbeiten** (F, erledigt in 4.1.0): Eleganter, stimmig zum Stil, ohne sichtbare Scrollbalken oder mit gestalteten.
+4. **Spotify-Bibliothek** (F, erledigt in 3.1.1 und 4.1.0, soweit Spotify die Daten freigibt): Lieblingssongs, Alben und Playlists durchsuchen und abspielen.
 
 ## 4.2.0 – Kochmodus, ältere Ideen
 

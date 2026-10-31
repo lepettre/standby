@@ -2,6 +2,14 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.1.0 – 31.10.2026
+
+- Neues Widget „Schlagzeilen-Übersicht“: mehrere nummerierte Schlagzeilen untereinander mit Alter, ohne Antippen lesbar, eigener Feed je Widget.
+- Laufband mehrzeilig: kleinere Schrift, mehrere Zeilen mit denselben Schlagzeilen versetzt, abwechselnd fett, leicht und als Kontur, gegenläufig.
+- Detailfenster ruhiger: sanftes Einblenden, mehr Luft, Zwischenüberschriften klein in Versalien, feinere Linien, kein sichtbarer Scrollbalken. Diagramm im Wetterfenster richtig verankert.
+- Spotify-Bibliothek durchsuchen: Suchfeld in Playlists, Lieblingssongs, Alben und Zuletzt gehört.
+- Weltzeit eleganter: Stadtname größer, Zeitverschiebung in Stunden statt „Heute“, schmal untereinander, 1 × 1 ohne Zusatzzeile.
+
 ## 4.0.0 – 31.10.2026
 
 - Langdruck auf ein Widget öffnet ein Menü wie bei iOS: Widget bearbeiten, groß anzeigen, Ansicht bearbeiten.

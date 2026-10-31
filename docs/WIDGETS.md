@@ -79,3 +79,8 @@ Alle 39 Widgets von Version 3.0.0 mit interner Kennung, Beschreibung, Hintergrun
 ## Bekannte Darstellungsfehler in 3.0.0
 
 Siehe ROADMAP.md, Version 3.0.1,.
+
+## Neu in 4.1
+
+- Schlagzeilen-Übersicht (`headlines`): bis zu acht nummerierte Schlagzeilen mit Alter, Feed je Widget.
+- Laufband (`ticker`) mehrzeilig, Zeilenzahl nach Kachelform.

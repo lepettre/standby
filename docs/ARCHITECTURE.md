@@ -76,3 +76,7 @@ Prüfkette nach jeder Änderung:
 | Tag-Nacht-Karte | `sunPos`, `sunAlt`, `mx`, `my`, `LAND` |
 | Farbsystem | `lum`, `mixHex`, `single`, `curCol`, `applyLook` |
 | Stilpaket | `stylePack`, `cssVars`, `importStyle` |
+
+## Optionen je Widget (ab 4.0)
+
+Jedes Modul in `dash().mods[i]` kann `o` tragen: `o[key] = {…}` je Widget im Stapel. Karten kennen ihr Modul über `data-mi`; `opt(c)` liest, `setOpt(mi,k,o)` schreibt. Felder: `nodate`, `city`, `feed`, `station`, `cals`, `cities[{n,tz,lat,lon}]`. Daten je Option: `D.wxBy`, `D.newsBy`, `D.pegelBy` mit Abruf bei Bedarf (`wxFor`, `newsOf`, `pegelOf`, `cities`). Langdruck: `ctxOpen`; Widget-Blatt: `wSheet`, `wsRead`. Größe: Eckgriff `.ed-rs` und `gestureend`. Hochformat spiegelt das Querformat-Raster (`isTall`).

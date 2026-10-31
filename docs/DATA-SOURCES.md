@@ -77,3 +77,5 @@ Alles ist an die Adresse (Origin) gebunden. Wechselt die Adresse, sind die Daten
 ## CORS-Proxy
 
 Frei eintragbar (`S.proxy`); Platzhalter `https://dein-proxy.example/`. Empfehlung: eigener Cloudflare-Worker.
+
+Ab 4.0 liefert die Open-Meteo Geocoding API auch die Zeitzone (`timezone`); sie dient der Städteauswahl für Weltzeit und Weltkarte.

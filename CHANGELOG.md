@@ -2,6 +2,15 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.0.0 – 31.10.2026
+
+- Langdruck auf ein Widget öffnet ein Menü wie bei iOS: Widget bearbeiten, groß anzeigen, Ansicht bearbeiten.
+- Einstellungen je Widget: Datum an Uhren ein/aus, Ort je Wetter-Widget (mehrere Orte gleichzeitig), Feed je Nachrichten-Widget, Messstelle je Pegel, Kalender je Kalender-Widget, Städte für Weltzeit und Weltkarte per Ortssuche (Stadtname statt Zeitzonen-Kennung), Senderliste im Radio-Widget.
+- Größe ändern im Bearbeiten-Modus mit dem Eckgriff (ziehen) oder mit zwei Fingern (aufziehen/zusammenziehen); das Durchschalten per Etikett entfällt.
+- Vollbild neu: „Groß anzeigen“ vergrößert ein Widget vorübergehend. Die Größe Vollbild gibt es nur noch für eine eigene Ansicht.
+- Migration: Vollbild-Module, die bisher andere Module verdrängten, wandern in eine eigene Ansicht. Bisherige Werte für Weltzeit, Feed, Pegel, Radio und Kalender bleiben als Voreinstellung erhalten.
+- Allgemeine Einstellungen entrümpelt: Weltzeit, Kalender je Widget, Pegel, Radio und Nachrichten stehen jetzt im jeweiligen Widget. „Wetter“ heißt „Standort“ (Wetter und Nachtmodus).
+
 ## 3.2.1 – 31.10.2026
 
 - Einstellungen und Farben wackeln nicht mehr seitlich: Eingabefelder mindestens 16 px (sonst zoomt iOS hinein), kein seitliches Scrollen.

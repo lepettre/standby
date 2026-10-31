@@ -699,6 +699,23 @@ input:not([type=checkbox]):not([type=range]):not([type=color]),select,textarea{f
 .w-hubcard{padding:0;background:#000}
 .w-hubcard .hub{height:100%;max-width:none;padding:14px 16px 20px}
 @media (orientation:landscape){.w-hubcard .hub{padding-top:56px}}
+
+/* 4.0: Kontextmenü, Widget-Blatt, groß anzeigen */
+#ctx{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ctx-in{position:absolute;min-width:230px;background:rgba(40,40,44,.96);border:1px solid #3a3a3c;border-radius:16px;padding:6px;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,.6)}
+.ctx-in b{font-size:12px;color:var(--muted);padding:8px 12px 6px;font-weight:600}
+.ctx-in button{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;font-size:16px;text-align:left}
+.ctx-in button:active{background:#3a3a3c}
+.ws h2{display:flex;justify-content:space-between;align-items:center}
+.ws .sec{margin:0}.btnrow.cty span{display:flex;flex-direction:column}.btnrow.cty small{color:var(--muted)}
+#big{position:fixed;inset:0;z-index:55;background:#000;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
+#big .big-card{height:100%;width:100%}
+.big-x{position:absolute;top:calc(env(safe-area-inset-top) + 18px);right:calc(env(safe-area-inset-right) + 18px);z-index:3}
+.nodate .cb-date,.nodate .cf-date,.nodate .cs-d,.nodate .co-d,.nodate .fl-d{display:none}
+
+.ed-rs{position:absolute;right:-6px;bottom:-6px;z-index:8;min-width:44px;height:30px;padding:0 10px 0 22px;border-radius:99px;background:rgba(58,58,60,.96);color:#fff;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.5);touch-action:none;cursor:nwse-resize}
+.ed-rs::before{content:"";position:absolute;left:9px;top:50%;width:8px;height:8px;margin-top:-4px;border-right:2px solid #fff;border-bottom:2px solid #fff}
+.sec input[type=search]{width:100%;background:#111;border:1px solid #333;border-radius:12px;padding:10px 12px;font-size:16px;color:#fff;-webkit-appearance:none;appearance:none}
 </style>
 </head>
 <body>
@@ -727,7 +744,7 @@ input:not([type=checkbox]):not([type=range]):not([type=color]),select,textarea{f
  <div id="lib" hidden></div>
  <div id="toast" role="status" aria-live="polite"></div>
  <div id="demoTag" hidden>Demo</div>
- <div id="modal" hidden></div>
+ <div id="ctx" hidden data-act="ctxClose"></div><div id="big" hidden></div><div id="modal" hidden></div>
 </div>
 
 <script>
@@ -771,6 +788,8 @@ if(S.wakeMode==null||!['off','always','cook'].includes(S.wakeMode))S.wakeMode=S.
 delete S.wake;
 let DASHES=LS.get('dashes',null)||JSON.parse(JSON.stringify(DEFAULT_DASH));
 if(LS.get('dash_v',1)<5){DASHES=JSON.parse(JSON.stringify(DEFAULT_DASH));S.dash='duo';LS.set('dashes',DASHES);LS.set('dash_v',5)}
+/* Migration 4.0: Vollbild-Module neben anderen Modulen bekommen eine eigene Ansicht; nichts geht verloren */
+if(LS.get('dash_v',5)<6){const add=[];DASHES.forEach(d=>{if(!d.mods||d.mods.length<2)return;const f=d.mods.filter(m=>m.s==='full');if(!f.length)return;d.mods=d.mods.filter(m=>m.s!=='full');f.forEach((m,i)=>add.push({id:d.id+'-v'+i,name:(WIDGETS[m.ks[0]]||'Vollbild'),mods:[m]}))});DASHES.push(...add);LS.set('dashes',DASHES);LS.set('dash_v',6)}
 const save=()=>{LS.set('settings',S);LS.set('dashes',DASHES)};
 const dash=()=>DASHES.find(d=>d.id===S.dash)||DASHES[0];
 const DEMO=['https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600','https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=1600'];
@@ -796,14 +815,14 @@ const pairOf=r=>D.rph[r.id]?['#000','#fff']:(PAIR[r.c[0]]||['#1c1c1e','#fff']);
 const pv=r=>{const[b,f]=pairOf(r);return`--bg:${b};--fg:${f}`};
 
 /* ---------- Kalender-Helfer ---------- */
-function evList(n,type){const t=new Date(),up=evFor(type).filter(e=>e.end>t).sort((a,b)=>a.start-b.start).slice(0,n);let last='';
+function evList(n,type,c){const t=new Date(),up=evFor(type,c).filter(e=>e.end>t).sort((a,b)=>a.start-b.start).slice(0,n);let last='';
  return up.length?`<ul class="ag">${up.map(e=>{const s=e.start<sod(t)?t:e.start,day=sameDay(s,t)?'Heute':sameDay(s,new Date(+sod(t)+864e5))?'Morgen':s.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'short'});const h=day!==last?(last=day,`<li class="day">${day}</li>`):'';return h+`<li${e.color?` style="--c:${e.color}"`:''}><div style="min-width:0"><div class="trunc">${esc(e.title||'Ohne Titel')}</div><time>${e.allDay?'Ganztägig':fmtT(e.start)+' – '+fmtT(e.end)}</time></div></li>`}).join('')}</ul>`:ghost([70,40,55],'Keine anstehenden Termine')}
 const ghost=(rows,label)=>`<div class="skel">${rows.map(w=>`<i style="width:${w}%"></i>`).join('')}<div class="skel-l">${label}</div></div>`;
 function calStatus(){if(S.demo)return'';if(!S.ics.trim()&&!LS.get('g_ok',false))return ghost([78,46,64,34],'Noch kein Kalender verbunden. In den Einstellungen Google verbinden.');
  const er=[D.calErr,D.gErr].filter(Boolean);return er.length?`<div class="cal-err">${er.map(esc).join('<br>')}${D.gExpired?` <button class="go sm" data-act="gRefresh" style="--fg:currentColor;--bg:transparent;border:1.5px solid currentColor">Erneuern</button>`:''}</div>`:''}
 const repaintCal=()=>repaint(...CALW);
-const calSrc=()=>S.demo?[{id:'demo',name:'Demo-Kalender',color:'#ff9f0a'}]:[...D.gCals.filter(x=>(S.gSel||[]).includes(x.id)).map(x=>({id:x.id,name:x.name,color:x.color})),...(S.ics.trim()?[{id:'ics',name:'ICS-Feed',color:'#8e8e93'}]:[])];
-const evFor=type=>{const w=S.wcal&&S.wcal[type];return w?D.events.filter(e=>w.includes(e.cal)):D.events};
+const calSrc=()=>S.demo?[{id:'demo',name:'Demo-Kalender',color:'#ff9f0a'}]:[...D.gCals.filter(x=>(S.gSel||[]).includes(x.id)).map(x=>({id:x.id,name:x.name,color:x.color})),...(S.ics.trim()||LS.get('ics_file')?[{id:'ics',name:'ICS-Kalender',color:'#8e8e93'}]:[])];
+const evFor=(type,c)=>{const w=(c&&opt(c).cals)||(S.wcal&&S.wcal[type]);return w?D.events.filter(e=>w.includes(e.cal)):D.events};
 const isoWeek=d=>{const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())),day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil(((t-y)/864e5+1)/7)};
 const NUMW=['zwölf','eins','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn','elf'];
 function wordTime(t){const h=t.getHours(),m=t.getMinutes(),blk=Math.round(m/5)*5,d=m-blk,H=h%12,H1=(h+1)%12,hw=x=>`<em>${NUMW[x]}</em>`,full=x=>`<em>${x===1?'ein':NUMW[x]}</em> Uhr`;
@@ -858,45 +877,45 @@ const W={
    q('.fl-t').textContent=nv;q('.fl-ft').textContent=ov;q('.fl-fb').textContent=nv;q('.fl-b').textContent=ov;f.classList.remove('flip');void f.offsetWidth;f.classList.add('flip');setTimeout(()=>{q('.fl-b').textContent=nv},600)})},
  'day-poster'(c){const t=new Date(),k=t.toDateString()+S.font;if(c._k===k)return;c._k=k;c.innerHTML=`<div class="fitbox" data-mw=".4" data-mh=".75"><div class="dp fitt">${t.toLocaleDateString('de-DE',{weekday:'long'})}</div></div><div class="dp-s"><span>${t.toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'})}</span><span>KW ${isoWeek(t)}</span></div>`;refitSoon(c)},
  countdown(c){const st=calStatus(),head='<div class="cd-l">Nächster Termin</div>';if(st.startsWith('<div class="skel')){c.innerHTML=head+st;return}
-  const now=Date.now(),ev=evFor('countdown').filter(e=>!e.allDay&&+e.end>now).sort((a,b)=>a.start-b.start)[0];
+  const now=Date.now(),ev=evFor('countdown',c).filter(e=>!e.allDay&&+e.end>now).sort((a,b)=>a.start-b.start)[0];
   if(!ev){c.innerHTML=head+'<div class="fitbox" data-mw=".26" data-mh=".6"><div class="cd fitt" style="opacity:.25">–<small>Std</small>––<small>Min</small></div></div><div class="cd-t" style="opacity:.6">Keine anstehenden Termine mit Uhrzeit</div>'+st;refitSoon(c);return}
   const on=+ev.start<=now,ms=(on?+ev.end:+ev.start)-now,d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.ceil(ms%36e5/6e4)%60,
    big=ms<6e4?'jetzt':d?`${d}<small>T</small>${h}<small>Std</small>`:h?`${h}<small>Std</small>${m}<small>Min</small>`:`${m}<small>Min</small>`,src=calSrc().find(x=>x.id===ev.cal);
   c.innerHTML=`<div class="cd-l">${on?'Läuft noch':'Noch'}</div><div class="fitbox" data-mw=".26" data-mh=".6"><div class="cd fitt">${big}</div></div><div class="cd-t">${esc(ev.title||'Termin')}</div><div class="cd-m">${src?`<i class="dot" style="background:${esc(src.color)};margin:0"></i>${esc(src.name)} · `:''}${ev.start.toLocaleDateString('de-DE',{weekday:'short'})} ${fmtT(ev.start)} – ${fmtT(ev.end)}</div>${st}`;refitSoon(c)},
- 'weather-text'(c){const w=D.weather,cls=w?wmo(w.code,w.day)[2]:'';c.className='card w-weather w-weather-text'+(cls?' '+cls:'');if(!w){c.innerHTML=`<div class="hint" style="color:#fff">${esc(D.weatherErr||'Wetter wird geladen …')}</div>`;return}
+ 'weather-text'(c){const w=wxFor(c),cls=w?wmo(w.code,w.day)[2]:'';c.className='card w-weather w-weather-text'+(cls?' '+cls:'');if(!w){c.innerHTML=`<div class="hint" style="color:#fff">${esc(D.weatherErr||'Wetter wird geladen …')}</div>`;return}
   const txt=wmo(w.code,w.day)[0],wet=x=>x>=51,H=w.hourly,ms=x=>Date.parse(x+'Z')-w.off*1000,hr=x=>{const d=new Date(ms(x));return S.h24?d.getHours()+' Uhr':d.toLocaleTimeString('en-US',{hour:'numeric',hour12:true})};let s2='';
   if(H&&H.time){const idx=H.time.map((_,i)=>i).filter(i=>ms(H.time[i])>Date.now()).slice(0,12),isWet=i=>wet(H.c[i])||(H.p[i]??0)>=60;
    if(wet(w.code)){const i=idx.find(i=>!isWet(i));s2=i!=null?`Trocken ab ${hr(H.time[i])}.`:'Die nächsten 12 Stunden nass.'}
    else{const i=idx.find(isWet);s2=i!=null?`Ab ${hr(H.time[i])} ${wet(H.c[i])?wmo(H.c[i],1)[0]:'Niederschlag ('+H.p[i]+' %)'}.`:'Die nächsten 12 Stunden trocken.'}}
   c.innerHTML=`<div class="wx-loc">${esc(w.name)}</div><div class="fitbox" data-mw=".14" data-mh=".3"><div class="wt fitt"><em>${w.temp} Grad</em>, ${txt.toLowerCase()}. ${s2} Heute bis ${w.hi} Grad.</div></div>`;refitSoon(c)},
- ticker(c){if(!D.news.length){c.innerHTML=`<div style="padding:0 18px">${ghost([92],esc(D.newsErr||'Schlagzeilen werden geladen …'))}</div>`;c._sig='';return}const sig=D.news.map(n=>n.title).join('|')+S.font;if(c._sig===sig)return;c._sig=sig;
-  const it=D.news.slice(0,8).map(n=>`<span>${esc(n.title)}</span><i>●</i>`).join('');c.innerHTML=`<div class="tk-h">${ic('rss')} ${esc(D.newsTitle||'Schlagzeilen')}</div><div class="tk"><div class="tk-run">${it}${it}</div></div>`;
+ ticker(c){const N=newsOf(c);if(!N.items.length){c.innerHTML=`<div style="padding:0 18px">${ghost([92],esc(N.err||'Schlagzeilen werden geladen …'))}</div>`;c._sig='';return}const sig=N.items.map(n=>n.title).join('|')+S.font;if(c._sig===sig)return;c._sig=sig;
+  const it=N.items.slice(0,8).map(n=>`<span>${esc(n.title)}</span><i>●</i>`).join('');c.innerHTML=`<div class="tk-h">${ic('rss')} ${esc(N.title||'Schlagzeilen')}</div><div class="tk"><div class="tk-run">${it}${it}</div></div>`;
   requestAnimationFrame(()=>{const r=c.querySelector('.tk-run');if(!r)return;const w=r.scrollWidth/2;r.style.setProperty('--w',w+'px');r.style.animationDuration=Math.max(20,w/80)+'s'})},
  gestirne(c){if(!c._gs){const day=Math.floor(Date.now()/864e5);c._gs={i:day%GS.Q.length,h:0,ang:GS.ORB.map((_,j)=>((day*7+j*13)%63)/10)};
   c.innerHTML=`<div class="gs-box"><div class="gs-top"><div class="gs-hd"><span class="gs-t">DIE GESTIRNE</span></div><canvas class="gs-sky" width="120" height="120" aria-label="Planetenanimation"></canvas></div><div class="fitbox gs-qb" data-mw=".2" data-mh=".34" data-min="12" data-max="80"><blockquote class="gs-q fitt"></blockquote></div><div class="gs-who"><canvas class="gs-pt" width="32" height="32" aria-hidden="true"></canvas><div class="gs-wt"><span class="gs-n"></span><span class="gs-src"></span></div></div></div><div class="gs-heads"><canvas class="gs-hc" width="32" height="32" aria-label="Köpfe der Kritischen Theorie"></canvas></div>`}
   gsPaint(c)},
  station(c){const a=angs();let k='';for(let i=0;i<60;i++){const h=i%5===0;k+=`<rect x="${h?48.3:49.4}" y="6" width="${h?3.4:1.2}" height="${h?10:3.4}" fill="var(--ink2)" transform="rotate(${i*6} 50 50)"/>`}
   c.innerHTML=`<svg class="analog" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><circle cx="50" cy="50" r="48" fill="var(--dial)" stroke="var(--ink2)" stroke-width="1.5"/>${k}<rect x="47" y="22" width="6" height="36" fill="var(--ink2)" transform="rotate(${a.h} 50 50)"/><rect x="47.8" y="10" width="4.4" height="48" fill="var(--ink2)" transform="rotate(${a.m} 50 50)"/><rect x="49.4" y="12" width="1.2" height="50" fill="var(--sec)" transform="rotate(${a.s} 50 50)"/><circle cx="50" cy="50" r="1.6" fill="var(--sec)"/></svg>`},
- 'cal-agenda'(c){const t=new Date(),st=calStatus();c.innerHTML=`<div class="ca"><div class="ca-l"><div class="cal-wd">${t.toLocaleDateString('de-DE',{weekday:'long'})}</div><div class="ca-d">${t.getDate()}</div><div class="cal-wd">${t.toLocaleDateString('de-DE',{month:'long'})}</div></div><div class="ca-r">${st&&st.startsWith('<div class="skel')?st:evList(4,'cal-agenda')+st}</div></div>`},
- week(c){const t=sod(new Date());let h='';for(let i=0;i<3;i++){const d=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i),e=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i+1),ev=evFor('week').filter(v=>v.start<e&&v.end>d).sort((a,b)=>a.start-b.start);
+ 'cal-agenda'(c){const t=new Date(),st=calStatus();c.innerHTML=`<div class="ca"><div class="ca-l"><div class="cal-wd">${t.toLocaleDateString('de-DE',{weekday:'long'})}</div><div class="ca-d">${t.getDate()}</div><div class="cal-wd">${t.toLocaleDateString('de-DE',{month:'long'})}</div></div><div class="ca-r">${st&&st.startsWith('<div class="skel')?st:evList(4,'cal-agenda',c)+st}</div></div>`},
+ week(c){const t=sod(new Date());let h='';for(let i=0;i<3;i++){const d=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i),e=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i+1),ev=evFor('week',c).filter(v=>v.start<e&&v.end>d).sort((a,b)=>a.start-b.start);
   h+=`<div class="wk-d${i?'':' now'}"><div class="wk-h"><span>${WD[d.getDay()]}</span><b>${d.getDate()}</b></div>${ev.slice(0,4).map(v=>`<div class="wk-e"${v.color?` style="--c:${v.color}"`:''}>${esc(v.title||'Termin')}</div>`).join('')}${ev.length>4?`<div class="wk-more">+${ev.length-4}</div>`:''}</div>`}
   const st=calStatus();c.innerHTML=`<div class="w-head"><span>Nächste 3 Tage</span></div>${st&&st.startsWith('<div class="skel')?st:`<div class="wk">${h}</div>${st}`}`},
- forecast(c){const w=D.weather;if(!wxGuard(c,w,'Vorhersage'))return;const nD=w.daily.time.length;c.innerHTML=`<div class="w-head"><span><i class="fc-n7">${nD} Tage</i><i class="fc-n3">${Math.min(3,nD)} Tage</i></span><span>${esc(w.name)}</span></div><div class="fc">${fcRows(w)}</div><div class="fc-lg"><span><b>%</b> Regenrisiko</span><span><i></i> Tiefst bis Höchst</span></div>`},
- 'temp-chart'(c){const w=D.weather;if(!wxGuard(c,w,'Temperatur'))return;const ix=hWin(w),T=ix.map(i=>w.hourly.t[i]);c.innerHTML=`<div class="w-head"><span>Temperatur<i class="lg"> ± 12 Std.</i></span><span>${Math.round(Math.min(...T))}° bis ${Math.round(Math.max(...T))}°</span></div><div class="ch-big">${w.temp}°</div><div class="ch">${chartSVG(w,ix,'temp')}</div>${axis(w,ix)}`},
- 'rain-chart'(c){const w=D.weather;if(!wxGuard(c,w,'Regenrisiko'))return;const ix=hIdx(w,13),P=ix.map(i=>w.hourly.p[i]??0),mx=Math.max(0,...P),d=ix.length?new Date(wms(w,w.hourly.time[ix[P.indexOf(mx)]])):null;
+ forecast(c){const w=wxFor(c);if(!wxGuard(c,w,'Vorhersage'))return;const nD=w.daily.time.length;c.innerHTML=`<div class="w-head"><span><i class="fc-n7">${nD} Tage</i><i class="fc-n3">${Math.min(3,nD)} Tage</i></span><span>${esc(w.name)}</span></div><div class="fc">${fcRows(w)}</div><div class="fc-lg"><span><b>%</b> Regenrisiko</span><span><i></i> Tiefst bis Höchst</span></div>`},
+ 'temp-chart'(c){const w=wxFor(c);if(!wxGuard(c,w,'Temperatur'))return;const ix=hWin(w),T=ix.map(i=>w.hourly.t[i]);c.innerHTML=`<div class="w-head"><span>Temperatur<i class="lg"> ± 12 Std.</i></span><span>${Math.round(Math.min(...T))}° bis ${Math.round(Math.max(...T))}°</span></div><div class="ch-big">${w.temp}°</div><div class="ch">${chartSVG(w,ix,'temp')}</div>${axis(w,ix)}`},
+ 'rain-chart'(c){const w=wxFor(c);if(!wxGuard(c,w,'Regenrisiko'))return;const ix=hIdx(w,13),P=ix.map(i=>w.hourly.p[i]??0),mx=Math.max(0,...P),d=ix.length?new Date(wms(w,w.hourly.time[ix[P.indexOf(mx)]])):null;
   c.innerHTML=`<div class="w-head"><span>Regenrisiko<i class="lg"> ± 12 Std.</i></span></div><div class="ch-big">${mx} %<small>${mx>0&&d?'gegen '+(S.h24?d.getHours()+' Uhr':d.toLocaleTimeString('en-US',{hour:'numeric',hour12:true})):'trocken'}</small></div><div class="ch">${chartSVG(w,hWin(w),'rain')}</div>${axis(w,hWin(w))}`},
- 'wx-combo'(c){const w=D.weather;if(!wxGuard(c,w,'Temperatur und Regen'))return;const ix=hIdx(w,24),P=ix.map(i=>w.hourly.p[i]??0);c.innerHTML=`<div class="w-head"><span>Temperatur und Regen</span></div><div class="ch-big">${w.temp}°<small><i class="ch-key"></i>Regen bis ${Math.max(0,...P)} %</small></div><div class="ch">${chartSVG(w,hWin(w),'combo')}</div>${axis(w,hWin(w))}`},
- sun(c){const w=D.weather;if(!wxGuard(c,w,'Sonne'))return;const sr=wms(w,w.sunrise[0]),ss=wms(w,w.sunset[0]),now=Date.now(),up=now>sr&&now<ss,f=Math.max(0,Math.min(1,(now-sr)/(ss-sr))),a=Math.PI*(1-f),x=50+40*Math.cos(a),y=50-40*Math.sin(a),len=ss-sr;
+ 'wx-combo'(c){const w=wxFor(c);if(!wxGuard(c,w,'Temperatur und Regen'))return;const ix=hIdx(w,24),P=ix.map(i=>w.hourly.p[i]??0);c.innerHTML=`<div class="w-head"><span>Temperatur und Regen</span></div><div class="ch-big">${w.temp}°<small><i class="ch-key"></i>Regen bis ${Math.max(0,...P)} %</small></div><div class="ch">${chartSVG(w,hWin(w),'combo')}</div>${axis(w,hWin(w))}`},
+ sun(c){const w=wxFor(c);if(!wxGuard(c,w,'Sonne'))return;const sr=wms(w,w.sunrise[0]),ss=wms(w,w.sunset[0]),now=Date.now(),up=now>sr&&now<ss,f=Math.max(0,Math.min(1,(now-sr)/(ss-sr))),a=Math.PI*(1-f),x=50+40*Math.cos(a),y=50-40*Math.sin(a),len=ss-sr;
   c.innerHTML=`<div class="w-head"><span>Sonne</span><span>${Math.floor(len/36e5)} Std. ${Math.round(len%36e5/6e4)} Min.</span></div><svg class="sunarc" viewBox="0 0 100 56" preserveAspectRatio="xMidYMid meet"><path d="M10 50 A40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="1.2" stroke-dasharray="1.5 2.5"/>${up?`<path d="M10 50 A40 40 0 0 1 ${x.toFixed(2)} ${y.toFixed(2)}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>`:''}<line x1="2" y1="50" x2="98" y2="50" stroke="currentColor" stroke-opacity=".4" stroke-width=".8"/>${up?`<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="4.5" fill="var(--accent)"/>`:''}</svg><div class="sun-row"><div><small>Aufgang</small><b>${(w.sunrise[now>ss?1:0]||'').slice(11,16)}</b></div><div style="text-align:right"><small>Untergang</small><b>${(w.sunset[now>ss?1:0]||'').slice(11,16)}</b></div></div>`},
- uv(c){const w=D.weather;if(!wxGuard(c,w,'UV-Index'))return;const v=w.uv??0,mx=w.daily.uv[0]??v;c.innerHTML=`<div class="w-head"><span>UV-Index</span><span>heute bis ${Math.round(mx)}</span></div><div class="fitbox mid" data-mw=".5" data-mh=".6"><div class="uv-n fitt">${Math.round(v)}</div></div><div class="uv-c">${uvCat(v)}</div><div class="uv-bar"><i style="left:${Math.min(100,v/11*100).toFixed(1)}%"></i></div>`},
- pollen(c){const w=D.weather;if(!wxGuard(c,w,'Pollenflug'))return;const rows=pollenRows(w),head='<div class="w-head"><span>Pollenflug</span><span>Körner/m³</span></div>';
+ uv(c){const w=wxFor(c);if(!wxGuard(c,w,'UV-Index'))return;const v=w.uv??0,mx=w.daily.uv[0]??v;c.innerHTML=`<div class="w-head"><span>UV-Index</span><span>heute bis ${Math.round(mx)}</span></div><div class="fitbox mid" data-mw=".5" data-mh=".6"><div class="uv-n fitt">${Math.round(v)}</div></div><div class="uv-c">${uvCat(v)}</div><div class="uv-bar"><i style="left:${Math.min(100,v/11*100).toFixed(1)}%"></i></div>`},
+ pollen(c){const w=wxFor(c);if(!wxGuard(c,w,'Pollenflug'))return;const rows=pollenRows(w),head='<div class="w-head"><span>Pollenflug</span><span>Körner/m³</span></div>';
   if(!rows||!rows.length){c.innerHTML=head+ghost([70,50,60],'Für diesen Ort gibt es keine Pollendaten.');return}const top=rows[0].max;
   if(top<1){c.innerHTML=head+'<div class="fitbox mid" data-mw=".13" data-mh=".3"><div class="pl-big fitt">Derzeit kein messbarer Pollenflug</div></div>';return}
   c.innerHTML=head+`<div class="pl-top"><b>${rows[0].k}</b> ${Math.round(top)}</div><div class="pl-l">${rows.map(r=>`<div class="pl-r"><span>${r.k}</span><span class="pl-b"><i style="width:${(r.max/top*100).toFixed(0)}%"></i></span><b>${Math.round(r.max)}</b></div>`).join('')}</div>`},
  wiki(c){const w=D.wiki,head='<div class="w-head"><span>Wikipedia</span><span>Was geschah heute</span></div>';if(!w){c.innerHTML=head+ghost([90,80,50],esc(D.wikiErr||'Wird geladen …'));return}const L=w.otd;
   if(!L.length){c.innerHTML=head+(w.tfa?`<div class="fitbox" data-mw=".1" data-mh=".3"><div class="wi-t fitt"><em>${esc(w.tfa.title)}</em> ${esc(w.tfa.extract||'')}</div></div>`:ghost([80,60],'Heute keine Einträge.'));return}const x=L[(c._wi||0)%L.length];
   c.innerHTML=head+`<div class="wi-y">${x.year}<small>vor ${new Date().getFullYear()-x.year} Jahren</small></div><div class="fitbox" data-mw=".1" data-mh=".28" data-min="11"><div class="wi-t fitt">${esc(x.text)}</div></div>`},
- pegel(c){const p=D.pegel,head=`<div class="w-head"><span>${ic('wave')} ${esc(p?tcase(p.name):'Pegel')}</span></div>`;if(!p||!p.pts.length){c.innerHTML=head+ghost([80,55,65],esc(D.pegelErr||'Wird geladen …'));return}
+ pegel(c){const PG=pegelOf(c);const p=PG.p,head=`<div class="w-head"><span>${ic('wave')} ${esc(p?tcase(p.name):'Pegel')}</span></div>`;if(!p||!p.pts.length){c.innerHTML=head+ghost([80,55,65],esc(PG.err||'Wird geladen …'));return}
   const last=p.pts[p.pts.length-1],prev=p.pts.find(x=>x.t>=last.t-36e5)||p.pts[0],tr=last.v-prev.v;
   c.innerHTML=head+`<div class="pg-n">${last.v}<small>cm</small></div><div class="pg-tr">${tr>2?'steigt':tr<-2?'fällt':'gleichbleibend'}, ${tr>0?'+':''}${tr} cm in 1 Std.</div><div class="ch">${pegelSVG(p.pts)}</div><div class="ch-x"><span>vor 24 Std.</span><span>${new Date(last.t).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</span></div>`},
  radio(c){const L=radioList(),x=L[radioI%Math.max(1,L.length)],on=!AUD.paused&&!!AUD.src;
@@ -905,19 +924,19 @@ const W={
   LAND.forEach((row,r)=>{const lat=78-r*136/39;for(let i=0;i<row.length;i++){if(row[i]!=='1')continue;const lon=-180+360*(i+.5)/90,a=sunAlt(sp,lat,lon),o=a>0?.95:a>-.1?.45:.2;dots+=`<circle cx="${5+i*10}" cy="${5+r*10}" r="3.3" fill="currentColor" fill-opacity="${o}"/>`}});
   let tan=Math.tan(sp.dec);if(Math.abs(tan)<1e-3)tan=1e-3;let path='';
   for(let lon=-180;lon<=180;lon+=3){const lat=Math.atan(-Math.cos((lon-sp.lon)*Math.PI/180)/tan)*180/Math.PI;path+=(path?'L':'M')+mx(lon).toFixed(1)+' '+my(lat).toFixed(1)}
-  const here=D.loc||{lat:52.52,lon:13.405,name:'Hier'};const pts=[{lat:here.lat,lon:here.lon,name:'Hier',main:true},...zoneList().filter(z=>ZC[z]).map(z=>({lat:ZC[z][0],lon:ZC[z][1],name:ZC[z][2]}))];
+  const here=D.loc||{lat:52.52,lon:13.405,name:'Hier'};const pts=[{lat:here.lat,lon:here.lon,name:'Hier',main:true},...cities(c).filter(x=>x.lat!=null).map(x=>({lat:x.lat,lon:x.lon,name:x.n}))];
   const mk=pts.filter(p=>!p.main).map(p=>{const x=mx(p.lon),y=my(Math.max(-58,Math.min(78,p.lat)));return`<circle cx="${x}" cy="${y}" r="6" fill="var(--accent)" stroke="#000" stroke-width="2"/>`}).join('')+pts.filter(p=>p.main).map(p=>`<circle cx="${mx(p.lon)}" cy="${my(Math.max(-58,Math.min(78,p.lat)))}" r="12" fill="var(--accent)" stroke="#fff" stroke-width="7"/>`).join('');
-  const z=zoneList()[0];
+  const z=cities(c)[0].tz,zc=cities(c)[0];
   c.innerHTML=`<svg class="solar" viewBox="0 0 900 400" preserveAspectRatio="xMidYMid meet">${dots}<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-opacity=".6" stroke-dasharray="2 6" stroke-linecap="round"/>${mk}</svg>
-   <div class="sl-row"><div><small>${esc(here.name==='Hier'?'Hier':here.name)}</small><b>${fmtT(t)}</b></div><div style="text-align:right"><small>${esc(zName(z))}</small><b>${t.toLocaleTimeString('de-DE',{timeZone:z,hour:'2-digit',minute:'2-digit',hour12:!S.h24})}</b></div></div>`},
+   <div class="sl-row"><div><small>${esc(here.name==='Hier'?'Hier':here.name)}</small><b>${fmtT(t)}</b></div><div style="text-align:right"><small>${esc(zc.n)}</small><b>${t.toLocaleTimeString('de-DE',{timeZone:z,hour:'2-digit',minute:'2-digit',hour12:!S.h24})}</b></div></div>`},
  world(c){const now=new Date(),here=now.toLocaleDateString('en-CA');
-  c.innerHTML=`<div class="w-head acc"><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Weltzeit</span></div><ul class="wl">${zoneList().slice(0,4).map(z=>{const d=now.toLocaleDateString('en-CA',{timeZone:z}),rel=d>here?'Morgen':d<here?'Gestern':'Heute';return`<li><div><div class="trunc" style="font-weight:700">${esc(zName(z))}</div><span>${rel}</span></div><b>${now.toLocaleTimeString('de-DE',{timeZone:z,hour:'2-digit',minute:'2-digit',hour12:!S.h24})}</b></li>`}).join('')}</ul>`},
+  c.innerHTML=`<div class="w-head acc"><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Weltzeit</span></div><ul class="wl">${cities(c).slice(0,4).map(({n:zn,tz:z})=>{const d=now.toLocaleDateString('en-CA',{timeZone:z}),rel=d>here?'Morgen':d<here?'Gestern':'Heute';return`<li><div><div class="trunc" style="font-weight:700">${esc(zn)}</div><span>${rel}</span></div><b>${now.toLocaleTimeString('de-DE',{timeZone:z,hour:'2-digit',minute:'2-digit',hour12:!S.h24})}</b></li>`}).join('')}</ul>`},
  calendar(c){const t=new Date(),y=t.getFullYear(),m=t.getMonth(),off=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate();
   let g=['M','D','M','D','F','S','S'].map(x=>`<span class="dow">${x}</span>`).join('')+'<span></span>'.repeat(off);
-  for(let d=1;d<=n;d++){const s=new Date(y,m,d),e=new Date(y,m,d+1),has=evFor('calendar').some(v=>v.start<e&&v.end>s);g+=`<span class="${d===t.getDate()?'today':''}${has?' ev':''}"><em>${d}</em></span>`}
+  for(let d=1;d<=n;d++){const s=new Date(y,m,d),e=new Date(y,m,d+1),has=evFor('calendar',c).some(v=>v.start<e&&v.end>s);g+=`<span class="${d===t.getDate()?'today':''}${has?' ev':''}"><em>${d}</em></span>`}
   c.innerHTML=`<div class="cal-in"><div class="cal-l"><div class="cal-wd">${t.toLocaleDateString('de-DE',{weekday:'long'})}, ${t.toLocaleDateString('de-DE',{month:'long'})}</div><div class="cal-d">${t.getDate()}</div></div><div class="cal-g">${g}</div></div>`},
- agenda(c){const t=new Date(),st=calStatus();c.innerHTML=`<div class="w-head"><span>${t.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</span></div>${st&&st.startsWith('<div class="skel')?st:evList(6,'agenda')+st}`},
- weather(c){const w=D.weather;c.className='card w-weather';if(!w){c.innerHTML=`<div class="hint" style="color:#fff">${esc(D.weatherErr||'Wetter wird geladen …')}</div>`;return}
+ agenda(c){const t=new Date(),st=calStatus();c.innerHTML=`<div class="w-head"><span>${t.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</span></div>${st&&st.startsWith('<div class="skel')?st:evList(6,'agenda',c)+st}`},
+ weather(c){const w=wxFor(c);c.className='card w-weather';if(!w){c.innerHTML=`<div class="hint" style="color:#fff">${esc(D.weatherErr||'Wetter wird geladen …')}</div>`;return}
   const[txt,ico,cls]=wmo(w.code,w.day),now=Date.now(),ms=s=>Date.parse(s+'Z')-w.off*1000;if(cls)c.classList.add(cls);
   let sl='Sonnenuntergang',sv=w.sunset[0];if(now<ms(w.sunrise[0])){sl='Sonnenaufgang';sv=w.sunrise[0]}else if(now>ms(w.sunset[0])){sl='Sonnenaufgang';sv=w.sunrise[1]}
   c.innerHTML=`<div class="wx-top"><div><div class="wx-loc">${esc(w.name)}</div><div class="wx-temp">${w.temp}°</div><div class="wx-cond">${txt}</div><div class="wx-cond" style="opacity:.75">H ${w.hi}°  T ${w.lo}°</div></div>${ic(ico,'wx-ico')}</div><div class="wx-row"><div><small>${sl}</small><b>${sv.slice(11,16)}</b></div><div><small>Wind</small><b>${w.wind} km/h</b></div><div><small>Luftqualität</small><b>${w.aqi!=null?Math.round(w.aqi)+' EAQI':'–'}</b></div></div>`},
@@ -935,12 +954,12 @@ const W={
   const pd=S.phInfo!=='none'&&D.userPhotos.length?(D.photoDates||[])[D.photoIdx%L.length]:null;c.querySelector('.ph-time').textContent=pd?new Date(pd+'T12:00').toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'}):'';
   if(!cur.getAttribute('src')){cur.src=url;return}if(cur.getAttribute('src')===url)return;
   const nx=im[1-c._ph.cur];nx.onload=()=>{nx.classList.add('on');cur.classList.remove('on');c._ph.cur=1-c._ph.cur};nx.src=url},
- news(c){let b;const n=D.news.length?Math.min(D.news.length,6):0,i=(c._ni||0)%(n||1),it=D.news[i];
+ news(c){const N=newsOf(c);let b;const n=N.items.length?Math.min(N.items.length,6):0,i=(c._ni||0)%(n||1),it=N.items[i];
   if(!S.rss.trim())b=ghost([96,88,60],'Kein Feed eingetragen.');
-  else if(D.newsErr)b=ghost([96,88,60],esc(D.newsErr));
+  else if(N.err)b=ghost([96,88,60],esc(N.err));
   else if(!n)b=ghost([96,88,60],'Schlagzeilen werden geladen …');
   else b=`<div class="fitbox" data-mw=".12" data-mh=".3"><a class="nw-big fitt" href="${esc(/^https?:/i.test(it.link||'')?it.link:'#')}" target="_blank" rel="noopener">${esc(it.title)}</a></div><div class="nw-meta"><span>${it.date?relTime(it.date):''}</span><span>${i+1} / ${n}</span></div>`;
-  c.innerHTML=`<div class="w-head acc"><span class="trunc">${ic('rss')} ${esc(D.newsTitle||'Schlagzeilen')}</span></div>${b}`},
+  c.innerHTML=`<div class="w-head acc"><span class="trunc">${ic('rss')} ${esc(N.title||'Schlagzeilen')}</span></div>${b}`},
  recipe(c){if(c.dataset.full){if(!c.querySelector('.hub')){c.innerHTML='';c.append(recipeHub())}return}const off=c._ro||0,day=Math.floor(Date.now()/864e5),r=RECIPES[((day+off)%RECIPES.length+RECIPES.length)%RECIPES.length],ph=D.rph[r.id];
   c.setAttribute('style',pv(r));
   c.innerHTML=(ph?`<img src="${ph}" alt=""><div class="shade"></div><div class="tint"></div>`:'')+`<div class="rk-in"><div class="w-head"><span class="rk-c">${esc(r.c[0]||'Rezept')}</span><button class="ghost" data-act="recipeNext" aria-label="Anderes Rezept">${ic('shuffle')}</button></div><div class="fitbox" data-mw=".17" data-mh=".5"><div class="rk-t fitt">${esc(r.t)}</div></div><div class="rk-m">${esc([rTime(r),r.sv].filter(Boolean).join(', '))}${D.rcred[r.id]?` · Foto: ${esc(D.rcred[r.id].name)} / Unsplash`:''}</div><div class="rk-b"><button class="go" data-act="openRecipe" data-id="${r.id}">${ic('play')} Kochen starten</button></div></div>`}
@@ -1216,6 +1235,15 @@ addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x0,dy
 addEventListener('pointerup',()=>{if(!drag)return;const d=drag;drag=null;if(!d.on)return;d.sl.classList.remove('dragging');d.sl.style.transition='transform .25s cubic-bezier(.2,.8,.2,1)';d.sl.style.transform='';setTimeout(()=>{d.sl.style.transition=''},280);save();lpFired=true;setTimeout(()=>{lpFired=false},350)});
 addEventListener('pointercancel',()=>{if(drag&&drag.on){drag.sl.classList.remove('dragging');drag.sl.style.transform=''}drag=null});
 
+/* ---------- Größe ändern (4.0): Eckgriff ziehen oder mit zwei Fingern aufziehen ---------- */
+let rs=null;const RS=['1x1','2x1','1x2','2x2','3x2','4x2'];
+$('#stage').addEventListener('pointerdown',e=>{const h=e.target.closest('.ed-rs');if(!h||!editing)return;e.stopPropagation();const i=+h.dataset.s,m=dash().mods[i],L=h.closest('.G'),G0=L._G,T=isTall(G0),G=T?{...G0,cols:G0.rows,rows:G0.cols}:G0,[w,h0]=span(m.s,G);const k=L.getBoundingClientRect().width/L.offsetWidth;rs={i,m,L,T,G,w,h:h0,x:e.clientX,y:e.clientY,step:(G0.cell+G0.g)*k,cur:m.s};h.setPointerCapture&&h.setPointerCapture(e.pointerId)},true);
+addEventListener('pointermove',e=>{if(!rs)return;let dx=Math.round((e.clientX-rs.x)/rs.step),dy=Math.round((e.clientY-rs.y)/rs.step);if(rs.T)[dx,dy]=[dy,dx];const w=Math.max(1,Math.min(rs.G.cols,rs.w+dx)),h=Math.max(1,Math.min(rs.G.rows,rs.h+dy)),ns=w+'x'+h;if(ns===rs.cur)return;rs.cur=ns;rs.m.s=ns;const b=rs.L.querySelectorAll(':scope>.slot')[rs.i]?.querySelector('.ed-rs');if(b)b.textContent=sizeName(ns);flipMove(rs.L,()=>layoutGrid(rs.L));refitSoon(rs.L)});
+addEventListener('pointerup',()=>{if(!rs)return;rs=null;save();renderStage()});
+/* Fingergeste (Safari): aufziehen = nächste Größe, zusammenziehen = kleinere */
+['gesturestart','gesturechange'].forEach(n=>document.addEventListener(n,e=>{if(editing)e.preventDefault()},{passive:false}));
+document.addEventListener('gestureend',e=>{if(!editing)return;const sl=e.target.closest&&e.target.closest('.G>.slot');if(!sl)return;const i=[...sl.parentElement.querySelectorAll(':scope>.slot')].indexOf(sl),m=dash().mods[i];if(!m)return;let j=RS.indexOf(m.s);if(j<0)j=0;if(e.scale>1.25)j=Math.min(RS.length-1,j+1);else if(e.scale<.8)j=Math.max(0,j-1);else return;m.s=RS[j];save();renderStage()});
+
 /* ---------- Text passend setzen: so groß wie möglich, sonst ausblenden ---------- */
 function refit(root=document){if(root.classList&&root.classList.contains('w-gestirne'))gsFit(root);root.querySelectorAll('.w-gestirne').forEach(gsFit);root.querySelectorAll('.fitbox').forEach(b=>{const t=b.querySelector('.fitt');if(!t)return;b.classList.remove('fade');const W=b.clientWidth,H=b.clientHeight;if(!W||!H)return;
  const mx=Math.max(+b.dataset.min||14,Math.min(W*(+b.dataset.mw||.15),H*(+b.dataset.mh||.5),+b.dataset.max||400)),mn=+b.dataset.min||14,ok=()=>t.scrollHeight<=H+1&&t.scrollWidth<=W+1;
@@ -1223,9 +1251,49 @@ function refit(root=document){if(root.classList&&root.classList.contains('w-gest
 const refitSoon=el=>requestAnimationFrame(()=>refit(el));
 let rzT;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(dash().layout!=='recipes'){const G=gridDims();if([G.cols,G.rows,G.cell].join()!==lastG)renderStage()}refit(document)},150)});
 
+/* ---------- Optionen je Widget (4.0): dash().mods[i].o[key] ---------- */
+const opt=c=>{const m=dash().mods?.[+c?.dataset?.mi];return(m&&m.o&&m.o[c.dataset.key])||{}};
+const setOpt=(mi,k,o)=>{const m=dash().mods[mi];m.o=m.o||{};m.o[k]={...(m.o[k]||{}),...o};save()};
+/* Wetter je Ort: Standard = D.weather; eigene Orte im Zwischenspeicher D.wxBy */
+D.wxBy={};function wxFor(c){const o=opt(c);if(!o.city||S.demo)return D.weather;const k=o.city.trim().toLowerCase(),x=D.wxBy[k];if(!x||(!x.busy&&Date.now()-x.at>9e5))loadWxCity(o.city.trim());return x&&x.w}
+async function fetchWx(L){const[f,a]=await Promise.all([fetch(`https://api.open-meteo.com/v1/forecast?latitude=${L.lat}&longitude=${L.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,is_day,uv_index&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,snowfall&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,snowfall_sum,uv_index_max,sunrise,sunset&past_hours=12&forecast_hours=48&forecast_days=7&timezone=auto`).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${L.lat}&longitude=${L.lon}&current=european_aqi&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,ragweed_pollen&forecast_hours=24&timezone=auto`).then(r=>r.json()).catch(()=>null)]);return wxFrom(f,a,L)}
+async function geo(q){const r=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=8&language=de`).then(r=>r.json());return(r.results||[]).map(p=>({n:p.name,sub:[p.admin1,p.country].filter(Boolean).join(', '),lat:p.latitude,lon:p.longitude,tz:p.timezone}))}
+async function loadWxCity(q){const k=q.toLowerCase();D.wxBy[k]={...(D.wxBy[k]||{}),busy:true,at:Date.now()};try{const g=(await geo(q))[0];if(!g)throw Error(`Ort „${q}“ nicht gefunden`);D.wxBy[k]={w:await fetchWx({lat:g.lat,lon:g.lon,name:g.n}),at:Date.now()}}catch(e){D.wxBy[k]={w:null,err:netErr(e)?'Wetterdienst nicht erreichbar.':e.message,at:Date.now()}}repaint(...WXW)}
+/* Nachrichten je Feed */
+D.newsBy={};function newsOf(c){const u=(opt(c).feed||'').trim();if(!u||S.demo)return{items:D.news,err:D.newsErr,title:D.newsTitle};const x=D.newsBy[u];if(!x||(!x.busy&&Date.now()-x.at>9e5))loadFeed(u);return x||{items:[],err:'',title:''}}
+async function fetchFeed(u){const r=await fetch(proxied(u));if(!r.ok)throw Error('Feed nicht erreichbar');const x=new DOMParser().parseFromString(await r.text(),'text/xml');if(x.querySelector('parsererror'))throw Error('Kein gültiger Feed');return{title:x.querySelector('channel > title, feed > title')?.textContent.trim()||'Schlagzeilen',items:[...x.querySelectorAll('item, entry')].slice(0,12).map(i=>{const l=i.querySelector('link');return{title:i.querySelector('title')?.textContent.trim(),link:l?.getAttribute('href')||l?.textContent.trim(),date:i.querySelector('pubDate, updated, published')?.textContent}})}}
+async function loadFeed(u){D.newsBy[u]={...(D.newsBy[u]||{items:[]}),busy:true,at:Date.now()};try{D.newsBy[u]={...(await fetchFeed(u)),err:'',at:Date.now()}}catch(e){D.newsBy[u]={items:[],title:'',err:netErr(e)?'Abruf blockiert. CORS-Proxy in den Einstellungen eintragen.':e.message,at:Date.now()}}repaint('news','ticker')}
+/* Pegel je Messstelle */
+D.pegelBy={};function pegelOf(c){const st=(opt(c).station||'').trim();if(!st||S.demo)return{p:D.pegel,err:D.pegelErr};const x=D.pegelBy[st];if(!x||(!x.busy&&Date.now()-x.at>6e5))loadPegelSt(st);return x||{p:null,err:''}}
+async function loadPegelSt(st){D.pegelBy[st]={...(D.pegelBy[st]||{}),busy:true,at:Date.now()};try{const j=await fetch(`https://www.pegelonline.wsv.de/webservices/rest-api/v2/stations/${encodeURIComponent(st)}/W/measurements.json?start=P1D`).then(r=>{if(!r.ok)throw Error(r.status===404?`Pegel „${st}“ nicht gefunden`:'Pegel nicht erreichbar');return r.json()});D.pegelBy[st]={p:{name:st,pts:j.map(x=>({t:Date.parse(x.timestamp),v:x.value})).filter(x=>x.v!=null)},err:'',at:Date.now()}}catch(e){D.pegelBy[st]={p:null,err:e.message,at:Date.now()}}repaint('pegel')}
+/* Städte für Weltzeit und Weltkarte */
+function cities(c){const o=opt(c);if(o.cities&&o.cities.length)return o.cities;return zoneList().map(z=>({n:zName(z),tz:z,lat:ZC[z]?.[0],lon:ZC[z]?.[1]}))}
+
+/* ---------- Langdruck: Kontextmenü wie bei iOS ---------- */
+const DATEW=['clock-big','clock-float','clock-stack','clock-outline','clock-flap','clock-flap-classic'];
+const WOPT=k=>DATEW.includes(k)?'date':WXW.includes(k)?(k==='solar'?'cities':'city'):['news','ticker'].includes(k)?'feed':k==='pegel'?'station':CALTYPES[k]?'cals':k==='world'?'cities':k==='radio'?'radio':null;
+function ctxOpen(e){const card=e.target.closest('#stage .card[data-key]'),x=$('#ctx');if(!card){enterEdit();return}const k=card.dataset.key,mi=+card.dataset.mi;
+ x.innerHTML=`<div class="ctx-in"><b>${esc(WIDGETS[k]||'Widget')}</b>${WOPT(k)?`<button data-act="wEdit" data-k="${k}" data-mi="${mi}">${ic('sliders')} Widget bearbeiten</button>`:''}<button data-act="wBig" data-k="${k}" data-mi="${mi}">${ic('expand')} Groß anzeigen</button><button data-act="ctxEdit">${ic('grid')} Ansicht bearbeiten</button></div>`;
+ x.hidden=false;const r=x.firstChild.getBoundingClientRect(),W=innerWidth,H=innerHeight;x.firstChild.style.left=Math.max(8,Math.min(W-r.width-8,e.clientX-r.width/2))+'px';x.firstChild.style.top=Math.max(8,Math.min(H-r.height-8,e.clientY-r.height/2))+'px';if(navigator.vibrate)navigator.vibrate(10)}
+/* Widget bearbeiten: eigenes Blatt je Widget */
+function wSheet(k,mi){const o=(dash().mods[mi]?.o||{})[k]||{},t=WOPT(k);let h='';
+ if(t==='date')h=`<label class="tog">Datum zeigen<input type="checkbox" data-wo="nodate" data-inv="1" ${o.nodate?'':'checked'}></label>`;
+ if(t==='city')h=`<span class="lbl">Ort</span><input type="text" data-wo="city" value="${esc(o.city||'')}" placeholder="${esc(S.city||'Aktueller Standort')}" autocomplete="off"><p class="pmut">Leer: Standort aus den allgemeinen Einstellungen.</p>`;
+ if(t==='feed')h=`<span class="lbl">RSS- oder Atom-Feed</span><input type="url" data-wo="feed" value="${esc(o.feed||'')}" placeholder="${esc(S.rss)}" autocomplete="off">`;
+ if(t==='station')h=`<span class="lbl">Messstelle (Name wie bei pegelonline.wsv.de)</span><input type="text" data-wo="station" value="${esc(o.station||'')}" placeholder="${esc(S.pegel||'KÖLN')}" autocomplete="off">`;
+ if(t==='cals'){const src=calSrc();h=src.length?`<span class="lbl">Kalender</span><div class="wc-row">${src.map(x=>`<label><input type="checkbox" data-wcal value="${esc(x.id)}" ${!o.cals||o.cals.includes(x.id)?'checked':''}><i class="dot" style="background:${esc(x.color)};margin:0"></i>${esc(x.name)}</label>`).join('')}</div>`:'<p class="pmut">Noch kein Kalender verbunden.</p>'}
+ if(t==='cities'){const L=o.cities&&o.cities.length?o.cities:null;h=`<span class="lbl">Orte</span><div id="ctyL">${(L||[]).map((x,i)=>`<div class="rd-r"><span>${esc(x.n)} <small class="pmut">${esc(x.tz)}</small></span><button class="round sm" data-act="ctyDel" data-i="${i}" aria-label="${esc(x.n)} entfernen">${ic('xmark')}</button></div>`).join('')||`<p class="pmut">Standard: ${esc(zoneList().map(zName).join(', '))}</p>`}</div><input type="search" id="ctyQ" placeholder="Stadt suchen" autocomplete="off"><div id="ctyR"></div>`}
+ if(t==='radio')h=`<div id="radioEd">${radioEd()}</div>`;
+ const m=$('#modal');m.innerHTML=`<div class="sheet ws"><h2>${esc(WIDGETS[k]||'Widget')}<button class="round" data-act="wsDone" aria-label="Fertig">${ic('check')}</button></h2><div class="sec" data-k="${k}" data-mi="${mi}">${h}</div></div>`;m.hidden=false;
+ const q=$('#ctyQ');if(q){let tm;q.oninput=()=>{clearTimeout(tm);tm=setTimeout(async()=>{const v=q.value.trim();if(v.length<2){$('#ctyR').innerHTML='';return}try{const R=await geo(v);$('#ctyR').innerHTML=R.map((x,i)=>`<button class="spp-row btnrow cty" data-act="ctyAdd" data-j='${esc(JSON.stringify({n:x.n,tz:x.tz,lat:x.lat,lon:x.lon}))}'><span><b>${esc(x.n)}</b><small>${esc(x.sub)}</small></span></button>`).join('')||'<p class="pmut">Nichts gefunden.</p>'}catch{$('#ctyR').innerHTML='<p class="pmut">Ortssuche gerade nicht erreichbar.</p>'}},300)}}}
+function wsRead(){const sec=$('#modal .ws .sec');if(!sec)return;const k=sec.dataset.k,mi=+sec.dataset.mi,o={};
+ sec.querySelectorAll('[data-wo]').forEach(i=>{o[i.dataset.wo]=i.type==='checkbox'?(i.dataset.inv?!i.checked:i.checked):i.value.trim()});
+ const cb=[...sec.querySelectorAll('[data-wcal]')];if(cb.length){const v=cb.filter(x=>x.checked).map(x=>x.value);o.cals=v.length===cb.length?null:v}
+ setOpt(mi,k,o)}
+
 /* ---------- Rendering ---------- */
 let mounted=[];
-function mount(k){const c=el('div','card w-'+k);c.dataset.key=k;mounted.push({key:k,el:c});(W[k]||(()=>{c.innerHTML='<div class="hint">Unbekanntes Widget</div>'}))(c);refitSoon(c);return c}
+function mount(k,mi){const c=el('div','card w-'+k);c.dataset.key=k;if(mi!=null)c.dataset.mi=mi;const o=mi!=null&&dash().mods?.[mi]?.o?.[k];if(o&&o.nodate)c.classList.add('nodate');mounted.push({key:k,el:c});(W[k]||(()=>{c.innerHTML='<div class="hint">Unbekanntes Widget</div>'}))(c);refitSoon(c);return c}
 function repaint(...keys){mounted.forEach(m=>{if(keys.includes(m.key)){W[m.key](m.el);if(m.el.querySelector('.fitbox'))refitSoon(m.el)}})}
 const SIZES=['1x1','2x1','1x2','2x2','3x2','4x2','full'];
 const sizeName=x=>x==='full'?'Vollbild':x.replace('x',' × ');
@@ -1245,10 +1313,10 @@ function layoutGrid(L){const G0=L._G,T=isTall(G0),G=T?{...G0,cols:G0.rows,rows:G
  if(T&&r.free)r.free=[r.free[1],r.free[0]];const sl=[...L.querySelectorAll(':scope>.slot')];let used=0;sl.forEach((e,i)=>{let p=r.pos[i],[w,h]=sizes[i]||[1,1];if(p&&T){p=[p[1],p[0]];[w,h]=[h,w]}if(p){e.style.display='';e.style.gridArea=`${p[0]+1}/${p[1]+1}/span ${h}/span ${w}`;used+=w*h}else{e.style.display='none'}});
  return{used,free:r.free,miss:r.miss}}
 function slot(keys,i,size){const w=el('div','slot'),s=el('div','stack');w.dataset.size=size;
- if(keys.length)keys.forEach(k=>{const p=el('div','page'),c=size==='full'&&k==='recipe'?(()=>{const x=el('div','card w-recipe w-hubcard');x.dataset.key='recipe';x.dataset.full='1';mounted.push({key:'recipe',el:x});W.recipe(x);return x})():mount(k);p.append(c);s.append(p)});else{const p=el('div','page');p.innerHTML='<div class="card empty"></div>';s.append(p)}
+ if(keys.length)keys.forEach(k=>{const p=el('div','page'),c=size==='full'&&k==='recipe'?(()=>{const x=el('div','card w-recipe w-hubcard');x.dataset.key='recipe';x.dataset.mi=i;x.dataset.full='1';mounted.push({key:'recipe',el:x});W.recipe(x);return x})():mount(k,i);p.append(c);s.append(p)});else{const p=el('div','page');p.innerHTML='<div class="card empty"></div>';s.append(p)}
  w.append(s);
  if(keys.length>1){const d=el('div','dots');d.innerHTML=keys.map((_,j)=>`<i class="${j?'':'on'}"></i>`).join('');w.append(d);s.addEventListener('scroll',()=>{const j=Math.round(s.scrollTop/s.clientHeight);d.querySelectorAll('i').forEach((x,k)=>x.classList.toggle('on',k===j))},{passive:true})}
- if(editing)w.insertAdjacentHTML('beforeend',`<button class="ed-del" data-act="wRemove" data-s="${i}" aria-label="Widget entfernen">−</button><button class="ed-size" data-act="eSize" data-s="${i}" aria-label="Größe ändern">${sizeName(size)}</button><button class="ed-add" data-act="wGallery" data-s="${i}">${ic('plus')} Widget</button>${keys.length>1?`<div class="ed-pg"><button data-act="pgStep" data-s="${i}" data-d="-1" aria-label="Vorheriges Widget">${ic('chevron-down','up')}</button><button data-act="pgStep" data-s="${i}" data-d="1" aria-label="Nächstes Widget">${ic('chevron-down')}</button></div>`:''}`);
+ if(editing)w.insertAdjacentHTML('beforeend',`<button class="ed-del" data-act="wRemove" data-s="${i}" aria-label="Widget entfernen">−</button><button class="ed-rs" data-s="${i}" aria-label="Größe ändern: ziehen">${sizeName(size)}</button><button class="ed-add" data-act="wGallery" data-s="${i}">${ic('plus')} Widget</button>${keys.length>1?`<div class="ed-pg"><button data-act="pgStep" data-s="${i}" data-d="-1" aria-label="Vorheriges Widget">${ic('chevron-down','up')}</button><button data-act="pgStep" data-s="${i}" data-d="1" aria-label="Nächstes Widget">${ic('chevron-down')}</button></div>`:''}`);
  return w}
 function renderStage(){const st=$('#stage'),d=dash();st.innerHTML='';mounted=[];$('#dashName').textContent=d.name;pdots();
  if(d.layout==='recipes'){st.classList.add('lib');st.append(recipeHub());return}st.classList.remove('lib');
@@ -1264,10 +1332,10 @@ function enterEdit(){if(editing)return;editing=true;document.body.classList.add(
 function exitEdit(){editing=false;document.body.classList.remove('editing');$('#ebar').hidden=true;$('#gal').hidden=true;$('#stage').style.paddingTop='';save();renderStage();showHdr()}
 const WCAT=[['Uhren',['clock-big','clock-split','clock-stack','clock-outline','clock-float','clock-words','clock-flap','clock-analog','analog-solid','analog-numbers','analog-arc']],['Klassiker',['station','clock-flap-classic','gestirne']],['Kalender',['calendar','agenda','cal-agenda','week','countdown','day-poster']],['Wetter',['weather','weather-text','forecast','temp-chart','rain-chart','wx-combo','uv','pollen']],['Sonne, Welt und Wasser',['sun','solar','world','pegel']],['Medien und Wissen',['spotify','radio','photos','news','ticker','wiki']],['Küche',['recipe']]];
 function openGallery(){const g=$('#gal'),G=gridDims(),sz=galMode==='new'?galSize:(dash().mods[galSlot]||{}).s||'1x1',T=isTall(G),[w,h]=(s=>T?[s[1],s[0]]:s)(span(sz,T?{...G,cols:G.rows,rows:G.cols}:G)),ar=w*G.cell/(h*G.cell);
- g.innerHTML=`<div class="pal-h"><b>${galMode==='new'?'Neues Modul':'Widget hinzufügen'}</b><button class="go sm" data-act="galClose" style="--fg:#fff;--bg:#000">Abbrechen</button></div>${galMode==='new'?`<div class="pal-l">Größe</div><div class="pal-row">${SIZES.map(x=>`<button class="combo${x===galSize?' on':''}" data-act="galSize" data-s="${x}">${sizeName(x)}</button>`).join('')}</div>`:''}${WCAT.map(([n,ks])=>`<div class="pal-l">${n}</div><div class="gal-g" style="grid-template-columns:repeat(auto-fill,minmax(${ar>1.3?230:ar<.8?110:140}px,1fr))">${ks.map(k=>`<button class="gal-i" data-act="galPick" data-k="${k}"><div class="gal-p" style="aspect-ratio:${ar.toFixed(3)}"></div><span>${WIDGETS[k]}</span></button>`).join('')}</div>`).join('')}`;g.hidden=false;
+ g.innerHTML=`<div class="pal-h"><b>${galMode==='new'?'Neues Modul':'Widget hinzufügen'}</b><button class="go sm" data-act="galClose" style="--fg:#fff;--bg:#000">Abbrechen</button></div>${galMode==='new'?`<div class="pal-l">Größe</div><div class="pal-row">${SIZES.filter(x=>x!=='full'||!(dash().mods||[]).length).map(x=>`<button class="combo${x===galSize?' on':''}" data-act="galSize" data-s="${x}">${sizeName(x)}</button>`).join('')}</div>`:''}${WCAT.map(([n,ks])=>`<div class="pal-l">${n}</div><div class="gal-g" style="grid-template-columns:repeat(auto-fill,minmax(${ar>1.3?230:ar<.8?110:140}px,1fr))">${ks.map(k=>`<button class="gal-i" data-act="galPick" data-k="${k}"><div class="gal-p" style="aspect-ratio:${ar.toFixed(3)}"></div><span>${WIDGETS[k]}</span></button>`).join('')}</div>`).join('')}`;g.hidden=false;
  g.querySelectorAll('.gal-i').forEach(b=>{const c=el('div','card w-'+b.dataset.k);b.querySelector('.gal-p').append(c);prevCard(c,w,h);try{W[b.dataset.k](c)}catch{}});requestAnimationFrame(()=>{prevFit(g);refit(g)})}
 let lpT=null,lpX=0,lpY=0,lpFired=false;
-$('#stage').addEventListener('pointerdown',e=>{if(editing||e.target.closest('input,select,textarea'))return;lpX=e.clientX;lpY=e.clientY;clearTimeout(lpT);lpT=setTimeout(()=>{lpFired=true;enterEdit()},600)});
+$('#stage').addEventListener('pointerdown',e=>{if(editing||e.target.closest('input,select,textarea'))return;lpX=e.clientX;lpY=e.clientY;clearTimeout(lpT);lpT=setTimeout(()=>{lpFired=true;ctxOpen(e)},550)});
 ['pointerup','pointercancel','pointerleave'].forEach(n=>$('#stage').addEventListener(n,()=>clearTimeout(lpT)));
 $('#stage').addEventListener('pointermove',e=>{if(Math.hypot(e.clientX-lpX,e.clientY-lpY)>10)clearTimeout(lpT)});
 let swX=null,swY=0;
@@ -1329,7 +1397,7 @@ async function loadWeather(){if(S.demo){demoData();repaint(...WXW);applyLook();r
  try{const L=await resolveLoc();D.loc=L;
   const[f,a]=await Promise.all([fetch(`https://api.open-meteo.com/v1/forecast?latitude=${L.lat}&longitude=${L.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,is_day,uv_index&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,snowfall&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,snowfall_sum,uv_index_max,sunrise,sunset&past_hours=12&forecast_hours=48&forecast_days=7&timezone=auto`).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${L.lat}&longitude=${L.lon}&current=european_aqi&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,ragweed_pollen&forecast_hours=24&timezone=auto`).then(r=>r.json()).catch(()=>null)]);
   D.weather=wxFrom(f,a,L);D.weatherErr=''}
- catch(e){D.weatherErr=netErr(e)?'Wetterdienst nicht erreichbar. In der Claude-Vorschau sind Abrufe aus dem Internet gesperrt; auf GitHub Pages funktioniert es.':'Wetter nicht verfügbar: '+e.message}
+ catch(e){D.weatherErr=netErr(e)?'Wetterdienst nicht erreichbar.':'Wetter nicht verfügbar: '+e.message}
  repaint(...WXW);applyLook();if(D.popKind==='wx')POP.wx()}
 
 /* ---------- Kalender (ICS) ---------- */
@@ -1462,7 +1530,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='3.2.1';
+const VERSION='4.0.0';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>
@@ -1478,18 +1546,18 @@ function openSettings(keepScroll){const con=!!SP.t,v=k=>esc(S[k]),sc=keepScroll?
   <p>Mit Timer schaltet der Mond-Knopf nur bis zum nächsten Wechsel um.</p>
   <label class="tog">24-Stunden-Format<input type="checkbox" id="s_h24" ${S.h24?'checked':''}></label>
   <label class="tog">Display anlassen<select id="s_wake"><option value="off"${S.wakeMode==='off'?' selected':''}>Nie (geht normal aus)</option><option value="cook"${S.wakeMode==='cook'?' selected':''}>Nur im Kochmodus</option><option value="always"${S.wakeMode==='always'?' selected':''}>Immer</option></select></label></div>
- <div class="sec"><h3>Ansichten</h3><p>Wie bei Apple: lange auf ein Widget drücken, dann Widgets hinzufügen, entfernen, Layout wählen oder neue Ansichten anlegen. Zwischen Ansichten wischst du seitlich.</p><button class="btn" data-act="editFromSettings">Jetzt bearbeiten</button>${DASHES.some(d=>d.layout==='recipes')?'':'<button class="btn" data-act="dRecipes">Rezepte-Ansicht wieder hinzufügen</button>'}</div>
- <div class="sec"><h3>Wetter</h3><span class="lbl">Ort</span><input type="text" id="s_city" value="${v('city')}" placeholder="Leer lassen für aktuellen Standort"></div>
- <div class="sec"><h3>Weltzeit</h3><span class="lbl">Zeitzonen, kommagetrennt (IANA, z. B. Europe/Oslo). Auf der Weltkarte erscheinen alle Orte aus der Liste der bekannten Städte.</span><input type="text" id="s_zones" value="${v('zones')}"></div>
+ <div class="sec"><h3>Ansichten</h3><p>Lange auf ein Widget drücken: Widget bearbeiten (Ort, Feed, Kalender, Städte …), groß anzeigen oder die Ansicht bearbeiten. Zwischen Ansichten seitlich wischen.</p><button class="btn" data-act="editFromSettings">Jetzt bearbeiten</button>${DASHES.some(d=>d.layout==='recipes')?'':'<button class="btn" data-act="dRecipes">Rezepte-Ansicht wieder hinzufügen</button>'}</div>
+ <div class="sec"><h3>Standort</h3><span class="lbl">Ort für Wetter und Nachtmodus</span><input type="text" id="s_city" value="${v('city')}" placeholder="Leer lassen für aktuellen Standort"></div>
+
  <div class="sec"><h3>Google Kalender <span class="badge ${LS.get('g_ok',false)?'ok':''}">${LS.get('g_ok',false)?'Verbunden':'Nicht verbunden'}</span></h3>
   <div class="row">${LS.get('g_ok',false)?'<button class="btn" data-act="gOut">Trennen</button><button class="btn" data-act="gRefresh">Neu anmelden</button>':'<button class="btn pri" data-act="gIn">Mit Google verbinden</button>'}</div>
   ${D.gCals.length?`<span class="lbl">Angezeigte Kalender</span>${D.gCals.map(x=>`<label class="tog"><span class="trunc"><i class="dot" style="background:${esc(x.color)}"></i>${esc(x.name)}</span><input type="checkbox" data-ch="gSel" value="${esc(x.id)}" ${(S.gSel||[]).includes(x.id)?'checked':''}></label>`).join('')}`:''}
   ${D.gErr?`<p style="color:#ff8a80">${esc(D.gErr)}</p>`:''}<p>Nur Lesezugriff. Google beendet die Anmeldung nach einer Stunde; ein Tipp aufs Display erneuert sie.</p></div>
  <div class="sec"><h3>Zusätzlich: ICS-Feed <span class="badge ${S.ics&&!D.calErr?'ok':''}">${!S.ics?'Kein Feed':D.calErr?'Fehler':'Aktiv'}</span></h3><span class="lbl">Optional, z. B. für iCloud: Link eines öffentlich geteilten Kalenders</span><input type="url" id="s_ics" value="${v('ics')}" placeholder="https://…/kalender.ics"><span class="lbl">Oder eine ICS-Datei hochladen (bleibt nur auf diesem Gerät)</span><div class="row"><label class="btn">${LS.get('ics_file')?'Andere Datei wählen':'ICS-Datei wählen'}<input type="file" id="s_icsf" accept=".ics,text/calendar" hidden></label>${LS.get('ics_file')?`<button class="btn" data-act="icsFileDel">„${esc(LS.get('ics_file').name)}“ entfernen</button>`:''}</div></div>
- <div class="sec"><h3>Kalender je Widget</h3>${calSrc().length?Object.entries(CALTYPES).map(([k,n])=>`<span class="lbl">${n}</span><div class="wc-row">${calSrc().map(x=>`<label><input type="checkbox" data-ch="wcal" data-w="${k}" value="${esc(x.id)}" ${!S.wcal?.[k]||S.wcal[k].includes(x.id)?'checked':''}><i class="dot" style="background:${esc(x.color)};margin:0"></i>${esc(x.name)}</label>`).join('')}</div>`).join(''):'<p>Erst Google verbinden oder einen ICS-Feed eintragen, dann lässt sich hier pro Widget wählen, welche Kalender es zeigt.</p>'}</div>
- <div class="sec"><h3>Pegel</h3><span class="lbl">Messstelle wie bei pegelonline.wsv.de</span><input type="text" id="s_pegel" value="${esc(S.pegel||'KÖLN')}"></div>
- <div class="sec"><h3>Radio</h3><div id="radioEd">${radioEd()}</div></div>
- <div class="sec"><h3>Nachrichten</h3><span class="lbl">RSS- oder Atom-Feed</span><input type="url" id="s_rss" value="${v('rss')}"></div>
+
+
+
+
  <div class="sec"><h3>CORS-Proxy</h3><input type="url" id="s_proxy" value="${v('proxy')}" placeholder="https://dein-proxy.example/?url={url}"><p>Kalender- und die meisten RSS-Feeds lassen keinen direkten Abruf aus dem Browser zu. Der Proxy wird vorangestellt; {url} markiert die Stelle der Feed-Adresse, sonst wird sie angehängt.</p></div>
  <div class="sec"><h3>Spotify <span class="badge ${con?'ok':''}">${con?'Verbunden':'Nicht verbunden'}</span></h3>
   <div class="row">${con?'<button class="btn" data-act="spDisconnect">Trennen</button><button class="btn" data-act="spConnect">Neu verbinden</button>':'<button class="btn pri" data-act="spConnect">Mit Spotify verbinden</button>'}</div></div>
@@ -1503,7 +1571,7 @@ function openSettings(keepScroll){const con=!!SP.t,v=k=>esc(S[k]),sc=keepScroll?
  $('#s_bkimp').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await rdF(f));if(j.format!=='standby-backup'||!j.settings||!j.dashes)throw 0;if(!confirm('Alle Einstellungen und Ansichten auf diesem Gerät werden durch die Sicherung ersetzt.'))return;LS.set('settings',j.settings);LS.set('dashes',j.dashes);if(j.dash_v)LS.set('dash_v',j.dash_v);Object.entries(j.extra||{}).forEach(([k,v])=>{if(BK_EXTRA.includes(k))LS.set(k,v)});location.reload()}catch{toast('Die Datei ist keine Sicherung dieses Dashboards.')}};
  $('#s_ph').onchange=e=>{readSettings();addPhotos([...e.target.files]).then(()=>openSettings(true))};
  $('#modal').hidden=false;if(sc)$('.sheet').scrollTop=sc}
-function readSettings(){const g=id=>($('#'+id)?.value||'').trim();if(!$('#s_h24'))return;S.h24=$('#s_h24').checked;S.wakeMode=$('#s_wake').value;S.city=g('s_city');S.zones=g('s_zones');S.ics=g('s_ics');S.proxy=g('s_proxy');S.rss=g('s_rss');S.pegel=g('s_pegel');S.demo=$('#s_demo').checked;if($('#s_phi'))S.phInfo=$('#s_phi').value;S.unKey=g('s_un');const nm=$('#s_nm').value;if(nm!==S.nightMode)S.nOv=null;S.nightMode=nm;S.nightFrom=$('#s_nf').value||'22:00';S.nightTo=$('#s_nt').value||'07:00';save()}
+function readSettings(){const g=id=>($('#'+id)?.value||'').trim();if(!$('#s_h24'))return;S.h24=$('#s_h24').checked;S.wakeMode=$('#s_wake').value;if($('#s_city'))S.city=g('s_city');if($('#s_zones'))S.zones=g('s_zones');if($('#s_ics'))S.ics=g('s_ics');if($('#s_proxy'))S.proxy=g('s_proxy');if($('#s_rss'))S.rss=g('s_rss');if($('#s_pegel'))S.pegel=g('s_pegel');S.demo=$('#s_demo').checked;if($('#s_phi'))S.phInfo=$('#s_phi').value;if($('#s_un'))S.unKey=g('s_un');const nm=$('#s_nm').value;if(nm!==S.nightMode)S.nOv=null;S.nightMode=nm;S.nightFrom=$('#s_nf').value||'22:00';S.nightTo=$('#s_nt').value||'07:00';save()}
 function afterSettings(){applyLook();loadWiki();loadPegel();$('#demoTag').hidden=!S.demo;if(!S.demo){D.evDemo=[];D.news=[];D.sp=null;D.weather=null;/* keine Demo-Reste im Spotify-Fenster */D.spDevs=null;D.spPls=null;D.spQueue=null;D.spRecent=null;D.spDevAt=0;spPopAt=0;spSig=''}if(S.wakeMode==='always'||(S.wakeMode==='cook'&&cook))wake();else unwake();loadWeather();loadCalendar();loadNews();renderStage();loadSpotify()}
 const edit=fn=>{readSettings();fn();save();openSettings(true)};
 
@@ -1532,7 +1600,14 @@ const ACT={
  editFromSettings(){readSettings();$('#modal').hidden=true;afterSettings();enterEdit()},
  demoOn(){S.demo=true;save();afterSettings()},
  popClose(){$('#pop').hidden=true;$('#pop').innerHTML='';D.popKind=null},
- spDev(a){spTransfer(a.dataset.id)},
+ spDev(a){spTransfer(a.dataset.id)},ctxClose(a,e){$('#ctx').hidden=true},
+ wEdit(a){$('#ctx').hidden=true;wSheet(a.dataset.k,+a.dataset.mi)},
+ ctxEdit(){$('#ctx').hidden=true;enterEdit()},
+ wsDone(){wsRead();$('#modal').hidden=true;renderStage();loadNews()},
+ ctyAdd(a){const sec=$('#modal .ws .sec'),k=sec.dataset.k,mi=+sec.dataset.mi,x=JSON.parse(a.dataset.j),L=[...(opt({dataset:{mi,key:k}}).cities||[])];if(!L.some(y=>y.n===x.n&&y.tz===x.tz))L.push(x);wsRead();setOpt(mi,k,{cities:L});wSheet(k,mi)},
+ ctyDel(a){const sec=$('#modal .ws .sec'),k=sec.dataset.k,mi=+sec.dataset.mi,L=[...(opt({dataset:{mi,key:k}}).cities||[])];L.splice(+a.dataset.i,1);wsRead();setOpt(mi,k,{cities:L});wSheet(k,mi)},
+ wBig(a){$('#ctx').hidden=true;const k=a.dataset.k,mi=+a.dataset.mi,B=$('#big');B.innerHTML=`<button class="round big-x" data-act="bigClose" aria-label="Schließen">${ic('xmark')}</button>`;const c=mount(k,mi);c.classList.add('big-card');B.prepend(c);B.hidden=false;refitSoon(B)},
+ bigClose(){const B=$('#big');mounted=mounted.filter(m=>!B.contains(m.el));B.innerHTML='';B.hidden=true},
  rdDel(a){const L=radioList();L.splice(+a.dataset.i,1);radioSave(L);$('#radioEd').innerHTML=radioEd();repaint('radio')},
  rdSugg(a){const x=radioSugg().find(y=>y[0]===a.dataset.n);if(!x)return;radioSave([...radioList(),x]);$('#radioEd').innerHTML=radioEd();repaint('radio')},
  rdAdd(){const n=$('#rdN').value.trim(),u=$('#rdU').value.trim();if(!n||!/^https?:\/\/\S+$/i.test(u)){toast('Bitte Name und eine Stream-Adresse mit https:// eingeben.');return}radioSave([...radioList(),[n.replace(/\|/g,'/'),u]]);$('#radioEd').innerHTML=radioEd();repaint('radio')},

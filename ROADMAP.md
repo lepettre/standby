@@ -63,14 +63,14 @@ Offen geblieben: Punkt 11 (Google-Client) wird mit der fest eingebauten Client-I
 4. **Rezepte nachladen und löschen** (F, erledigt in 3.2.0): Weitere Rezepte aus einer Export-Datei importieren, einzelne löschen. Direkter Abgleich mit einer Rezepte-App auf derselben Domain prüfen (gemeinsamer Browser-Speicher).
 5. **Zugangsdaten fest einbauen** (F, erledigt in 3.0.4): Spotify- und Google-Client-ID im Code hinterlegen, damit nichts mehr von Hand eingegeben werden muss. Beides ist für dich als Entwickler kostenlos; die Client-ID ist bei diesem Anmeldeverfahren kein Geheimnis. Benötigt: deine Spotify-Client-ID, deine Google-OAuth-Client-ID (Typ Webanwendung) und die endgültige Adresse des Dashboards. Einschränkungen: Spotify-Apps im Entwicklungsmodus funktionieren nur für Konten, die du im Spotify-Dashboard freischaltest; Google-Apps im Status „Testen“ nur für eingetragene Testnutzer, mit Warnhinweis „nicht überprüft“. Für dich allein reicht das.
 
-## 4.0.0 – Widgets bearbeiten wie bei iOS
+## 4.0.0 – Widgets bearbeiten wie bei iOS (ausgeliefert)
 
-1. **Widget-Einstellungen per Langdruck** (F): Langdruck auf ein Widget öffnet dessen eigene Einstellungen, wie „Widget bearbeiten“ bei iOS. Beispiele: Kalender auswählen, Ort fürs Wetter (mehrere Wetter-Widgets mit verschiedenen Orten), Datum an Uhren ein- oder ausblenden, Feed und Darstellung bei Nachrichten, Sender beim Radio, Messstelle beim Pegel.
-2. **Größe per Fingergeste und Eckpfeil** (F): Im Wackelmodus mit zwei Fingern auf- und zuziehen; ohne Touch per Ziehgriff an der Ecke. Das Durchschalten der Größen per Etikett entfällt.
-3. **Vollbild neu denken** (F): Vollbild verdrängt bisher alle anderen Module in einen unsichtbaren Bereich. Lösung: Vollbild als eigene Ansicht oder als vorübergehende Vergrößerung, nicht als Modulgröße.
-4. **Allgemeine Einstellungen entrümpeln** (F): Alles, was ein Widget selbst regelt, wandert ins Widget. In den allgemeinen Einstellungen bleiben Verbindungen (Spotify, Google, CORS-Proxy, Unsplash), Darstellung, Nachtmodus, Datensicherung, Über.
-5. **Weltuhr** (F): Beim Tippen Städte vorschlagen (Ortssuche), Auswahl nach Städtenamen statt Zeitzonen-Kennungen, elegantere Darstellung.
-6. **Migration** (P): Gespeicherte 3.x-Einstellungen automatisch übernehmen.
+1. **Widget-Einstellungen per Langdruck** (F, erledigt): Langdruck auf ein Widget öffnet dessen eigene Einstellungen, wie „Widget bearbeiten“ bei iOS. Beispiele: Kalender auswählen, Ort fürs Wetter (mehrere Wetter-Widgets mit verschiedenen Orten), Datum an Uhren ein- oder ausblenden, Feed und Darstellung bei Nachrichten, Sender beim Radio, Messstelle beim Pegel.
+2. **Größe per Fingergeste und Eckpfeil** (F, erledigt; Fingergeste nur in Safari): Im Wackelmodus mit zwei Fingern auf- und zuziehen; ohne Touch per Ziehgriff an der Ecke. Das Durchschalten der Größen per Etikett entfällt.
+3. **Vollbild neu denken** (F, erledigt): Vollbild verdrängt bisher alle anderen Module in einen unsichtbaren Bereich. Lösung: Vollbild als eigene Ansicht oder als vorübergehende Vergrößerung, nicht als Modulgröße.
+4. **Allgemeine Einstellungen entrümpeln** (F, erledigt): Alles, was ein Widget selbst regelt, wandert ins Widget. In den allgemeinen Einstellungen bleiben Verbindungen (Spotify, Google, CORS-Proxy, Unsplash), Darstellung, Nachtmodus, Datensicherung, Über.
+5. **Weltuhr** (F, Ortssuche erledigt; elegantere Darstellung offen): Beim Tippen Städte vorschlagen (Ortssuche), Auswahl nach Städtenamen statt Zeitzonen-Kennungen, elegantere Darstellung.
+6. **Migration** (P, erledigt): Gespeicherte 3.x-Einstellungen automatisch übernehmen.
 
 ## 4.1.0 – Neue Darstellungen, schönere Fenster
 

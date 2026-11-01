@@ -2,6 +2,10 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.5.1 – 01.11.2026
+
+- Abfahrten: mehrere Haltestellen je Widget (Abfahrten zusammengeführt, Haltestelle klein hinter dem Ziel), Filter nach Verkehrsmitteln (U-Bahn, S-Bahn, AKN, Regionalbahn, Bus, Fähre), Option Linienfarben (angelehnt an das HVV-Liniennetz, nicht offiziell geprüft).
+
 ## 4.5.0 – 01.11.2026
 
 - Neues Widget „Abfahrten“ (Gruppe „Unterwegs“): nächste Abfahrten aller Verkehrsmittel an einer HVV-Haltestelle. 1 × 1 zeigt die nächste Abfahrt groß, ab 2 × 1 eine Liste mit Linie, Ziel, Minuten, Verspätung und Ausfällen; Aktualisierung alle 15 Sekunden.

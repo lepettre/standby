@@ -47,6 +47,7 @@ Umsetzung im Dialog mit Claude (Anthropic).
 
 | Element | Herkunft | Lizenz | Status |
 | --- | --- | --- | --- |
+| Linienfarben im Abfahrten-Widget (Option) | Angelehnt an das Liniennetz des hvv; Werte aus dem Gedächtnis, nicht an offizieller Quelle geprüft | Gestaltungselemente des Verkehrsverbunds | – | Nur als Option | offen |
 | Spotify-Symbol (ab 3.1.0) | Pfad aus Simple Icons (simple-icons, npm), Marke von Spotify AB | Simple Icons: CC0 1.0 (Paketangabe gelesen); Markennutzung nach Spotify Design Guidelines | offen (Guidelines zu Logogröße, Farbe, Cover-Radius an der Quelle nachlesen) |
 | App-Icon und Favicon (`icons/`, ab 3.0.2) | Eigenes Werk, gestaltet mit Claude nach dem eigenen Widget „Uhr als Ringe“ | eigenes Werk | – |
 | Inline-SVG-Icons (39 Stück, u. a. cloud, moon, music, heart, repeat, radio, airplay, shuffle) | Pfade entsprechen weitgehend Lucide (lucide.dev), teils von Feather Icons abgeleitet; einige schlicht selbst gezeichnet (play, pause, grid) | Lucide: ISC License; Feather: MIT License | übernommen (Herkunft je Icon in Code prüfen, Lizenztext beilegen) |

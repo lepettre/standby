@@ -868,6 +868,9 @@ body.night .card{box-shadow:inset 0 0 0 1px #2a0805}
  .tr-m{font:800 min(30cqh,34cqw)/1 var(--round);color:var(--accent)}.tr-m small{font-size:.35em;color:#fff}
  .tr-dl{font-size:11px;color:#ff6b5e;font-weight:700}
 }
+
+.tr-st{color:var(--muted);font-weight:500}
+@container (max-width:240px){.tr-st{display:none}}
 </style>
 </head>
 <body>
@@ -1130,10 +1133,10 @@ const W={
   c.classList.toggle('dt-only',f==='d');c.innerHTML=`<div class="fitbox mid" data-mw="${f==='w'?.3:f==='wd'?.42:f==='dm'?.8:1.25}" data-mh="${small?.62:.86}" data-max="900"><div class="dt-b fitt">${esc(big)}${f==='dm'?'<span>.</span>':''}</div></div>${small?`<div class="dt-s">${esc(small)}</div>`:''}`;refitSoon(c)},
  moon(c){const a=moonAge(),il=Math.round((1-Math.cos(2*Math.PI*a/MP))/2*100),full=(((MP/2-a)%MP)+MP)%MP,k=Math.floor(Date.now()/36e5)+S.font;if(c._k===k)return;c._k=k;const nf=new Date(Date.now()+full*864e5);
   c.innerHTML=`<div class="mo"><canvas class="mo-c" width="28" height="28" aria-hidden="true"></canvas><div class="mo-t"><b>${GS.moon()}</b><span>${il} % beleuchtet</span><span class="mo-n">Vollmond ${full<1?'heute':nf.toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'short'})}</span></div></div>`;moonPix(c.querySelector('.mo-c'),a,document.body.classList.contains('night')?'#ff3b30':'#f2f0e6')},
- transit(c){const X=depsOf(c),now=Date.now(),L=(X.deps||[]).map(d=>({...d,m:Math.max(0,Math.round(d.min+(d.delay||0)-(now-(X.ts||now))/6e4))})).filter(d=>d.m>=0).sort((a,b)=>a.m-b.m),src='<div class="tr-src">Quelle: HOCHBAHN / hvv (Geofox GTI)</div>',mm=d=>d.cancelled?'fällt aus':d.m<1?'jetzt':d.m+' Min.';
+ transit(c){const X=depsOf(c),now=Date.now(),col=!!opt(c).colors,L=(X.deps||[]).map(d=>({...d,m:Math.max(0,Math.round(d.min+(d.delay||0)-(now-(d.ts||X.ts||now))/6e4))})).filter(d=>d.m>=0).sort((a,b)=>a.m-b.m),src='<div class="tr-src">Quelle: HOCHBAHN / hvv (Geofox GTI)</div>',mm=d=>d.cancelled?'fällt aus':d.m<1?'jetzt':d.m+' Min.';
   if(!L.length){c.innerHTML=`<div class="w-head"><span>${ic('wave')} ${esc(X.name||'Abfahrten')}</span></div>`+ghost([80,60,70],esc(X.err||(X.busy?'Wird geladen …':'Gerade keine Abfahrten.')))+src;return}
-  const n=L[0],badge=d=>`<b class="tr-l">${esc(d.line)}</b>`;
-  c.innerHTML=`<div class="w-head"><span class="trunc">${esc(X.name)}</span></div><div class="tr-one">${badge(n)}<div class="tr-d trunc">${esc(n.dir)}</div><div class="tr-m">${n.cancelled?'fällt aus':n.m<1?'jetzt':`${n.m}<small> Min.</small>`}</div>${n.delay?`<div class="tr-dl">+${n.delay} Min. Verspätung</div>`:''}</div><ul class="tr">${L.slice(0,8).map(d=>`<li class="${d.cancelled?'x':''}">${badge(d)}<span class="trunc">${esc(d.dir)}</span><em>${mm(d)}${d.delay&&!d.cancelled?` <i>+${d.delay}</i>`:''}</em></li>`).join('')}</ul>${src}`},
+  const n=L[0],badge=d=>{const k=col&&trCol(d);return`<b class="tr-l"${k?` style="background:${k[0]};color:${k[1]}"`:''}>${esc(d.line)}</b>`};
+  c.innerHTML=`<div class="w-head"><span class="trunc">${esc(X.name)}</span></div><div class="tr-one">${badge(n)}<div class="tr-d trunc">${esc(n.dir)}</div><div class="tr-m">${n.cancelled?'fällt aus':n.m<1?'jetzt':`${n.m}<small> Min.</small>`}</div>${n.delay?`<div class="tr-dl">+${n.delay} Min. Verspätung</div>`:''}</div><ul class="tr">${L.slice(0,8).map(d=>`<li class="${d.cancelled?'x':''}">${badge(d)}<span class="trunc">${esc(d.dir)}${X.multi&&d.st?`<small class="tr-st"> · ${esc(d.st)}</small>`:''}</span><em>${mm(d)}${d.delay&&!d.cancelled?` <i>+${d.delay}</i>`:''}</em></li>`).join('')}</ul>${src}`},
  headlines(c){const N=newsOf(c),L=N.items.slice(0,8);c.innerHTML=`<div class="w-head acc"><span class="trunc">${ic('rss')} ${esc(N.dom)}</span></div>${L.length?`<ol class="hdl">${L.map(n=>`<li><a href="${esc(/^https?:/i.test(n.link||'')?n.link:'#')}" target="_blank" rel="noopener"><b>${esc(n.title)}</b>${n.date?`<small>${relTime(n.date)}</small>`:''}</a></li>`).join('')}</ol>`:ghost([96,88,60],esc(N.err||'Schlagzeilen werden geladen …'))}`},
  news(c){const N=newsOf(c);let b;const n=N.items.length?Math.min(N.items.length,6):0,i=(c._ni||0)%(n||1),it=N.items[i];
   if(!S.rss.trim())b=ghost([96,88,60],'Kein Feed eingetragen.');
@@ -1478,7 +1481,10 @@ function ctxOpen(e){const card=e.target.closest('#stage .card[data-key]'),x=$('#
 function wSheet(k,mi){const o=(dash().mods[mi]?.o||{})[k]||{},t=WOPT(k);let h='';
  if(t==='poster')h=`<label class="tog">Kalenderwoche zeigen<input type="checkbox" data-wo="nokw" data-inv="1" ${o.nokw?'':'checked'}></label><label class="tog">Jahr zeigen<input type="checkbox" data-wo="noyear" data-inv="1" ${o.noyear?'':'checked'}></label>`;
  if(t==='datefmt')h=`<span class="lbl">Anzeige</span><select data-wo="fmt">${[['d','Nur Tag'],['dm','Tag und Monat'],['w','Wochentag'],['wd','Wochentag und Tag']].map(([v,n])=>`<option value="${v}"${(o.fmt||'dm')===v?' selected':''}>${n}</option>`).join('')}</select>`;
- if(t==='transit')h=`<span class="lbl">Haltestelle</span><div class="rd-r"><span>${esc(o.stopName||'Noch keine gewählt')}</span></div><input type="search" id="trQ" placeholder="Haltestelle suchen" autocomplete="off"><button class="btn" data-act="trNear">Nächste per Standort</button><div id="trR"></div><details class="adv"${trUrl()?'':' open'}><summary>Worker-Adresse (nur auf diesem Gerät gespeichert)</summary><input type="url" id="trUrl" value="${esc(S.transitUrl||'')}" placeholder="https://….workers.dev" autocomplete="off"></details><p class="pmut">Quelle: HOCHBAHN / hvv (Geofox GTI). Nur für die Fahrplanauskunft.</p>`;
+ if(t==='transit'){const St=trStops(o),K=o.kinds||TRK.map(x=>x[0]);h=`<span class="lbl">Haltestellen</span><div id="trL">${St.map((x,i)=>`<div class="rd-r"><span>${esc(x.name)}</span><button class="round sm" data-act="trDel" data-i="${i}" aria-label="${esc(x.name)} entfernen">${ic('xmark')}</button></div>`).join('')||'<p class="pmut">Noch keine gewählt.</p>'}</div><input type="search" id="trQ" placeholder="Haltestelle suchen und hinzufügen" autocomplete="off"><button class="btn" data-act="trNear">Nächste per Standort</button><div id="trR"></div>
+ <span class="lbl">Verkehrsmittel</span><div class="wc-row">${TRK.map(([k,n])=>`<label><input type="checkbox" data-trk value="${k}" ${K.includes(k)?'checked':''}>${n}</label>`).join('')}</div>
+ <label class="tog">Linienfarben<input type="checkbox" data-wo="colors" ${o.colors?'checked':''}></label><p class="pmut">Farben angelehnt an das HVV-Liniennetz, nicht offiziell geprüft.</p>
+ <details class="adv"${trUrl()?'':' open'}><summary>Worker-Adresse (nur auf diesem Gerät gespeichert)</summary><input type="url" id="trUrl" value="${esc(S.transitUrl||'')}" placeholder="https://….workers.dev" autocomplete="off"></details><p class="pmut">Quelle: HOCHBAHN / hvv (Geofox GTI). Nur für die Fahrplanauskunft.</p>`}
  if(t==='pantry')h=`<span class="lbl">Vorrat (Zutaten mit Komma)</span><input type="text" data-wo="pantry" value="${esc(o.pantry||'')}" placeholder="z. B. Linsen, Reis, Zwiebeln" autocomplete="off"><p class="pmut">Leer: Rezept des Tages. Mit Vorrat: Rezepte, die am meisten davon nutzen; der Mischen-Knopf zeigt das nächste.</p>`;
  if(t==='spotify')h=`<label class="tog">Cover groß als Hintergrund (ab 2 × 2)<input type="checkbox" data-wo="coverbg" ${o.coverbg?'checked':''}></label><p class="pmut">Spotify verlangt, Cover unverändert zu zeigen; diese Darstellung legt Steuerung darüber und ist daher nur eine Option.</p>`;
  if(t==='clock')h=`${DATEW.includes(k)?`<label class="tog">Datum zeigen<input type="checkbox" data-wo="nodate" data-inv="1" ${o.nodate?'':'checked'}></label>`:''}<span class="lbl">Ort der Uhrzeit</span><div class="rd-r"><span>${esc(o.cityName||'Aktueller Standort')} <small class="pmut">${esc(o.tz||'')}</small></span>${o.tz?`<button class="round sm" data-act="clkReset" aria-label="Aktueller Standort">${ic('xmark')}</button>`:''}</div><input type="search" id="clkQ" placeholder="Stadt suchen" autocomplete="off"><div id="clkR"></div>`;
@@ -1500,6 +1506,7 @@ const TRT={U_BAHN:'U-Bahn',S_BAHN:'S-Bahn',BUS:'Bus',METROBUS:'Metrobus',SCHNELL
 const trList=L=>(L||[]).length?L.map(x=>`<button class="spp-row btnrow cty" data-act="trSet" data-id="${esc(x.id)}" data-n="${esc(x.name)}"><span><b>${esc(x.name)}</b><small>${esc([x.city,(x.types||[]).map(t=>TRT[t]||t).join(', '),x.d!=null?x.d+' m':''].filter(Boolean).join(' · '))}</small></span></button>`).join(''):'<p class="pmut">Keine Haltestelle gefunden.</p>';
 function wsRead(){trSave();const sec=$('#modal .ws .sec');if(!sec)return;if($('#wsProxy')){S.proxy=$('#wsProxy').value.trim();save()}const k=sec.dataset.k,mi=+sec.dataset.mi,o={};
  sec.querySelectorAll('[data-wo]').forEach(i=>{o[i.dataset.wo]=i.type==='checkbox'?(i.dataset.inv?!i.checked:i.checked):i.value.trim()});
+ const tk=[...sec.querySelectorAll('[data-trk]')];if(tk.length){const v=tk.filter(x=>x.checked).map(x=>x.value);o.kinds=v.length===tk.length?null:v}
  const cb=[...sec.querySelectorAll('[data-wcal]')];if(cb.length){const v=cb.filter(x=>x.checked).map(x=>x.value);o.cals=v.length===cb.length?null:v}
  setOpt(mi,k,o)}
 
@@ -1517,8 +1524,17 @@ setInterval(autoView,30000);setTimeout(autoView,1500);
 /* 4.5: ÖPNV-Abfahrten über einen eigenen Worker (Adresse nur auf dem Gerät, S.transitUrl); Quelle HOCHBAHN / hvv (Geofox GTI) */
 D.depBy={};const trUrl=()=>(S.transitUrl||'').trim().replace(/\/+$/,'');
 async function trGet(path){const b=trUrl();if(!b)throw Error('Noch keine Worker-Adresse eingetragen.');let r;try{r=await fetch(b+path)}catch{throw Error('Abfahrten gerade nicht erreichbar.')}const j=await r.json().catch(()=>({}));if(!r.ok||j.error)throw Error('Abfahrten gerade nicht verfügbar.');return j}
-function depsOf(c){const o=opt(c);if(S.demo){const t=Date.now();return{name:'Demo-Haltestelle',deps:[['U1','Nordring',2,0],['5','Westpark',4,2],['S3','Flughafen',7,0],['U3','Zentrum',9,0],['X35','Hauptbahnhof',12,1],['62','Am Hafen',15,0]].map(([line,dir,min,delay])=>({line,dir,min,delay,type:''})),ts:t}}
- if(!o.stopId)return{name:'',deps:[],err:'Haltestelle per Langdruck wählen.'};const x=D.depBy[o.stopId];if(!x||(!x.busy&&Date.now()-x.at>3e4))loadDeps(o.stopId);return{name:o.stopName,...(x||{deps:[],err:''})}}
+/* Verkehrsmittel aus Linie und Typ (Typ von der Schnittstelle, sonst Linienname) */
+const TRK=[['U','U-Bahn'],['S','S-Bahn'],['A','AKN'],['R','Regionalbahn'],['B','Bus'],['F','Fähre']];
+const trKind=d=>{const n=String(d.line||''),t=String(d.type||'').toUpperCase();if(/SHIP|SCHIFF|FAEHRE|FÄHRE/.test(t))return'F';if(/^U\d/.test(n))return'U';if(/^S\d/.test(n))return'S';if(/^A\d/.test(n))return'A';if(/^(RE|RB|R)\d|^(IC|ICE|EC)/.test(n)||/^R_BAHN|FERNBAHN|REGIONAL/.test(t))return'R';if(/BUS/.test(t)||/^(X|M)?\d+$/.test(n))return'B';return t==='TRAIN'?'R':'B'};
+/* Linienfarben, angelehnt an das HVV-Liniennetz (nicht an offizieller Quelle geprüft; Option) */
+const TRC={U1:['#0069b4','#fff'],U2:['#e3051b','#fff'],U3:['#ffdc00','#000'],U4:['#009ba4','#fff'],S1:['#00963f','#fff'],S2:['#b51e45','#fff'],S3:['#6c2a84','#fff'],S5:['#00a6d6','#fff'],A1:['#e3051b','#fff'],A2:['#e3051b','#fff'],A3:['#e3051b','#fff'],B:['#e3051b','#fff'],F:['#0090d4','#fff']};
+const trCol=d=>TRC[d.line]||TRC[trKind(d)]||null;
+const trStops=o=>o.stops&&o.stops.length?o.stops:o.stopId?[{id:o.stopId,name:o.stopName}]:[];
+function depsOf(c){const o=opt(c),ok=d=>!o.kinds||o.kinds.includes(trKind(d));if(S.demo){const t=Date.now();return{name:'Demo-Haltestelle',multi:false,deps:[['U1','Nordring',2,0],['5','Westpark',4,2],['S3','Flughafen',7,0],['U3','Zentrum',9,0],['X35','Hauptbahnhof',12,1],['62','Am Hafen',15,0,'SHIP']].map(([line,dir,min,delay,type])=>({line,dir,min,delay,type:type||'',ts:t})).filter(ok),ts:t}}
+ const St=trStops(o);if(!St.length)return{name:'',deps:[],err:'Haltestelle per Langdruck wählen.'};let deps=[],err='',busy=false;
+ St.forEach(st=>{const x=D.depBy[st.id];if(!x||(!x.busy&&Date.now()-x.at>3e4))loadDeps(st.id);if(x){busy=busy||!!x.busy;if(x.err)err=x.err;deps.push(...(x.deps||[]).map(d=>({...d,ts:x.ts,st:st.name})))}});
+ return{name:St.length>1?St.map(x=>x.name).join(' · '):St[0].name,multi:St.length>1,deps:deps.filter(ok),err,busy}}
 async function loadDeps(id){D.depBy[id]={...(D.depBy[id]||{deps:[]}),busy:true,at:Date.now()};try{const j=await trGet('/departures?id='+encodeURIComponent(id));D.depBy[id]={deps:j.deps||[],ts:j.ts||Date.now(),err:'',at:Date.now()}}catch(e){D.depBy[id]={deps:[],err:e.message,at:Date.now()}}repaint('transit')}
 setInterval(()=>{if(document.visibilityState==='visible'&&mounted.some(m=>m.key==='transit'))repaint('transit')},15000);
 
@@ -1780,7 +1796,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='4.5.0';
+const VERSION='4.5.1';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>
@@ -1850,7 +1866,8 @@ const ACT={
  eTimeDone(){const d=dash();d.from=$('#vtF').value||'';d.to=$('#vtT').value||'';save();$('#modal').hidden=true;autoLast=null},
  eTimeClear(){const d=dash();delete d.from;delete d.to;save();$('#modal').hidden=true},
  async trNear(){trSave();$('#trR').innerHTML='<p class="pmut">Standort wird bestimmt …</p>';const g=await new Promise(res=>{if(!navigator.geolocation)return res(null);navigator.geolocation.getCurrentPosition(p=>res(p.coords),()=>res(null),{timeout:8000,maximumAge:60000})});if(!g){$('#trR').innerHTML='<p class="pmut">Standort nicht verfügbar.</p>';return}try{const j=await trGet(`/stops?lat=${g.latitude}&lon=${g.longitude}`);$('#trR').innerHTML=trList(j.stops)}catch(e){$('#trR').innerHTML=`<p class="pmut">${esc(e.message)}</p>`}},
- trSet(a){const sec=$('#modal .ws .sec'),k=sec.dataset.k,mi=+sec.dataset.mi;trSave();wsRead();setOpt(mi,k,{stopId:a.dataset.id,stopName:a.dataset.n});wSheet(k,mi)},
+ trSet(a){const sec=$('#modal .ws .sec'),k=sec.dataset.k,mi=+sec.dataset.mi;trSave();wsRead();const St=trStops(opt({dataset:{mi,key:k}}));if(!St.some(x=>x.id===a.dataset.id))St.push({id:a.dataset.id,name:a.dataset.n});setOpt(mi,k,{stops:St,stopId:'',stopName:''});wSheet(k,mi)},
+ trDel(a){const sec=$('#modal .ws .sec'),k=sec.dataset.k,mi=+sec.dataset.mi;wsRead();const St=trStops(opt({dataset:{mi,key:k}}));St.splice(+a.dataset.i,1);setOpt(mi,k,{stops:St,stopId:'',stopName:''});wSheet(k,mi)},
  ctxEdit(){$('#ctx').hidden=true;enterEdit()},
  wsDone(){wsRead();$('#modal').hidden=true;renderStage();loadNews()},
  ctyAdd(a){const sec=$('#modal .ws .sec'),k=sec.dataset.k,mi=+sec.dataset.mi,x=JSON.parse(a.dataset.j),L=[...(opt({dataset:{mi,key:k}}).cities||[])];if(!L.some(y=>y.n===x.n&&y.tz===x.tz))L.push(x);wsRead();setOpt(mi,k,{cities:L});wSheet(k,mi)},

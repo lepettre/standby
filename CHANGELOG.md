@@ -2,6 +2,12 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.5.0 – 01.11.2026
+
+- Neues Widget „Abfahrten“ (Gruppe „Unterwegs“): nächste Abfahrten aller Verkehrsmittel an einer HVV-Haltestelle. 1 × 1 zeigt die nächste Abfahrt groß, ab 2 × 1 eine Liste mit Linie, Ziel, Minuten, Verspätung und Ausfällen; Aktualisierung alle 15 Sekunden.
+- Haltestelle per Langdruck: Suche mit Vorschlägen oder „Nächste per Standort“. Die Adresse des eigenen Cloudflare-Workers wird nur auf dem Gerät gespeichert, nicht im Code.
+- Quelle sichtbar im Widget und unter „Über und Quellen“: „Quelle: HOCHBAHN / hvv (Geofox GTI)“.
+
 ## 4.4.0 – 01.11.2026
 
 - Neues Widget „Mondphase“: Mond als Pixelbild (Nordhalbkugel), Phase, Beleuchtung in Prozent, nächster Vollmond.

@@ -119,13 +119,13 @@ Herkunft: Feedback vom 01.11. (F3).
 
 1. **Zutaten je Schritt** (F): Die automatische Zuordnung trifft nicht immer (Zutaten mit Hinweisen, Teilmengen). Optionen: Zuordnung verbessern, als Einstellung abschaltbar machen oder ausblenden. Entscheidung offen.
 2. **Weitere Ideen** (A, teils erledigt in 4.4.0): erledigt sind Mondphase als Pixel-Widget, Ansichten nach Tageszeit, Rezeptvorschläge aus dem Vorrat, Gestirne-Wechsel am Ende der Nacht. Weitere eigene Ideen verworfen; neue Funktionen nur nach Auftrag.
-3. **ÖPNV-Abfahrten (HVV), neues Widget** (F, noch nicht umsetzen; wartet auf Worker-Endpunkte und neutrale Adresse):
+3. **ÖPNV-Abfahrten (HVV), neues Widget** (F, erledigt in 4.5.0 mit eigenem Worker; Adresse nur auf dem Gerät):
    - Datenquelle: bestehender Cloudflare-Worker des Autors (Geofox GTI, Zugang als Worker-Secrets, CORS offen). Liefert bisher nur U-Bahn (`/nearby`, `/stations`, Filter auf `U_BAHN` und Linien `^U\d`).
    - Nötig: zusätzlicher Endpunkt `/departures?id=…` für alle Verkehrsmittel und eine Haltestellensuche ohne U-Bahn-Filter; bestehende Endpunkte unverändert lassen.
    - Haltestelle per Suche mit Autovervollständigung wählbar, optional nächste per Standort.
    - 1 × 1: nächste Abfahrt groß. Ab 2 × 1: Liste mit Linie, Ziel, Minuten, Verspätung.
    - Pflichtnennung sichtbar: „Quelle: HOCHBAHN / hvv (Geofox GTI)“; CREDITS.md ergänzen. Nutzung laut Bedingungen nur Fahrplanauskunft.
-   - Offene Frage: neutrale Worker-Adresse (eigene Route/Domain), da die bisherige den Namen des Autors enthält und laut Datenschutzregel nicht ins Repo darf.
+   - Gelöst: eigener Worker nur für das Dashboard; der bestehende bleibt unverändert. Seine Adresse steht nicht im Repo, sondern wird im Widget eingetragen.
 
 ## 5.0.0 – Home Assistant
 

@@ -80,7 +80,7 @@ Offen geblieben: Punkt 11 (Google-Client) wird mit der fest eingebauten Client-I
 3. **Detailfenster überarbeiten** (F, erledigt in 4.1.0): Eleganter, stimmig zum Stil, ohne sichtbare Scrollbalken oder mit gestalteten.
 4. **Spotify-Bibliothek** (F, erledigt in 3.1.1 und 4.1.0, soweit Spotify die Daten freigibt): Lieblingssongs, Alben und Playlists durchsuchen und abspielen.
 
-## 4.2.0 – Feedback zu 4.1 (Handy, Bearbeiten, Rezepte, Einstellungen)
+## 4.2.0 – Feedback zu 4.1 (Handy, Bearbeiten, Rezepte, Einstellungen) – ausgeliefert
 
 Herkunft: Feedback vom 31.10. abends (F2). Reihenfolge = Umsetzungsreihenfolge.
 

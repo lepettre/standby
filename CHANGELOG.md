@@ -2,6 +2,19 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.2.0 – 01.11.2026
+
+- Handy-Raster fest 4 × 2 quer und 2 × 4 hoch, die Zellgröße passt sich an: zwei 2 × 2-Module passen immer. Bearbeiten-Leiste einzeilig und kompakt.
+- Rezepte-Ansicht ohne Bearbeiten-Leiste und ohne Wackelmodus.
+- Wisch-Punkte auf Widget-Stapeln blenden nach 3 Sekunden aus und bei Berührung wieder ein.
+- Neues Widget „Datum“: nur Tag, Tag und Monat, Wochentag oder Wochentag und Tag (per Langdruck wählbar).
+- Kochmodus: Zutatenleiste unter dem Schritt entfällt; im Schritt steht die Menge, wenn die Zutat eindeutig erkannt wird und dort zum ersten Mal vorkommt, z. B. „Tellerlinsen (250 g)“.
+- Rezeptfoto über Unsplash direkt im Kochmodus, auch ohne Zugangsschlüssel: Suche auf unsplash.com öffnen, Foto hinzufügen. Mit Schlüssel weiterhin Suche in der App.
+- Einstellungen: „Darstellung“ (Nachtmodus, 24-Stunden-Format, Display anlassen) wandert in das Farben-Panel; „Ansichten“, „Standort“, „CORS-Proxy“ und „Rezeptfotos von Unsplash“ entfallen. Proxy steht beim ICS-Abo und im Feed eines Nachrichten-Widgets. Stil-Bibliothek ganz unten.
+- Ort eines Wetter-Widgets mit Vorschlägen beim Tippen.
+- „Groß anzeigen“ zeigt neben dem Widget passende Zusatzinfos (z. B. Kalender mit Terminliste, Wetter mit Vorhersage, Nachrichten mit Übersicht); bei Fotos und Rezept entfällt es.
+- Fehler behoben: Kopfzeilen-Knöpfe standen untereinander (Klassenkonflikt seit 4.1), „Drei Tage“ quetschte viele Termine übereinander, Google-Anmeldefehler als Code statt verständlich mit „Erneuern“, Kalender-Fenster mit langen Texten über dem rechten Rand.
+
 ## 4.1.0 – 31.10.2026
 
 - Neues Widget „Schlagzeilen-Übersicht“: mehrere nummerierte Schlagzeilen untereinander mit Alter, ohne Antippen lesbar, eigener Feed je Widget.

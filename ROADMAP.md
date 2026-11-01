@@ -22,7 +22,8 @@ Bisher: 1.0.0, 2.0.0, 3.0.0 (siehe CHANGELOG.md). Die Nummer steht in `index.htm
 | 4.0.0 | Widgets bearbeiten wie bei iOS | Haupt |
 | 4.1.0 | Neue Darstellungen und schönere Detailfenster | Neben |
 | 4.2.0 | Feedback zu 4.1: Handy-Raster, Bearbeiten, Datum, Kochmodus, Einstellungen | Neben |
-| 4.3.0 | Kochmodus verfeinern, ältere Ideen | Neben |
+| 4.3.0 | Feedback zu 4.2: Feeds, Spotify, Farben, Widgets, Vorlagen | Neben |
+| 4.4.0 | Kochmodus verfeinern, ältere Ideen | Neben |
 | 5.0.0 | Home Assistant | Haupt |
 | R-Plan | Übernahme von Rezept-Übersicht und Kochmodus in eine eigene Rezepte-App | eigenes Projekt, nur nach Freigabe |
 
@@ -96,7 +97,25 @@ Herkunft: Feedback vom 31.10. abends (F2). Reihenfolge = Umsetzungsreihenfolge.
 10. **Fehler Kalender-Widget** (F2): Viele Termine an einem Tag überlagern sich in „Drei Tage“; Google-Anmeldefehler erscheint als technische Meldung („popup_failed_to_open“) statt als verständlicher Hinweis mit Knopf zum Erneuern.
 11. **Kalender-Detailfenster** (F2): Inhalt hält rechts den Rand nicht ein.
 
-## 4.3.0 – Kochmodus, ältere Ideen
+## 4.3.0 – Feedback zu 4.2 (Feeds, Spotify, Farben, Widgets, Bearbeiten, Vorlagen)
+
+Herkunft: Feedback vom 01.11. (F3).
+
+1. **Feeds**: Im Widget statt Feed-Titel nur die Domain. Vorschlagsliste deutscher und englischer Quellen mit Namen, eigene Adresse weiter möglich, Suche mit Autovervollständigung.
+2. **Spotify**: Liken funktioniert nicht (Premium vorhanden). Lautsprecherliste weicht von der in der Spotify-App ab (Dynamic Island zeigt die nützlicheren). Player im Fenster nicht mittig. Option: Cover groß und füllend als Hintergrund ab 2 × 2. Abspielknopf teils verzerrt.
+3. **Farben**: Muster neu mischen, Kalender im gelben Muster in schönem Gelb.
+4. **Kalender**: Punkte im Monatsblatt erst ab 2 × 2. Kalenderfarbe in Widgets weglassen (nur im Fenster). Countdown ohne Kalendername. Wochentag-Plakat: KW und Jahr wählbar.
+5. **Größenangaben**: Statt „Vollbild“ immer die konkrete Größe.
+6. **Datum**: Nur Tageszahl zentriert, groß, gleichmäßige Proportionen.
+7. **Uhren**: Ort wählbar, Ortsname anzeigen, wenn nicht der aktuelle Standort.
+8. **Wetter**: Achsenbeschriftungen überschneiden sich; Wetter-Übersicht (Trennlinie, Ränder, „18 km/h“ in einer Zeile); Wetter als Satz („bis zu“); Temperaturverlauf ohne doppelte Zahlen, weniger Text.
+9. **Rezepte**: Kamera-Symbol für Foto und Unsplash zusammen, Foto ohne sichtbares Zwischenspeichern einfügen, Foto wieder löschbar. Fotos nur in neuen Bild-Varianten der Widgets (Text-Widgets bleiben), Text darauf mit Unschärfe hinterlegt, bei kleinen Kacheln weniger Text.
+10. **Fotos-Widget**: Vorschau in der Galerie zeigt kein Symbolbild.
+11. **Einheitlicher Rand**: Klar und gleich für alle Widgets.
+12. **Bearbeiten**: Größe ändern sanft wie beim Ziehen. Kleine Module lassen sich nicht sauber nebeneinander ziehen.
+13. **Vorlagen**: Duo, Schreibtisch, Nachttisch, Rezepte mit festen, füllenden Proportionen (Raster nicht änderbar, Inhalte schon).
+
+## 4.4.0 – Kochmodus, ältere Ideen
 
 1. **Zutaten je Schritt** (F): Die automatische Zuordnung trifft nicht immer (Zutaten mit Hinweisen, Teilmengen). Optionen: Zuordnung verbessern, als Einstellung abschaltbar machen oder ausblenden. Entscheidung offen.
 2. **Weitere Ideen** (A): Google Tasks als Aufgaben-Widget, Mondphase als Pixel-Widget, Wecker-Ansicht vor dem ersten Termin, Ansichten automatisch nach Tageszeit, Rezeptvorschläge aus dem Vorrat, Gestirne-Wechsel am Ende des Nacht-Timers.

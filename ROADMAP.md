@@ -118,8 +118,8 @@ Herkunft: Feedback vom 01.11. (F3).
 ## 4.4.0 – Kochmodus, ältere Ideen, ÖPNV-Abfahrten
 
 1. **Zutaten je Schritt** (F): Die automatische Zuordnung trifft nicht immer (Zutaten mit Hinweisen, Teilmengen). Optionen: Zuordnung verbessern, als Einstellung abschaltbar machen oder ausblenden. Entscheidung offen.
-2. **Weitere Ideen** (A): Google Tasks als Aufgaben-Widget, Mondphase als Pixel-Widget, Wecker-Ansicht vor dem ersten Termin, Ansichten automatisch nach Tageszeit, Rezeptvorschläge aus dem Vorrat, Gestirne-Wechsel am Ende des Nacht-Timers.
-3. **ÖPNV-Abfahrten (HVV), neues Widget** (F, noch nicht umsetzen):
+2. **Weitere Ideen** (A, teils erledigt in 4.4.0): erledigt sind Mondphase als Pixel-Widget, Ansichten nach Tageszeit, Rezeptvorschläge aus dem Vorrat, Gestirne-Wechsel am Ende der Nacht. Offen: Google Tasks als Aufgaben-Widget (braucht die Google Tasks API im Google-Projekt und eine erneute Freigabe), Wecker-Ansicht vor dem ersten Termin.
+3. **ÖPNV-Abfahrten (HVV), neues Widget** (F, noch nicht umsetzen; wartet auf Worker-Endpunkte und neutrale Adresse):
    - Datenquelle: bestehender Cloudflare-Worker des Autors (Geofox GTI, Zugang als Worker-Secrets, CORS offen). Liefert bisher nur U-Bahn (`/nearby`, `/stations`, Filter auf `U_BAHN` und Linien `^U\d`).
    - Nötig: zusätzlicher Endpunkt `/departures?id=…` für alle Verkehrsmittel und eine Haltestellensuche ohne U-Bahn-Filter; bestehende Endpunkte unverändert lassen.
    - Haltestelle per Suche mit Autovervollständigung wählbar, optional nächste per Standort.

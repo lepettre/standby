@@ -1,6 +1,6 @@
 # StandBy-Dashboard
 
-Version 4.3.0 · 31. Oktober 2026
+Version 4.4.0 · 31. Oktober 2026
 
 Eine Web-App in einer einzigen HTML-Datei, die ein iPhone 17 im Querformat zur Uhr-, Wetter-, Kalender-, Musik- und Kochstation macht, angelehnt an Apples StandBy. Läuft ohne Server und Framework, gehostet auf GitHub Pages, bedient wie der iPhone-Homescreen.
 
@@ -8,7 +8,7 @@ Eine Web-App in einer einzigen HTML-Datei, die ein iPhone 17 im Querformat zur U
 
 | Pfad | Inhalt |
 | --- | --- |
-| `index.html` | Die App, Version 4.3.0 |
+| `index.html` | Die App, Version 4.4.0 |
 | `CLAUDE.md` | Arbeitsanweisung für Claude Code |
 | `ROADMAP.md` | Geplante Versionen und Wunschliste |
 | `CHANGELOG.md` | Was sich in welcher Version geändert hat |

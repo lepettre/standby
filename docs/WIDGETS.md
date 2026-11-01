@@ -84,3 +84,8 @@ Siehe ROADMAP.md, Version 3.0.1,.
 
 - Schlagzeilen-Übersicht (`headlines`): bis zu acht nummerierte Schlagzeilen mit Alter, Feed je Widget.
 - Laufband (`ticker`) mehrzeilig, Zeilenzahl nach Kachelform.
+
+## Neu in 4.4
+
+- Mondphase (`moon`): Pixelmond, Phase, Beleuchtung, nächster Vollmond.
+- Rezept (`recipe`) mit Option Vorrat.

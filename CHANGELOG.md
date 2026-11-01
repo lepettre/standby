@@ -2,6 +2,13 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.4.0 – 01.11.2026
+
+- Neues Widget „Mondphase“: Mond als Pixelbild (Nordhalbkugel), Phase, Beleuchtung in Prozent, nächster Vollmond.
+- Ansichten nach Tageszeit: Im Bearbeiten-Modus über das Mond-Symbol ein Zeitfenster je Ansicht festlegen; die Ansicht erscheint, wenn das Fenster beginnt. Manuelles Wischen bleibt bis zum nächsten Fenster.
+- Rezept-Widget mit Vorrat (per Langdruck): zeigt Rezepte, die am meisten der eingetragenen Zutaten nutzen, mit „Passt zu: …“.
+- Die Gestirne zeigen am Ende der Nacht (Nachtmodus nach Uhrzeit oder Sonne) ein neues Zitat.
+
 ## 4.3.0 – 01.11.2026
 
 - Nachrichten: Im Widget steht nur noch die Domain der Quelle. Beim Feed eines Widgets Vorschläge deutscher und englischer Quellen mit Namen, Suche beim Tippen und Feed-Suche für eine eingegebene Website (über den CORS-Proxy).

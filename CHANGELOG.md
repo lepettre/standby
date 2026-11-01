@@ -2,6 +2,11 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.6.0 – 01.11.2026
+
+- Rezepte exportieren und importieren im Format der Rezeptesammlung (HTML-Datei mit eingebetteten Daten, format „rezeptkasten“, Version 2). Beim Export Wahl „Mit Fotos“ oder „Ohne Fotos“; Unsplash-Fotos werden nicht mitgespeichert. Beim Import werden Fotos übernommen; importierte Rezepte behalten alle Felder der Rezeptesammlung und gehen beim erneuten Export unverändert zurück.
+- Unsplash-Suche direkt im Kamera-Fenster am Rezept, Zugangsschlüssel eingebaut.
+
 ## 4.5.2 – 01.11.2026
 
 - Abfahrten: Adresse des Workers fest eingebaut (neutrale Adresse), kein Eintragen mehr nötig.

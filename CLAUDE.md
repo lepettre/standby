@@ -1,6 +1,6 @@
 # Arbeitsanweisung für Claude Code
 
-Projekt: StandBy-Dashboard. Eine Web-App in einer einzigen Datei, `index.html`, für ein iPhone 17 im Querformat, gehostet auf GitHub Pages. Aktuelle Version: 4.5.2.
+Projekt: StandBy-Dashboard. Eine Web-App in einer einzigen Datei, `index.html`, für ein iPhone 17 im Querformat, gehostet auf GitHub Pages. Aktuelle Version: 4.6.0.
 
 ## Erst lesen
 
@@ -40,6 +40,6 @@ In Texten, Code, Commits und Dateien keine Namen, Benutzernamen, Adressen, Orte,
 
 - Kein Framework, kein Build-Schritt; `index.html` ist die Quelle.
 - Prüfkette: Skript extrahieren, `node --check`, Playwright-Screenshots im Demo-Modus.
-- Zugangsdaten: Spotify- und Google-Client-ID sind öffentliche Kennungen und dürfen in den Code (ROADMAP 3.2.0). Keine Geheimnisse (Client-Secrets, Unsplash-Secret) in den Code.
+- Zugangsdaten: Spotify- und Google-Client-ID sowie der Unsplash Access Key sind öffentliche Kennungen und dürfen in den Code. Keine Geheimnisse (Client-Secrets, Unsplash-Secret) in den Code.
 - Gespeicherte Daten der Nutzer nie stillschweigend verwerfen; Formatänderungen mit Migration.
 

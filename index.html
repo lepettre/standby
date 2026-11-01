@@ -871,6 +871,7 @@ body.night .card{box-shadow:inset 0 0 0 1px #2a0805}
 
 .tr-st{color:var(--muted);font-weight:500}
 @container (max-width:240px){.tr-st{display:none}}
+body:not(.editing) .G.fixed{margin-top:auto;margin-bottom:auto}
 </style>
 </head>
 <body>
@@ -1563,6 +1564,8 @@ function repaint(...keys){mounted.forEach(m=>{if(keys.includes(m.key)){W[m.key](
 const SIZES=['1x1','2x1','1x2','2x2','3x2','4x2','full'];
 const sizeName=x=>{if(x==='full'){const G=gridDims();return G.cols+' × '+G.rows}return x.replace('x',' × ')};
 let lastG='';
+/* 4.6: Vorlagen immer im Grundraster 4 × 2 (hoch 2 × 4), Zellen so groß wie möglich, höchstens 25 % von quadratisch abweichend; Rest wird mittig verteilt */
+function fixedDims(){const st=$('#stage'),W=st.clientWidth-16,H=st.clientHeight-16,g=8,cols=W>=H?4:2,rows=W>=H?2:4;let cw=(W-g*(cols-1))/cols,ch=(H-g*(rows-1))/rows;if(cw>ch*1.25)cw=ch*1.25;if(ch>cw*1.25)ch=cw*1.25;cw=Math.floor(cw);ch=Math.floor(ch);return{cols,rows,cell:Math.min(cw,ch),cw,ch,g}}
 function gridDims(){const st=$('#stage'),W=st.clientWidth-16,H=st.clientHeight-16,g=8;let cols,rows,cell;
  /* Handy (kurze Seite unter 620): fest 4 × 2 quer, 2 × 4 hoch, damit zwei 2 × 2-Module immer passen */
  if(Math.min(W,H)<620){if(W>=H){cols=4;rows=2}else{cols=2;rows=4}cell=Math.min((W-g*(cols-1))/cols,(H-g*(rows-1))/rows);return{cols,rows,cell:Math.floor(cell),g}}
@@ -1575,9 +1578,13 @@ function pack(sizes,G,order){const occ=[...Array(G.rows)].map(()=>Array(G.cols).
  let free=null;for(let r=0;r<G.rows&&!free;r++)for(let c=0;c<G.cols;c++)if(!occ[r][c]){free=[r,c];break}return{pos,free,miss:pos.filter(x=>!x).length}}
 /* Hochformat = gedrehtes Querformat: Größen und Positionen werden gespiegelt (2 × 1 quer wird 1 × 2 hoch), die Anordnung bleibt gleich */
 const isTall=G=>G.rows>G.cols;
-function layoutGrid(L){const G0=L._G,T=isTall(G0),G=T?{...G0,cols:G0.rows,rows:G0.cols}:G0,d0=dash(),mods=d0.mods||[],sizes=mods.map(m=>{if(!d0.fixed)return span(m.s,G);const[w,h]=m.s.split('x').map(Number);return[Math.max(1,Math.round(w*G.cols/4)),Math.max(1,Math.round(h*G.rows/2))]}),idx=mods.map((_,i)=>i);let r=pack(sizes,G,idx);
+function layoutGrid(L){const G0=L._G,T=isTall(G0),G=T?{...G0,cols:G0.rows,rows:G0.cols}:G0,d0=dash(),mods=d0.mods||[],B4={cols:4,rows:2},fx=!!d0.fixed,sizes=mods.map(m=>fx?span(m.s,B4):span(m.s,G)),idx=mods.map((_,i)=>i);let r=pack(sizes,fx?B4:G,idx);
+ /* 4.6: Vorlagen im Grundraster 4 × 2 setzen und Kanten proportional auf das echte Raster übertragen – füllt jede Bildschirmgröße lückenlos */
+ if(fx){const sc=(v,n,N)=>Math.round(v*N/n);r.pos=r.pos.map((p,i)=>{if(!p)return p;const[w,h]=sizes[i],c0=sc(p[1],4,G.cols),c1=sc(p[1]+w,4,G.cols),r0=sc(p[0],2,G.rows),r1=sc(p[0]+h,2,G.rows);sizes[i]=[Math.max(1,c1-c0),Math.max(1,r1-r0)];return[r0,c0]})}
  if(r.miss){const alt=pack(sizes,G,[...idx].sort((a,b)=>sizes[b][0]*sizes[b][1]-sizes[a][0]*sizes[a][1]||a-b));if(alt.miss<r.miss)r=alt}
- if(T&&r.free)r.free=[r.free[1],r.free[0]];const sl=[...L.querySelectorAll(':scope>.slot')];let used=0;sl.forEach((e,i)=>{let p=r.pos[i],[w,h]=sizes[i]||[1,1];if(p&&T){p=[p[1],p[0]];[w,h]=[h,w]}if(p){e.style.display='';e.style.gridArea=`${p[0]+1}/${p[1]+1}/span ${h}/span ${w}`;used+=w*h}else{e.style.display='none'}});
+ if(T&&r.free)r.free=[r.free[1],r.free[0]];const sl=[...L.querySelectorAll(':scope>.slot')];let used=0;sl.forEach((e,i)=>{let p=r.pos[i],[w,h]=sizes[i]||[1,1];if(p&&T){p=[p[1],p[0]];[w,h]=[h,w]}if(p){e.style.display='';e.style.gridArea=`${p[0]+1}/${p[1]+1}/span ${h}/span ${w}`;used+=w*h;e._bb=[p[0]+h,p[1]+w]}else{e.style.display='none';e._bb=null}});
+ /* 4.6: belegten Bereich mittig setzen, wenn eine Ansicht das Raster nicht füllt (nicht im Bearbeiten-Modus) */
+ {let mr=0,mc=0;sl.forEach(e=>{if(e._bb){mr=Math.max(mr,e._bb[0]);mc=Math.max(mc,e._bb[1])}});const sx=(G0.cw||G0.cell)+G0.g,sy=(G0.ch||G0.cell)+G0.g,dx=editing||!mc?0:(G0.cols-mc)*sx/2,dy=editing||!mr?0:(G0.rows-mr)*sy/2;L.style.translate=(dx||dy)?`${dx}px ${dy}px`:''}
  return{used,free:r.free,miss:r.miss}}
 function slot(keys,i,size){const w=el('div','slot'),s=el('div','stack');w.dataset.size=size;
  if(keys.length)keys.forEach(k=>{const p=el('div','page'),c=size==='full'&&k==='recipe'?(()=>{const x=el('div','card w-recipe w-hubcard');x.dataset.key='recipe';x.dataset.mi=i;x.dataset.full='1';mounted.push({key:'recipe',el:x});W.recipe(x);return x})():mount(k,i);p.append(c);s.append(p)});else{const p=el('div','page');p.innerHTML='<div class="card empty"></div>';s.append(p)}
@@ -1587,11 +1594,11 @@ function slot(keys,i,size){const w=el('div','slot'),s=el('div','stack');w.datase
  return w}
 function renderStage(){const st=$('#stage'),d=dash();st.innerHTML='';mounted=[];$('#dashName').textContent=d.name;pdots();dotsWake();if(editing){const b=$('#ebar');b.hidden=d.layout==='recipes';if(!b.hidden&&$('#eName'))$('#eName').value=d.name}
  if(d.layout==='recipes'){st.classList.add('lib');st.append(recipeHub());return}st.classList.remove('lib');
- const G=gridDims(),L=el('div','G'+(d.fixed?' fixed':''));lastG=[G.cols,G.rows,G.cell].join();L.style.cssText=`grid-template-columns:repeat(${G.cols},${G.cell}px);grid-auto-rows:${G.cell}px;gap:${G.g}px;height:${G.rows*G.cell+(G.rows-1)*G.g}px`;
+ const G=d.fixed?fixedDims():gridDims(),L=el('div','G'+(d.fixed?' fixed':''));lastG=[G.cols,G.rows,G.cell].join();const cw=G.cw||G.cell,ch=G.ch||G.cell;L.style.cssText=`grid-template-columns:repeat(${G.cols},${cw}px);grid-auto-rows:${ch}px;gap:${G.g}px;height:${G.rows*ch+(G.rows-1)*G.g}px`;
  (d.mods||[]).forEach((m,i)=>L.append(slot(m.ks,i,m.s)));L._G=G;const res=layoutGrid(L);
  if(editing&&res.free&&!d.fixed){const a=el('button','addmod');a.dataset.act='modNew';a.innerHTML=`${ic('plus')}<span>Modul</span>`;a.style.gridArea=`${res.free[0]+1}/${res.free[1]+1}/span 1/span 1`;L.append(a)}
  const used=res.used;
- st.append(L);if(editing){const gh=G.rows*G.cell+(G.rows-1)*G.g,av=st.clientHeight-parseFloat(getComputedStyle(st).paddingTop)-8,k=Math.min(1,av/gh);L.style.transform=`scale(${k})`;L.style.transformOrigin='top center'}if(editing){const info=$('#eInfo');if(info)info.textContent=d.fixed?'Festes Raster':res.miss?`${res.miss} Modul${res.miss>1?'e passen':' passt'} nicht mehr hinein und ${res.miss>1?'sind':'ist'} ausgeblendet`:`${used} von ${G.cols*G.rows} Feldern belegt`}}
+ st.append(L);if(editing){const gh=G.rows*ch+(G.rows-1)*G.g,av=st.clientHeight-parseFloat(getComputedStyle(st).paddingTop)-8,k=Math.min(1,av/gh);L.style.transform=`scale(${k})`;L.style.transformOrigin='top center'}if(editing){const info=$('#eInfo');if(info)info.textContent=d.fixed?'Festes Raster':res.miss?`${res.miss} Modul${res.miss>1?'e passen':' passt'} nicht mehr hinein und ${res.miss>1?'sind':'ist'} ausgeblendet`:`${used} von ${G.cols*G.rows} Feldern belegt`}}
 let editing=false,galSlot=0,galPos=0,galMode='stack',galSize='1x1';
 function pdots(){const p=$('#pdots');if(p)p.innerHTML=DASHES.map(d=>`<i class="${d.id===dash().id?'on':''}"></i>`).join('')}
 function paintEbar(){const d=dash(),b=$('#ebar');b.innerHTML=`<input id="eName" value="${esc(d.name)}" aria-label="Name der Ansicht"><span id="eInfo"></span>${d.fixed?'':`<button class="cbtn" data-act="modNew" aria-label="Modul hinzufügen">${ic('plus')}<span class="lb"> Modul</span></button>`}<button class="cbtn" data-act="eNew" aria-label="Ansicht hinzufügen">${ic('grid')}<span class="lb"> Ansicht</span></button>${DASHES.length>1?`<button class="cbtn sq" data-act="eDel" aria-label="Ansicht löschen">${ic('trash')}</button>`:''}${d.layout==='recipes'?'':`<button class="cbtn sq" data-act="eTime" aria-label="Zeiten für diese Ansicht">${ic('moon')}</button>`}<button class="go" data-act="editDone">Fertig</button>`;b.hidden=false;$('#stage').style.paddingTop=(b.offsetHeight+16)+'px'}
@@ -1812,7 +1819,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='4.6.0';
+const VERSION='4.6.1';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>

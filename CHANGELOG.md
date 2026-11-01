@@ -2,6 +2,11 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.6.1 – 01.11.2026
+
+- Vorlagen (Duo, Schreibtisch, Nachttisch) auf iPad und Mac: immer im Grundraster 4 × 2 (hoch 2 × 4) mit großen, nahezu quadratischen Zellen, füllend und mittig; vorher fiel beim Schreibtisch auf großen Bildschirmen der Kalender heraus.
+- Eigene Ansichten, die das Raster nicht füllen, werden mittig gesetzt (nicht im Bearbeiten-Modus).
+
 ## 4.6.0 – 01.11.2026
 
 - Rezepte exportieren und importieren im Format der Rezeptesammlung (HTML-Datei mit eingebetteten Daten, format „rezeptkasten“, Version 2). Beim Export Wahl „Mit Fotos“ oder „Ohne Fotos“; Unsplash-Fotos werden nicht mitgespeichert. Beim Import werden Fotos übernommen; importierte Rezepte behalten alle Felder der Rezeptesammlung und gehen beim erneuten Export unverändert zurück.

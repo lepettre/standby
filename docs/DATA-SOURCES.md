@@ -83,3 +83,7 @@ Ab 4.0 liefert die Open-Meteo Geocoding API auch die Zeitzone (`timezone`); sie 
 ## Abfahrten (ab 4.5)
 
 Eigener Cloudflare-Worker (Code nicht im Repo), Adresse fest in `TR_URL`. Endpunkte: `GET /stops?q=Name` oder `?lat=…&lon=…` → `{stops:[{id,name,city,types,lat,lon,d?}]}`; `GET /departures?id=Master:…` → `{deps:[{line,dir,type,min,delay,platform,cancelled}],ts}`. Zugangsdaten als Worker-Secrets `GTI_USER`, `GTI_PASS`.
+
+## Google über Worker (ab 4.7)
+
+Eigener Cloudflare-Worker (Adresse `GW` im Code, Code nicht im Repo). Gerätekennung zufällig in `sb_g_dev`. Endpunkte: `/health`, `/auth/start?dev&ret`, `/auth/callback`, `/token?dev` → `{access_token,expires_in}`, `POST /logout?dev`. Zugänge im KV-Speicher unter dem SHA-256 der Gerätekennung.

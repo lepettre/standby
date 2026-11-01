@@ -2,6 +2,12 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.7.0 – 01.11.2026
+
+- Google Kalender dauerhaft: Anmeldung über einen eigenen Worker (einmalige Freigabe, danach erneuert der Worker den Zugang ohne Popup). Solange der Worker nicht eingerichtet ist, bleibt die bisherige Anmeldung.
+- Datensicherung wahlweise mit Fotos und Rezeptfotos; Wiederherstellung schreibt sie zurück.
+- Das Dashboard bittet den Browser, seine Daten dauerhaft zu behalten.
+
 ## 4.6.1 – 01.11.2026
 
 - Vorlagen (Duo, Schreibtisch, Nachttisch) auf iPad und Mac: immer im Grundraster 4 × 2 (hoch 2 × 4) mit großen, nahezu quadratischen Zellen, füllend und mittig; vorher fiel beim Schreibtisch auf großen Bildschirmen der Kalender heraus.

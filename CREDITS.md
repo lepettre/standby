@@ -21,6 +21,7 @@ Umsetzung im Dialog mit Claude (Anthropic).
 | Unsplash API | Rezeptfotos, von dir ausgewählt | Unsplash License für Fotos; API Guidelines: Bilder nur über die von der API gelieferten Adressen laden, Fotograf und Unsplash nennen und verlinken (mit utm-Parametern), Download-Endpunkt bei Verwendung auslösen, Schlüssel vertraulich halten | Nennung „Foto: Name / Unsplash“ mit Links | Hotlink, Download-Auslösung und Nennung umgesetzt; utm_source „standby“ ist kein registrierter App-Name | geprüft (help.unsplash.com API Guidelines) |
 | Zwei Unsplash-Fotos als Demo-Bilder (photo-1506744038136-46273834b3fb, photo-1511884642898-4c92249e20b6) | Fotos-Widget im Demo-Modus | Unsplash License | Fotograf nennen | **Keine Nennung, Fotograf nicht ermittelt** | offen: ersetzen oder Urheber nachtragen |
 | RSS-Feed tagesschau.de (tagesschau.de/index~rss2.xml, ARD-aktuell / NDR) | Voreingestellte Schlagzeilen, ab 3.0.5 | Nutzungsbedingungen von tagesschau.de; Schlagzeilen sind redaktionelle Inhalte | Quelle nennen, verlinken | Feedname im Widget, Schlagzeilen verlinkt | offen |
+| Vorgeschlagene Nachrichten-Feeds (tagesschau, ZEIT ONLINE, Süddeutsche Zeitung, FAZ, heise online, netzpolitik.org, BBC News, The Guardian, NPR, Al Jazeera, The New York Times) | Vorschläge im Feed-Feld, ab 4.3.0 | Nutzungsbedingungen der jeweiligen Anbieter; Schlagzeilen sind redaktionelle Inhalte | Quelle (Domain) im Widget, Schlagzeilen verlinkt | Domain im Widget, Link zum Artikel | offen (Adressen nicht abrufbar geprüft) |
 | Livestreams Deutschlandradio (Deutschlandfunk, Deutschlandfunk Kultur, Deutschlandfunk Nova) | Radio | Öffentlich angebotene Streams für privates Hören; keine Logos verwendet | Sendername nennen | Name genannt | übernommen |
 
 ## 2. Inhalte
@@ -109,7 +110,7 @@ Umsetzung im Dialog mit Claude (Anthropic).
 
 1. Open-Meteo-Hinweis mit Link an jeder Wetteranzeige, CAMS bei Luftqualität und Pollen. Stand 3.1.3: im Wetter-Detailfenster und unter „Über und Quellen“; in den Kacheln selbst noch nicht.
 2. Spotify-Darstellung an die Design-Richtlinien anpassen: erledigt in 3.1.0, Richtlinien noch an der Quelle prüfen.
-3. Demo-Fotos ersetzen oder Fotografen nachtragen.
+3. Demo-Fotos ersetzen oder Fotografen nachtragen: erledigt in 4.3.0 (eigene Symbolbilder).
 4. Lizenztexte für OFL-Schriften, Lucide und global-land-mask: erledigt in 3.1.3 (`lizenzen/`, verlinkt unter „Über und Quellen“); für global-land-mask liegt kein Lizenztext im Paket, nur die Angabe MIT.
 5. Wikipedia-Einträge im Widget und Detailfenster verlinken.
 6. Unsplash utm_source auf den registrierten App-Namen setzen.

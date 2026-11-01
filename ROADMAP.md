@@ -97,7 +97,7 @@ Herkunft: Feedback vom 31.10. abends (F2). Reihenfolge = Umsetzungsreihenfolge.
 10. **Fehler Kalender-Widget** (F2): Viele Termine an einem Tag überlagern sich in „Drei Tage“; Google-Anmeldefehler erscheint als technische Meldung („popup_failed_to_open“) statt als verständlicher Hinweis mit Knopf zum Erneuern.
 11. **Kalender-Detailfenster** (F2): Inhalt hält rechts den Rand nicht ein.
 
-## 4.3.0 – Feedback zu 4.2 (Feeds, Spotify, Farben, Widgets, Bearbeiten, Vorlagen)
+## 4.3.0 – Feedback zu 4.2 (Feeds, Spotify, Farben, Widgets, Bearbeiten, Vorlagen) – ausgeliefert
 
 Herkunft: Feedback vom 01.11. (F3).
 

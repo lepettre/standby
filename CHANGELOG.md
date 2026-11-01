@@ -2,6 +2,22 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.3.0 – 01.11.2026
+
+- Nachrichten: Im Widget steht nur noch die Domain der Quelle. Beim Feed eines Widgets Vorschläge deutscher und englischer Quellen mit Namen, Suche beim Tippen und Feed-Suche für eine eingegebene Website (über den CORS-Proxy).
+- Spotify: Herz zum Liken jetzt auch im Widget, Speichern über die neue Bibliotheks-Schnittstelle mit Rückfall auf die alte; Player im Fenster mittig; Abspielknöpfe immer rund; Option „Cover groß als Hintergrund“ ab 2 × 2.
+- Farben: Zweitfarbe neu als warme Aufhellung der Fläche (Kalender im gelben Muster in klarem Pastellgelb); gespeicherte Kombinationen werden angepasst.
+- Kalender: Punkte im Monatsblatt erst ab 2 × 2; in Widgets keine Kalenderfarben mehr (nur im Fenster); Countdown ohne Kalendername; Wochentag-Plakat mit wählbarer KW und Jahreszahl.
+- Größenangabe immer konkret (z. B. 4 × 2) statt „Vollbild“.
+- Datum „nur Tag“ zentriert und groß.
+- Uhren: Ort per Ortssuche wählbar, Ortsname klein in der Ecke, wenn nicht der aktuelle Standort.
+- Wetter: Achse „−12 h · jetzt · +12 h“ ohne Überschneidung; Temperaturverlauf ohne doppelte Zahlen; Wetter-Übersicht gleichmäßig, Werte einzeilig („18 km/h“); „Heute bis zu … Grad“.
+- Rezepte: Ein Kamera-Knopf für alles (Foto wählen, aus der Zwischenablage, Bildadresse einfügen, Unsplash, Foto löschen). Fotos erscheinen nur noch im neuen Widget „Rezept mit Foto“ (Text auf Unschärfe, klein mit weniger Text); das Text-Widget „Rezept“ bleibt ohne Foto.
+- Fotos-Widget: eigene Symbolbilder statt fremder Demo-Fotos, auch in der Galerie-Vorschau.
+- Einheitlicher, feiner Rand für alle Widgets.
+- Bearbeiten: Beim Ändern der Größe folgt ein Rahmen dem Finger, die Kachel gleitet in die neue Größe. Ziehen und Größe ändern treffen jetzt auch bei zentriertem Raster das richtige Modul (Ursache für schlecht verschiebbare 1 × 1-Module).
+- Vorlagen neu mit festen, füllenden Proportionen: Duo (zwei gleich große Hälften), Schreibtisch (Uhr, Datum, Wetter, Player klein, Kalender groß), Nachttisch (große Uhr, Kalender und Player klein), Rezepte. Raster fest, Inhalte änderbar. Die bisherigen Standard-Ansichten werden ersetzt (gesichert), eigene Ansichten bleiben.
+
 ## 4.2.0 – 01.11.2026
 
 - Handy-Raster fest 4 × 2 quer und 2 × 4 hoch, die Zellgröße passt sich an: zwei 2 × 2-Module passen immer. Bearbeiten-Leiste einzeilig und kompakt.

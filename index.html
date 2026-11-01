@@ -1484,7 +1484,7 @@ function wSheet(k,mi){const o=(dash().mods[mi]?.o||{})[k]||{},t=WOPT(k);let h=''
  if(t==='transit'){const St=trStops(o),K=o.kinds||TRK.map(x=>x[0]);h=`<span class="lbl">Haltestellen</span><div id="trL">${St.map((x,i)=>`<div class="rd-r"><span>${esc(x.name)}</span><button class="round sm" data-act="trDel" data-i="${i}" aria-label="${esc(x.name)} entfernen">${ic('xmark')}</button></div>`).join('')||'<p class="pmut">Noch keine gewählt.</p>'}</div><input type="search" id="trQ" placeholder="Haltestelle suchen und hinzufügen" autocomplete="off"><button class="btn" data-act="trNear">Nächste per Standort</button><div id="trR"></div>
  <span class="lbl">Verkehrsmittel</span><div class="wc-row">${TRK.map(([k,n])=>`<label><input type="checkbox" data-trk value="${k}" ${K.includes(k)?'checked':''}>${n}</label>`).join('')}</div>
  <label class="tog">Linienfarben<input type="checkbox" data-wo="colors" ${o.colors?'checked':''}></label><p class="pmut">Farben angelehnt an das HVV-Liniennetz, nicht offiziell geprüft.</p>
- <details class="adv"${trUrl()?'':' open'}><summary>Worker-Adresse (nur auf diesem Gerät gespeichert)</summary><input type="url" id="trUrl" value="${esc(S.transitUrl||'')}" placeholder="https://….workers.dev" autocomplete="off"></details><p class="pmut">Quelle: HOCHBAHN / hvv (Geofox GTI). Nur für die Fahrplanauskunft.</p>`}
+ <p class="pmut">Quelle: HOCHBAHN / hvv (Geofox GTI). Nur für die Fahrplanauskunft.</p>`}
  if(t==='pantry')h=`<span class="lbl">Vorrat (Zutaten mit Komma)</span><input type="text" data-wo="pantry" value="${esc(o.pantry||'')}" placeholder="z. B. Linsen, Reis, Zwiebeln" autocomplete="off"><p class="pmut">Leer: Rezept des Tages. Mit Vorrat: Rezepte, die am meisten davon nutzen; der Mischen-Knopf zeigt das nächste.</p>`;
  if(t==='spotify')h=`<label class="tog">Cover groß als Hintergrund (ab 2 × 2)<input type="checkbox" data-wo="coverbg" ${o.coverbg?'checked':''}></label><p class="pmut">Spotify verlangt, Cover unverändert zu zeigen; diese Darstellung legt Steuerung darüber und ist daher nur eine Option.</p>`;
  if(t==='clock')h=`${DATEW.includes(k)?`<label class="tog">Datum zeigen<input type="checkbox" data-wo="nodate" data-inv="1" ${o.nodate?'':'checked'}></label>`:''}<span class="lbl">Ort der Uhrzeit</span><div class="rd-r"><span>${esc(o.cityName||'Aktueller Standort')} <small class="pmut">${esc(o.tz||'')}</small></span>${o.tz?`<button class="round sm" data-act="clkReset" aria-label="Aktueller Standort">${ic('xmark')}</button>`:''}</div><input type="search" id="clkQ" placeholder="Stadt suchen" autocomplete="off"><div id="clkR"></div>`;
@@ -1521,8 +1521,9 @@ function moonPix(cv,a,ink){const x=cv.getContext('2d'),N=cv.width,R=N/2-1,k=Math
 let autoLast=null;function autoView(){const m=new Date().getHours()*60+new Date().getMinutes(),inW=d=>{if(!d.from||!d.to)return false;const f=toMin(d.from),u=toMin(d.to);return f<u?(m>=f&&m<u):(m>=f||m<u)},hit=DASHES.find(inW),id=hit?hit.id:null;if(id!==autoLast){autoLast=id;if(id&&S.dash!==id&&!editing&&!cook){S.dash=id;save();renderStage()}}}
 setInterval(autoView,30000);setTimeout(autoView,1500);
 
-/* 4.5: ÖPNV-Abfahrten über einen eigenen Worker (Adresse nur auf dem Gerät, S.transitUrl); Quelle HOCHBAHN / hvv (Geofox GTI) */
-D.depBy={};const trUrl=()=>(S.transitUrl||'').trim().replace(/\/+$/,'');
+/* 4.5: ÖPNV-Abfahrten über einen eigenen Worker; Quelle HOCHBAHN / hvv (Geofox GTI) */
+const TR_URL='https://standby-hvv.e4tth1s.workers.dev';
+D.depBy={};const trUrl=()=>TR_URL;
 async function trGet(path){const b=trUrl();if(!b)throw Error('Noch keine Worker-Adresse eingetragen.');let r;try{r=await fetch(b+path)}catch{throw Error('Abfahrten gerade nicht erreichbar.')}const j=await r.json().catch(()=>({}));if(!r.ok||j.error)throw Error('Abfahrten gerade nicht verfügbar.');return j}
 /* Verkehrsmittel aus Linie und Typ (Typ von der Schnittstelle, sonst Linienname) */
 const TRK=[['U','U-Bahn'],['S','S-Bahn'],['A','AKN'],['R','Regionalbahn'],['B','Bus'],['F','Fähre']];
@@ -1796,7 +1797,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='4.5.1';
+const VERSION='4.5.2';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>

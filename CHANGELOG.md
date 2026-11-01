@@ -2,6 +2,10 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.5.2 – 01.11.2026
+
+- Abfahrten: Adresse des Workers fest eingebaut (neutrale Adresse), kein Eintragen mehr nötig.
+
 ## 4.5.1 – 01.11.2026
 
 - Abfahrten: mehrere Haltestellen je Widget (Abfahrten zusammengeführt, Haltestelle klein hinter dem Ziel), Filter nach Verkehrsmitteln (U-Bahn, S-Bahn, AKN, Regionalbahn, Bus, Fähre), Option Linienfarben (angelehnt an das HVV-Liniennetz, nicht offiziell geprüft).

@@ -23,7 +23,7 @@ Bisher: 1.0.0, 2.0.0, 3.0.0 (siehe CHANGELOG.md). Die Nummer steht in `index.htm
 | 4.1.0 | Neue Darstellungen und schönere Detailfenster | Neben |
 | 4.2.0 | Feedback zu 4.1: Handy-Raster, Bearbeiten, Datum, Kochmodus, Einstellungen | Neben |
 | 4.3.0 | Feedback zu 4.2: Feeds, Spotify, Farben, Widgets, Vorlagen | Neben |
-| 4.4.0 | Kochmodus verfeinern, ältere Ideen | Neben |
+| 4.4.0 | Kochmodus verfeinern, ältere Ideen, ÖPNV-Abfahrten | Neben |
 | 5.0.0 | Home Assistant | Haupt |
 | R-Plan | Übernahme von Rezept-Übersicht und Kochmodus in eine eigene Rezepte-App | eigenes Projekt, nur nach Freigabe |
 
@@ -115,10 +115,17 @@ Herkunft: Feedback vom 01.11. (F3).
 12. **Bearbeiten**: Größe ändern sanft wie beim Ziehen. Kleine Module lassen sich nicht sauber nebeneinander ziehen.
 13. **Vorlagen**: Duo, Schreibtisch, Nachttisch, Rezepte mit festen, füllenden Proportionen (Raster nicht änderbar, Inhalte schon).
 
-## 4.4.0 – Kochmodus, ältere Ideen
+## 4.4.0 – Kochmodus, ältere Ideen, ÖPNV-Abfahrten
 
 1. **Zutaten je Schritt** (F): Die automatische Zuordnung trifft nicht immer (Zutaten mit Hinweisen, Teilmengen). Optionen: Zuordnung verbessern, als Einstellung abschaltbar machen oder ausblenden. Entscheidung offen.
 2. **Weitere Ideen** (A): Google Tasks als Aufgaben-Widget, Mondphase als Pixel-Widget, Wecker-Ansicht vor dem ersten Termin, Ansichten automatisch nach Tageszeit, Rezeptvorschläge aus dem Vorrat, Gestirne-Wechsel am Ende des Nacht-Timers.
+3. **ÖPNV-Abfahrten (HVV), neues Widget** (F, noch nicht umsetzen):
+   - Datenquelle: bestehender Cloudflare-Worker des Autors (Geofox GTI, Zugang als Worker-Secrets, CORS offen). Liefert bisher nur U-Bahn (`/nearby`, `/stations`, Filter auf `U_BAHN` und Linien `^U\d`).
+   - Nötig: zusätzlicher Endpunkt `/departures?id=…` für alle Verkehrsmittel und eine Haltestellensuche ohne U-Bahn-Filter; bestehende Endpunkte unverändert lassen.
+   - Haltestelle per Suche mit Autovervollständigung wählbar, optional nächste per Standort.
+   - 1 × 1: nächste Abfahrt groß. Ab 2 × 1: Liste mit Linie, Ziel, Minuten, Verspätung.
+   - Pflichtnennung sichtbar: „Quelle: HOCHBAHN / hvv (Geofox GTI)“; CREDITS.md ergänzen. Nutzung laut Bedingungen nur Fahrplanauskunft.
+   - Offene Frage: neutrale Worker-Adresse (eigene Route/Domain), da die bisherige den Namen des Autors enthält und laut Datenschutzregel nicht ins Repo darf.
 
 ## 5.0.0 – Home Assistant
 

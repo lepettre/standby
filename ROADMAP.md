@@ -137,7 +137,9 @@ Erst nach Abschluss der obigen Pakete und nach Absprache (F).
 
 ## R-Plan – Rezepte-App (eigenes Projekt)
 
-Rezept-Übersicht und Kochmodus samt Farben sollen in einer eigenen Rezepte-App aufgegriffen werden (F). Vorgehen: erst Planung und Freigabe, dann Umsetzung im dortigen Projekt. Zusammenzustellen sind Gestaltung (Kategoriefarben `PAIR`, Kachel, Übersicht), Kochmodus (Schrittnummer, Segmentleiste, Wischen, Zutaten-Schublade, Portionen), Datenformat und Code-Bausteine (siehe docs/ARCHITECTURE.md).
+- Erledigt (Rezepte-App 3.4): Kachel-Ansicht und Kochmodus als gemeinsamer Baustein (Markierung „BAUSTEIN Kacheln und Kochmodus“ im Code beider Apps).
+- Offen: Das Dashboard übernimmt den Baustein für seinen Kochmodus, damit er nur einmal gepflegt wird. Dabei Regel klären: Mengen aus der Zutatenliste im Schritt (Dashboard bisher ja) oder nur Mengen, die im Schritt stehen (Rezepte-App).
+- Austausch der Rezepte über die Export-Datei im Format der Rezepte-App (beide Richtungen, ab 4.6.0); kein Sync.
 
 ## Vor jeder Auslieferung
 

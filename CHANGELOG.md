@@ -2,6 +2,11 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.7.3 – 02.11.2026
+
+- iPhone als Home-Bildschirm-App: Dashboard reicht bis zur Unterkante, der schwarze Streifen unten entfällt (iOS 26 meldet die Ansicht um die Statusleiste zu kurz). Kochmodus und Fenster folgen derselben Fläche.
+- Unsplash: Schlüssel wird als Adressparameter übergeben statt als Kopfzeile.
+
 ## 4.7.2 – 02.11.2026
 
 - Unsplash-Suche: ein früher von Hand eingetragener, ungültiger Schlüssel wird verworfen; danach gilt der eingebaute Schlüssel.

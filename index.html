@@ -33,6 +33,8 @@ input,select{font:inherit;color:#fff;-webkit-user-select:text;user-select:text}
 .trunc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .acc{color:var(--accent)}
 #app{position:fixed;inset:0;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+/* iOS 26 als Home-Bildschirm-App: Ansicht ist um die Statusleiste zu kurz, unten bleibt ein schwarzer Streifen. Bis zur Unterkante strecken. */
+@media (display-mode:standalone){#app{bottom:auto;height:min(100lvh,calc(100% + env(safe-area-inset-top)))}}
 
 /* Kopfzeile: blendet sich aus, Tippen holt sie zurück */
 #hdr{position:absolute;z-index:40;top:calc(env(safe-area-inset-top) + 8px);left:calc(env(safe-area-inset-left) + 12px);right:calc(env(safe-area-inset-right) + 12px);display:flex;justify-content:space-between;align-items:center;transition:opacity .4s}
@@ -159,7 +161,7 @@ input,select{font:inherit;color:#fff;-webkit-user-select:text;user-select:text}
 .go.sm{padding:6px 12px;font-size:12px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:0}
 /* Farbwahl direkt im Dashboard */
-#pal{position:fixed;z-index:48;left:0;right:0;bottom:0;max-height:52%;overflow-y:auto;background:rgba(16,16,18,.94);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border-radius:26px 26px 0 0;padding:14px 16px calc(env(safe-area-inset-bottom) + 14px);box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+#pal{position:absolute;z-index:48;left:0;right:0;bottom:0;max-height:52%;overflow-y:auto;background:rgba(16,16,18,.94);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border-radius:26px 26px 0 0;padding:14px 16px calc(env(safe-area-inset-bottom) + 14px);box-shadow:0 -10px 40px rgba(0,0,0,.5)}
 @media (orientation:landscape){#pal{left:auto;top:0;width:min(340px,46%);max-height:none;border-radius:26px 0 0 26px;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 16px) 14px 16px}}
 .pal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .pal-h b{font:800 22px var(--round)}
@@ -244,7 +246,7 @@ body.editing .card *{pointer-events:none}
 .lay{width:38px;height:32px;border-radius:9px;background:#2c2c2e;color:#8e8e93;display:grid;place-items:center}
 .lay.on{background:#fff;color:#000}.lay svg{width:24px;height:18px}
 #ebar .go{margin-left:auto}
-#gal{position:fixed;inset:0;z-index:49;background:rgba(12,12,14,.97);overflow-y:auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 20px) calc(env(safe-area-inset-left) + 16px)}
+#gal{position:absolute;inset:0;z-index:49;background:rgba(12,12,14,.97);overflow-y:auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 20px) calc(env(safe-area-inset-left) + 16px)}
 .gal-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
 .gal-i{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#ccc;text-align:left}
 .gal-p{position:relative;aspect-ratio:1}
@@ -290,7 +292,7 @@ body.editing .card *{pointer-events:none}
 .sp-nocov{background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 70%,#000),#000)!important}
 .sp-dv{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(0,0,0,.45);color:#fff;max-width:60%}
 /* Detail-Fenster */
-#pop{position:fixed;inset:0;z-index:47;background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
+#pop{position:absolute;inset:0;z-index:47;background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
 .pop-in{position:relative;width:min(960px,100%);max-height:100%;height:min(720px,100%);overflow-y:auto;background:#121214;border:1px solid #2c2c2e;border-radius:30px;padding:22px;-webkit-user-select:text;user-select:text}
 .pop-x{position:sticky;top:0;float:right;z-index:3}
 .pop-in h2{font:800 30px/1.05 var(--round);letter-spacing:-.02em;margin-bottom:10px}
@@ -322,10 +324,10 @@ body.editing .card *{pointer-events:none}
 /* Mengen im Kochmodus */
 .srv{display:flex;align-items:center;gap:10px;margin:2px 0 8px}.srv b{font:800 18px var(--round)}
 /* Hinweis-Toast */
-#toast{position:fixed;z-index:60;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translate(-50%,-30px);max-width:min(520px,90%);padding:11px 16px;border-radius:16px;background:rgba(40,40,42,.97);color:#fff;font-size:14px;font-weight:600;line-height:1.3;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+#toast{position:absolute;z-index:60;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translate(-50%,-30px);max-width:min(520px,90%);padding:11px 16px;border-radius:16px;background:rgba(40,40,42,.97);color:#fff;font-size:14px;font-weight:600;line-height:1.3;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 /* Stil-Bibliothek */
-#lib{position:fixed;inset:0;z-index:49;background:#0c0c0e;overflow-y:auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 18px)}
+#lib{position:absolute;inset:0;z-index:49;background:#0c0c0e;overflow-y:auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 18px)}
 .lib-h{font:800 24px var(--round);margin:26px 0 10px;color:var(--accent)}.lib-p{font-size:14px;color:#bbb;line-height:1.45;max-width:70ch;margin:6px 0}
 .lib-x{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}.lib-x textarea{width:100%;background:#111;border:1px solid #333;border-radius:12px;padding:10px;color:#fff;font:12px ui-monospace,Menlo,monospace;margin:6px 0;-webkit-user-select:text;user-select:text}
 .lib-sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}.lib-sw>div{display:grid;grid-template-columns:48px 1fr;column-gap:10px;align-items:center}.lib-sw i{grid-row:1/4;width:48px;height:48px;border-radius:14px}.lib-sw b{font-size:14px}.lib-sw small{font:12px ui-monospace,Menlo,monospace;color:#999}.lib-sw span{font-size:12px;color:#bbb}
@@ -450,7 +452,7 @@ body.editing .stack{overflow:hidden}
 .rc.big .k,.rc.big .meta{font-size:max(12px,3.6cqw)}
 
 /* Kochmodus: große Typografie, ein Schritt pro Seite */
-#cook{position:fixed;inset:0;z-index:45;background:var(--bg);color:var(--fg);overflow:hidden}
+#cook{position:absolute;inset:0;z-index:45;background:var(--bg);color:var(--fg);overflow:hidden}
 .ck-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.4}
 .ck-wrap{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 12px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 14px) calc(env(safe-area-inset-left) + 18px)}
 .ck-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
@@ -494,7 +496,7 @@ body.editing .stack{overflow:hidden}
 .cred{font-size:11px;opacity:.75}.cred a{color:inherit}
 
 /* Einstellungen */
-#modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
+#modal{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
 .sheet{width:100%;max-width:600px;max-height:100%;overflow-y:auto;background:#161618;border:1px solid #2c2c2e;border-radius:28px;padding:18px}
 .sheet h2{font-size:20px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
 .sec{padding:14px;border-radius:18px;background:#1f1f22;border:1px solid #2c2c2e;margin-bottom:12px;display:flex;flex-direction:column;gap:8px}
@@ -701,14 +703,14 @@ input:not([type=checkbox]):not([type=range]):not([type=color]),select,textarea{f
 @media (orientation:landscape){.w-hubcard .hub{padding-top:56px}}
 
 /* 4.0: Kontextmenü, Widget-Blatt, groß anzeigen */
-#ctx{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#ctx{position:absolute;inset:0;z-index:60;background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .ctx-in{position:absolute;min-width:230px;background:rgba(40,40,44,.96);border:1px solid #3a3a3c;border-radius:16px;padding:6px;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,.6)}
 .ctx-in b{font-size:12px;color:var(--muted);padding:8px 12px 6px;font-weight:600}
 .ctx-in button{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;font-size:16px;text-align:left}
 .ctx-in button:active{background:#3a3a3c}
 .ws h2{display:flex;justify-content:space-between;align-items:center}
 .ws .sec{margin:0}.btnrow.cty span{display:flex;flex-direction:column}.btnrow.cty small{color:var(--muted)}
-#big{position:fixed;inset:0;z-index:55;background:#000;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
+#big{position:absolute;inset:0;z-index:55;background:#000;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
 #big .big-card{height:100%;width:100%}
 .big-x{position:absolute;top:calc(env(safe-area-inset-top) + 18px);right:calc(env(safe-area-inset-right) + 18px);z-index:3}
 .nodate .cb-date,.nodate .cf-date,.nodate .cs-d,.nodate .co-d,.nodate .fl-d{display:none}
@@ -1816,11 +1818,11 @@ const UN={get m(){return LS.get('rph_u',{})},set m(v){LS.set('rph_u',v)}};
 async function loadRecipePhotos(){Object.values(D.rph).forEach(u=>{if(u.startsWith('blob:'))URL.revokeObjectURL(u)});D.rph={};D.rcred={};const u=UN.m;for(const k in u){D.rph[k]=u[k].url;D.rcred[k]=u[k]}
  try{(await idbAll('rphotos')).forEach(([k,b])=>{D.rph[k]=URL.createObjectURL(b);delete D.rcred[k]})}catch{}}
 async function unSearch(q){const box=$('#unRes');if(!box)return;box.innerHTML='<div class="hint" style="grid-column:1/-1">Suche …</div>';
- try{const r=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=18&content_filter=high`,{headers:{Authorization:'Client-ID '+unKey(),'Accept-Version':'v1'}});if(r.status===401&&S.unKey){S.unKey='';save();return unSearch(q)}if(!r.ok)throw Error(r.status===401?'Unsplash-Schlüssel ungültig.':r.status===403?'Unsplash-Limit erreicht, später erneut versuchen.':'Unsplash: HTTP '+r.status);
+ try{const r=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=18&content_filter=high&client_id=${encodeURIComponent(unKey())}`);if(r.status===401&&S.unKey){S.unKey='';save();return unSearch(q)}if(!r.ok)throw Error(r.status===401?'Unsplash-Schlüssel ungültig.':r.status===403?'Unsplash-Limit erreicht, später erneut versuchen.':'Unsplash: HTTP '+r.status);
   const j=await r.json();D.unRes=j.results||[];box.innerHTML=D.unRes.length?D.unRes.map((p,i)=>`<button class="un-i" data-act="unPick" data-i="${i}"><img src="${esc(p.urls.thumb)}" alt="${esc(p.alt_description||'')}" loading="lazy"><span>${esc(p.user.name)}</span></button>`).join(''):'<div class="hint" style="grid-column:1/-1">Keine Treffer. Anderen Begriff versuchen.</div>'}
  catch(e){box.innerHTML=`<div class="hint" style="grid-column:1/-1">${esc(netErr(e)?'Unsplash gerade nicht erreichbar.':e.message)}</div>`}}
 function unPick(i){const p=D.unRes&&D.unRes[i];if(!p||!cook)return;const u=UN.m;u[cook.r.id]={url:p.urls.regular,name:p.user.name,link:p.user.links.html+'?utm_source=standby&utm_medium=referral'};UN.m=u;
- fetch(p.links.download_location,{headers:{Authorization:'Client-ID '+unKey()}}).catch(()=>{});cook.un=false;
+ fetch(p.links.download_location+(p.links.download_location.includes('?')?'&':'?')+'client_id='+encodeURIComponent(unKey())).catch(()=>{});cook.un=false;
  idbDo('rphotos',st=>st.delete(cook.r.id)).then(loadRecipePhotos).then(()=>{paintCook();fillHub();repaint('recipe','recipe-photo')})}
 const netErr=e=>e instanceof TypeError||/load failed|failed to fetch|networkerror/i.test(e?.message||'');
 async function setRecipePhoto(id,f){const b=f?await shrink(f,1800):null;await idbDo('rphotos',s=>b?s.put(b,id):s.delete(id));await loadRecipePhotos();if(cook)paintCook();fillHub();repaint('recipe','recipe-photo')}
@@ -1832,7 +1834,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='4.7.2';
+const VERSION='4.7.3';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>

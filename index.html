@@ -224,7 +224,9 @@ body.night .w-station{--dial:#000;--ink2:var(--nr);--sec:var(--nr)}
 .ck-need span{padding:6px 12px;border-radius:99px;background:color-mix(in srgb,var(--fg) 13%,transparent);font-size:clamp(13px,1.7vw,17px);font-weight:700}
 /* Bearbeiten wie bei Apple */
 #stage{-webkit-touch-callout:none;overflow:hidden;align-items:center}
-#stage.lib{align-items:stretch}
+#stage.lib{align-items:stretch;bottom:0}
+#stage.lib .hub{padding-bottom:calc(env(safe-area-inset-bottom) + 34px)}
+#stage.lib~#pdots{bottom:calc(env(safe-area-inset-bottom) + 4px);padding:5px 8px;border-radius:99px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 body.editing #stage{align-items:flex-start}
 .G{display:grid;overflow:hidden;align-content:start}
 .G .slot{position:relative;min-width:0;min-height:0}
@@ -494,6 +496,8 @@ body.editing .stack{overflow:hidden}
 .un-i img{width:100%;height:100%;object-fit:cover;display:block}
 .un-i span{position:absolute;left:5px;right:5px;bottom:4px;font-size:10px;font-weight:600;color:#fff;text-shadow:0 1px 3px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
 .cred{font-size:11px;opacity:.75}.cred a{color:inherit}
+/* Bildnachweis im Kochmodus: klein unten rechts, neben dem Home-Balken */
+.ck-cred{position:absolute;z-index:4;right:calc(env(safe-area-inset-right) + 18px);bottom:max(4px,calc(env(safe-area-inset-bottom) - 16px));max-width:55%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:500 10px/1.2 -apple-system,sans-serif;opacity:.5}.ck-cred a{color:inherit;text-decoration:none}
 
 /* Einstellungen */
 #modal{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
@@ -1672,9 +1676,9 @@ let cook=null;
 function openRecipe(id){unShift();const r=RECIPES.find(x=>x.id===id);if(!r)return;const steps=r.st.flatMap(([g,ss])=>ss.map(x=>({g,x})));cook={r,i:0,steps,ing:false};paintCook();$('#cook').hidden=false;wake()}
 function paintCook(){const{r}=cook,ph=D.rph[r.id],ck=$('#cook');ck.setAttribute('style',pv(r));
  ck.innerHTML=(ph?`<img class="ck-bg" src="${ph}" alt=""><div class="tint"></div>`:'')+`<div class="ck-wrap">
- <div class="ck-top"><div class="ck-title"><div class="trunc">${esc(r.t)}</div><small class="trunc">${esc([rTime(r),r.sv,r.diff].filter(Boolean).join(' · '))}</small>${D.rcred[r.id]?`<small class="cred">Foto: <a href="${esc(D.rcred[r.id].link)}" target="_blank" rel="noopener">${esc(D.rcred[r.id].name)}</a> / <a href="https://unsplash.com/?utm_source=standby&amp;utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></small>`:''}</div><div class="r"><span class="ck-lock" id="ckLock"></span><button class="cbtn${cook.ing?' on':''}" data-act="ckIng">${ic('list')} Zutaten</button><button class="cbtn sq${cook.un?' on':''}" data-act="ckUn" aria-label="Foto">${ic('camera')}</button><button class="cbtn sq" data-act="closeRecipe" aria-label="Schließen">${ic('xmark')}</button></div></div>
+ <div class="ck-top"><div class="ck-title"><div class="trunc">${esc(r.t)}</div><small class="trunc">${esc([rTime(r),r.sv,r.diff].filter(Boolean).join(' · '))}</small></div><div class="r"><span class="ck-lock" id="ckLock"></span><button class="cbtn${cook.ing?' on':''}" data-act="ckIng">${ic('list')} Zutaten</button><button class="cbtn sq${cook.un?' on':''}" data-act="ckUn" aria-label="Foto">${ic('camera')}</button><button class="cbtn sq" data-act="closeRecipe" aria-label="Schließen">${ic('xmark')}</button></div></div>
  <div class="ck-main" id="ckMain"></div>
- <div class="ck-bar" id="ckBar"></div></div>
+ <div class="ck-bar" id="ckBar"></div></div>${D.rcred[r.id]?`<small class="ck-cred">Foto <a href="${esc(D.rcred[r.id].link)}" target="_blank" rel="noopener">${esc(D.rcred[r.id].name)}</a> · <a href="https://unsplash.com/?utm_source=standby&amp;utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></small>`:''}
  ${cook.un?`<div class="drawer ph-dr"><h3>Foto</h3>${ph?`<div class="ph-now"><img src="${ph}" alt=""><button class="btn" data-act="ckPhDel">${ic('trash')} Foto löschen</button></div>`:''}
  <div class="row"><label class="btn pri">${ic('camera')} Foto wählen<input type="file" id="ckPh" accept="image/*" hidden></label><button class="btn" data-act="ckPaste">Aus Zwischenablage einfügen</button></div>
  <span class="lbl">Bild-Adresse einfügen (z. B. von Unsplash: Bild lange drücken → „Bildadresse kopieren“)</span><div class="un-f"><input id="ckUrl" type="url" placeholder="https://images.unsplash.com/…" autocomplete="off"><button class="go sm" data-act="ckUrlGo">Übernehmen</button></div>
@@ -1842,7 +1846,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='4.7.4';
+const VERSION='4.7.5';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>

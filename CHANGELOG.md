@@ -2,6 +2,11 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.7.5 – 02.11.2026
+
+- Kochmodus: Bildnachweis (Unsplash) klein unten rechts statt in der Kopfzeile.
+- Rezeptübersicht reicht bis zur Unterkante; die Seitenpunkte schweben dort auf einer kleinen Unterlage statt auf der Abschlusskante.
+
 ## 4.7.4 – 02.11.2026
 
 - iPhone als Home-Bildschirm-App: neuer Ansatz gegen den Streifen unten. Das Dokument ist jetzt mindestens bildschirmhoch, dann gibt iOS 26 die volle Fläche frei (bekannter WebKit-Fehler). Seitenpunkte und untere Kacheln liegen damit wieder im sichtbaren Bereich.

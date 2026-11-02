@@ -1,6 +1,6 @@
 # Arbeitsanweisung für Claude Code
 
-Projekt: StandBy-Dashboard. Eine Web-App in einer einzigen Datei, `index.html`, für ein iPhone 17 im Querformat, gehostet auf GitHub Pages. Aktuelle Version: 4.7.3.
+Projekt: StandBy-Dashboard. Eine Web-App in einer einzigen Datei, `index.html`, für ein iPhone 17 im Querformat, gehostet auf GitHub Pages. Aktuelle Version: 4.7.4.
 
 ## Erst lesen
 

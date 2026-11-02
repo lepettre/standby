@@ -2,6 +2,11 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.7.4 – 02.11.2026
+
+- iPhone als Home-Bildschirm-App: neuer Ansatz gegen den Streifen unten. Das Dokument ist jetzt mindestens bildschirmhoch, dann gibt iOS 26 die volle Fläche frei (bekannter WebKit-Fehler). Seitenpunkte und untere Kacheln liegen damit wieder im sichtbaren Bereich.
+- Wischen zwischen Dashboards: Ansicht folgt dem Finger und gleitet weich hinaus und herein statt hart umzuspringen.
+
 ## 4.7.3 – 02.11.2026
 
 - iPhone als Home-Bildschirm-App: Dashboard reicht bis zur Unterkante, der schwarze Streifen unten entfällt (iOS 26 meldet die Ansicht um die Statusleiste zu kurz). Kochmodus und Fenster folgen derselben Fläche.

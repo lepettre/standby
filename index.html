@@ -1567,8 +1567,8 @@ function repaint(...keys){mounted.forEach(m=>{if(keys.includes(m.key)){W[m.key](
 const SIZES=['1x1','2x1','1x2','2x2','3x2','4x2','full'];
 const sizeName=x=>{if(x==='full'){const G=gridDims();return G.cols+' × '+G.rows}return x.replace('x',' × ')};
 let lastG='';
-/* 4.6: Vorlagen immer im Grundraster 4 × 2 (hoch 2 × 4), Zellen so groß wie möglich, höchstens 25 % von quadratisch abweichend; Rest wird mittig verteilt */
-function fixedDims(){const st=$('#stage'),W=st.clientWidth-16,H=st.clientHeight-16,g=8,cols=W>=H?4:2,rows=W>=H?2:4;let cw=(W-g*(cols-1))/cols,ch=(H-g*(rows-1))/rows;if(cw>ch*1.25)cw=ch*1.25;if(ch>cw*1.25)ch=cw*1.25;cw=Math.floor(cw);ch=Math.floor(ch);return{cols,rows,cell:Math.min(cw,ch),cw,ch,g}}
+/* Vorlagen immer im Grundraster 4 × 2 (hoch 2 × 4), quadratische Zellen so groß wie möglich, mittig */
+function fixedDims(){const st=$('#stage'),W=st.clientWidth-16,H=st.clientHeight-16,g=8,cols=W>=H?4:2,rows=W>=H?2:4;/* 4.7.1: quadratisch, Rest gleichmäßig rundum */const c=Math.floor(Math.min((W-g*(cols-1))/cols,(H-g*(rows-1))/rows)),cw=c,ch=c;return{cols,rows,cell:Math.min(cw,ch),cw,ch,g}}
 function gridDims(){const st=$('#stage'),W=st.clientWidth-16,H=st.clientHeight-16,g=8;let cols,rows,cell;
  /* Handy (kurze Seite unter 620): fest 4 × 2 quer, 2 × 4 hoch, damit zwei 2 × 2-Module immer passen */
  if(Math.min(W,H)<620){if(W>=H){cols=4;rows=2}else{cols=2;rows=4}cell=Math.min((W-g*(cols-1))/cols,(H-g*(rows-1))/rows);return{cols,rows,cell:Math.floor(cell),g}}
@@ -1828,7 +1828,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='4.7.0';
+const VERSION='4.7.1';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>

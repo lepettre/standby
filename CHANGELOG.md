@@ -2,6 +2,10 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.7.1 – 02.11.2026
+
+- Vorlagen wieder mit quadratischen Kacheln, mittig mit gleichem Abstand oben/unten und links/rechts (Duo: zwei gleich große Quadrate, auch auf iPad und Mac).
+
 ## 4.7.0 – 01.11.2026
 
 - Google Kalender dauerhaft: Anmeldung über einen eigenen Worker (einmalige Freigabe, danach erneuert der Worker den Zugang ohne Popup). Solange der Worker nicht eingerichtet ist, bleibt die bisherige Anmeldung.

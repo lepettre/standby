@@ -12,6 +12,17 @@ Ab jetzt dreistellig: **HAUPT.NEBEN.KORREKTUR**.
 
 Bisher: 1.0.0, 2.0.0, 3.0.0 (siehe CHANGELOG.md). Die Nummer steht in `index.html` als `const VERSION` und wird bei jeder Auslieferung angepasst, zusammen mit CHANGELOG.md und, wenn neue Quellen hinzukommen, CREDITS.md.
 
+## Pause (Stand 02.11.2026)
+
+Weiterentwicklung pausiert, bis klar ist, wie das Dashboard neben Home Assistant genutzt wird. Feinschliff erst danach. Offen und vorgemerkt:
+
+- **Entscheidungen des Autors:** Mengen im Kochmodus (Zutatenliste im Schritt oder nur Mengen im Schrittext), danach Dashboard auf den gemeinsamen Baustein „Kacheln und Kochmodus“ umstellen.
+- **Einrichtung durch den Autor:** Worker `standby-google` (Code liegt beim Autor), KV `TOKENS`, Weiterleitungs-URI, App bei Google „In Produktion“.
+- **Auf dem Gerät prüfen:** Spotify-Liken, Abbruch nach etwa 12 s, Ringuhr, Zwei-Finger-Geste, Feed-Vorschläge, Abfahrten im Alltag.
+- **Technische Grenzen (dokumentiert):** Lautsprecherliste wie in der Spotify-App, Wiedergabe auf dem iPhone im Hintergrund, Statuszeile, Playlists im Spotify-Entwicklungsmodus.
+- **Kleinigkeiten:** Wetter-Detailfenster für Widgets mit eigenem Ort; Schreibtisch auf großen Bildschirmen feiner unterteilt.
+- **Später:** Home Assistant (5.0.0).
+
 ## Übersicht
 
 | Version | Thema | Art |

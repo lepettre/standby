@@ -159,7 +159,7 @@ input,select{font:inherit;color:#fff;-webkit-user-select:text;user-select:text}
 .go.sm{padding:6px 12px;font-size:12px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:0}
 /* Farbwahl direkt im Dashboard */
-#pal{position:absolute;z-index:48;left:0;right:0;bottom:0;max-height:52%;overflow-y:auto;background:rgba(16,16,18,.94);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border-radius:26px 26px 0 0;padding:14px 16px calc(env(safe-area-inset-bottom) + 14px);box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+#pal{position:fixed;z-index:48;left:0;right:0;bottom:0;max-height:52%;overflow-y:auto;background:rgba(16,16,18,.94);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border-radius:26px 26px 0 0;padding:14px 16px calc(env(safe-area-inset-bottom) + 14px);box-shadow:0 -10px 40px rgba(0,0,0,.5)}
 @media (orientation:landscape){#pal{left:auto;top:0;width:min(340px,46%);max-height:none;border-radius:26px 0 0 26px;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 16px) 14px 16px}}
 .pal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .pal-h b{font:800 22px var(--round)}
@@ -244,7 +244,7 @@ body.editing .card *{pointer-events:none}
 .lay{width:38px;height:32px;border-radius:9px;background:#2c2c2e;color:#8e8e93;display:grid;place-items:center}
 .lay.on{background:#fff;color:#000}.lay svg{width:24px;height:18px}
 #ebar .go{margin-left:auto}
-#gal{position:absolute;inset:0;z-index:49;background:rgba(12,12,14,.97);overflow-y:auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 20px) calc(env(safe-area-inset-left) + 16px)}
+#gal{position:fixed;inset:0;z-index:49;background:rgba(12,12,14,.97);overflow-y:auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 20px) calc(env(safe-area-inset-left) + 16px)}
 .gal-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
 .gal-i{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#ccc;text-align:left}
 .gal-p{position:relative;aspect-ratio:1}
@@ -290,7 +290,7 @@ body.editing .card *{pointer-events:none}
 .sp-nocov{background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 70%,#000),#000)!important}
 .sp-dv{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(0,0,0,.45);color:#fff;max-width:60%}
 /* Detail-Fenster */
-#pop{position:absolute;inset:0;z-index:47;background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
+#pop{position:fixed;inset:0;z-index:47;background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
 .pop-in{position:relative;width:min(960px,100%);max-height:100%;height:min(720px,100%);overflow-y:auto;background:#121214;border:1px solid #2c2c2e;border-radius:30px;padding:22px;-webkit-user-select:text;user-select:text}
 .pop-x{position:sticky;top:0;float:right;z-index:3}
 .pop-in h2{font:800 30px/1.05 var(--round);letter-spacing:-.02em;margin-bottom:10px}
@@ -322,10 +322,10 @@ body.editing .card *{pointer-events:none}
 /* Mengen im Kochmodus */
 .srv{display:flex;align-items:center;gap:10px;margin:2px 0 8px}.srv b{font:800 18px var(--round)}
 /* Hinweis-Toast */
-#toast{position:absolute;z-index:60;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translate(-50%,-30px);max-width:min(520px,90%);padding:11px 16px;border-radius:16px;background:rgba(40,40,42,.97);color:#fff;font-size:14px;font-weight:600;line-height:1.3;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+#toast{position:fixed;z-index:60;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translate(-50%,-30px);max-width:min(520px,90%);padding:11px 16px;border-radius:16px;background:rgba(40,40,42,.97);color:#fff;font-size:14px;font-weight:600;line-height:1.3;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 /* Stil-Bibliothek */
-#lib{position:absolute;inset:0;z-index:49;background:#0c0c0e;overflow-y:auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 18px)}
+#lib{position:fixed;inset:0;z-index:49;background:#0c0c0e;overflow-y:auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 18px)}
 .lib-h{font:800 24px var(--round);margin:26px 0 10px;color:var(--accent)}.lib-p{font-size:14px;color:#bbb;line-height:1.45;max-width:70ch;margin:6px 0}
 .lib-x{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}.lib-x textarea{width:100%;background:#111;border:1px solid #333;border-radius:12px;padding:10px;color:#fff;font:12px ui-monospace,Menlo,monospace;margin:6px 0;-webkit-user-select:text;user-select:text}
 .lib-sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}.lib-sw>div{display:grid;grid-template-columns:48px 1fr;column-gap:10px;align-items:center}.lib-sw i{grid-row:1/4;width:48px;height:48px;border-radius:14px}.lib-sw b{font-size:14px}.lib-sw small{font:12px ui-monospace,Menlo,monospace;color:#999}.lib-sw span{font-size:12px;color:#bbb}
@@ -450,7 +450,7 @@ body.editing .stack{overflow:hidden}
 .rc.big .k,.rc.big .meta{font-size:max(12px,3.6cqw)}
 
 /* Kochmodus: große Typografie, ein Schritt pro Seite */
-#cook{position:absolute;inset:0;z-index:45;background:var(--bg);color:var(--fg);overflow:hidden}
+#cook{position:fixed;inset:0;z-index:45;background:var(--bg);color:var(--fg);overflow:hidden}
 .ck-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.4}
 .ck-wrap{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 12px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 14px) calc(env(safe-area-inset-left) + 18px)}
 .ck-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
@@ -494,7 +494,7 @@ body.editing .stack{overflow:hidden}
 .cred{font-size:11px;opacity:.75}.cred a{color:inherit}
 
 /* Einstellungen */
-#modal{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
+#modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 10px) calc(env(safe-area-inset-right) + 10px) calc(env(safe-area-inset-bottom) + 10px) calc(env(safe-area-inset-left) + 10px)}
 .sheet{width:100%;max-width:600px;max-height:100%;overflow-y:auto;background:#161618;border:1px solid #2c2c2e;border-radius:28px;padding:18px}
 .sheet h2{font-size:20px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
 .sec{padding:14px;border-radius:18px;background:#1f1f22;border:1px solid #2c2c2e;margin-bottom:12px;display:flex;flex-direction:column;gap:8px}
@@ -1654,8 +1654,12 @@ function fillHub(){const g=$('#hubGrid');if(!g)return;const q=hubQ.trim().toLowe
  g.innerHTML=list.map((r,k)=>{const ph=D.rph[r.id];return`<button class="rc${k===0&&!q?' big':''}" data-act="openRecipe" data-id="${r.id}" style="${pv(r)}">${ph?`<img src="${ph}" alt=""><span class="shade"></span><span class="tint"></span>`:''}<span class="k">${esc(r.c[0]||'')}</span><span class="fitbox" data-mw="${k===0&&!q?.13:.18}" data-mh=".55" data-min="12"><b class="fitt">${esc(r.t)}</b></span><span class="meta">${esc([rTime(r),r.sv].filter(Boolean).join(', '))}</span></button>`}).join('')||'<div class="hint">Nichts gefunden.</div>';refitSoon(g)}
 
 /* ---------- Kochmodus ---------- */
+/* iOS: nach Tastatur oder Neustart kann die Seite verschoben bleiben; dann treffen Fingertipps daneben */
+function unShift(){if(scrollX||scrollY)scrollTo(0,0);const e=document.scrollingElement;if(e&&e.scrollTop)e.scrollTop=0;if(document.body.scrollTop)document.body.scrollTop=0}
+addEventListener('focusout',()=>setTimeout(unShift,80));addEventListener('pageshow',unShift);addEventListener('orientationchange',()=>setTimeout(unShift,300));
+if(window.visualViewport)visualViewport.addEventListener('resize',()=>{if(!document.activeElement||!/INPUT|TEXTAREA/.test(document.activeElement.tagName))unShift()});
 let cook=null;
-function openRecipe(id){const r=RECIPES.find(x=>x.id===id);if(!r)return;const steps=r.st.flatMap(([g,ss])=>ss.map(x=>({g,x})));cook={r,i:0,steps,ing:false};paintCook();$('#cook').hidden=false;wake()}
+function openRecipe(id){unShift();const r=RECIPES.find(x=>x.id===id);if(!r)return;const steps=r.st.flatMap(([g,ss])=>ss.map(x=>({g,x})));cook={r,i:0,steps,ing:false};paintCook();$('#cook').hidden=false;wake()}
 function paintCook(){const{r}=cook,ph=D.rph[r.id],ck=$('#cook');ck.setAttribute('style',pv(r));
  ck.innerHTML=(ph?`<img class="ck-bg" src="${ph}" alt=""><div class="tint"></div>`:'')+`<div class="ck-wrap">
  <div class="ck-top"><div class="ck-title"><div class="trunc">${esc(r.t)}</div><small class="trunc">${esc([rTime(r),r.sv,r.diff].filter(Boolean).join(' · '))}</small>${D.rcred[r.id]?`<small class="cred">Foto: <a href="${esc(D.rcred[r.id].link)}" target="_blank" rel="noopener">${esc(D.rcred[r.id].name)}</a> / <a href="https://unsplash.com/?utm_source=standby&amp;utm_medium=referral" target="_blank" rel="noopener">Unsplash</a></small>`:''}</div><div class="r"><span class="ck-lock" id="ckLock"></span><button class="cbtn${cook.ing?' on':''}" data-act="ckIng">${ic('list')} Zutaten</button><button class="cbtn sq${cook.un?' on':''}" data-act="ckUn" aria-label="Foto">${ic('camera')}</button><button class="cbtn sq" data-act="closeRecipe" aria-label="Schließen">${ic('xmark')}</button></div></div>
@@ -1812,7 +1816,7 @@ const UN={get m(){return LS.get('rph_u',{})},set m(v){LS.set('rph_u',v)}};
 async function loadRecipePhotos(){Object.values(D.rph).forEach(u=>{if(u.startsWith('blob:'))URL.revokeObjectURL(u)});D.rph={};D.rcred={};const u=UN.m;for(const k in u){D.rph[k]=u[k].url;D.rcred[k]=u[k]}
  try{(await idbAll('rphotos')).forEach(([k,b])=>{D.rph[k]=URL.createObjectURL(b);delete D.rcred[k]})}catch{}}
 async function unSearch(q){const box=$('#unRes');if(!box)return;box.innerHTML='<div class="hint" style="grid-column:1/-1">Suche …</div>';
- try{const r=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=18&content_filter=high`,{headers:{Authorization:'Client-ID '+unKey(),'Accept-Version':'v1'}});if(!r.ok)throw Error(r.status===401?'Unsplash-Schlüssel ungültig.':r.status===403?'Unsplash-Limit erreicht, später erneut versuchen.':'Unsplash: HTTP '+r.status);
+ try{const r=await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=18&content_filter=high`,{headers:{Authorization:'Client-ID '+unKey(),'Accept-Version':'v1'}});if(r.status===401&&S.unKey){S.unKey='';save();return unSearch(q)}if(!r.ok)throw Error(r.status===401?'Unsplash-Schlüssel ungültig.':r.status===403?'Unsplash-Limit erreicht, später erneut versuchen.':'Unsplash: HTTP '+r.status);
   const j=await r.json();D.unRes=j.results||[];box.innerHTML=D.unRes.length?D.unRes.map((p,i)=>`<button class="un-i" data-act="unPick" data-i="${i}"><img src="${esc(p.urls.thumb)}" alt="${esc(p.alt_description||'')}" loading="lazy"><span>${esc(p.user.name)}</span></button>`).join(''):'<div class="hint" style="grid-column:1/-1">Keine Treffer. Anderen Begriff versuchen.</div>'}
  catch(e){box.innerHTML=`<div class="hint" style="grid-column:1/-1">${esc(netErr(e)?'Unsplash gerade nicht erreichbar.':e.message)}</div>`}}
 function unPick(i){const p=D.unRes&&D.unRes[i];if(!p||!cook)return;const u=UN.m;u[cook.r.id]={url:p.urls.regular,name:p.user.name,link:p.user.links.html+'?utm_source=standby&utm_medium=referral'};UN.m=u;
@@ -1828,7 +1832,7 @@ function unwake(){if(wl){wl.release().catch(()=>{});wl=null}lockInfo()}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){wake();loadWeather();loadCalendar();loadNews();loadSpotify()}});
 
 /* ---------- Einstellungen ---------- */
-const VERSION='4.7.1';
+const VERSION='4.7.2';
 const optW=sel=>Object.entries(WIDGETS).map(([k,n])=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`).join('');
 function dashEditor(){return DASHES.map((d,i)=>`<div class="de"><div class="de-row"><input type="text" value="${esc(d.name)}" data-in="dName" data-d="${i}" aria-label="Name der Ansicht"><button class="round" data-act="dDel" data-d="${i}" aria-label="Ansicht löschen"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>
  <select data-ch="dLayout" data-d="${i}">${Object.entries(LAYOUTS).map(([k,[,n]])=>`<option value="${k}"${k===d.layout?' selected':''}>${n}</option>`).join('')}</select>

@@ -2,6 +2,11 @@
 
 Versionen 1.0.0 und 2.0.0 sind rückwirkend vergeben und grob nach den großen Arbeitsschritten aufgeteilt. Alle drei entstanden am 31. Oktober 2026.
 
+## 4.7.2 – 02.11.2026
+
+- Unsplash-Suche: ein früher von Hand eingetragener, ungültiger Schlüssel wird verworfen; danach gilt der eingebaute Schlüssel.
+- iPhone: Ansicht wird nach Tastatur, Drehen oder Neustart wieder an den Bildschirm ausgerichtet, damit Fingertipps im Kochmodus und in Fenstern treffen. Fenster und Kochmodus decken dieselbe Fläche ab wie das Dashboard.
+
 ## 4.7.1 – 02.11.2026
 
 - Vorlagen wieder mit quadratischen Kacheln, mittig mit gleichem Abstand oben/unten und links/rechts (Duo: zwei gleich große Quadrate, auch auf iPad und Mac).
